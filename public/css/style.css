@@ -1,0 +1,174 @@
+:root {
+    --theme: #F41b3b !important
+}
+
+.font-sans{
+    font-family: 'Jost', sans-serif !important;
+}
+
+.fixed-top{
+    position:fixed !important;
+    top: -80px;
+    transform: translateY(80px);
+    transition: transform .3s;
+    background: white;
+    color: rgb(64 64 64) !important;
+}
+  /* Dropzone js */
+.dropzone{
+    border: 1px solid #c9c9c9;
+}
+.dz-message{
+    color: rgb(115, 115, 115);
+}
+.dz-image{
+    border-radius: 5px !important;
+}
+.dropzone .dz-preview{
+    marign: 0px !important;
+}
+.dz-error{
+    display: none !important;
+}
+.dz-remove{
+    background: rgb(255, 85, 85);
+    width: fit-content;
+    padding: 7px 12px 7px 12px;
+    border-radius: 100%;
+    color: white;
+    position: absolute;
+    top: -8px;
+    z-index: 20;
+    right: -6px;
+    cursor: pointer !important;
+    pointer-events: all;
+}
+.dz-remove:hover{
+    background: red;
+}
+.dz-remove i{
+    cursor: pointer !important;
+    pointer-events: all;
+}
+.dz-max-files-reached {
+    pointer-events: none;
+    cursor: default;
+}
+
+.linear_gradient:after{
+    background: linear-gradient(180deg,#0000 60%,#131313 100%);
+    position: absolute;
+    bottom: 0;
+    content: "";
+    left: 0;
+    pointer-events: none;
+    right: 0;
+    top: 0;
+}
+
+/* Splide */
+.thumbnails {
+    display: flex;
+    margin: 1rem auto 0;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .thumbnail {
+    width: 70px;
+    height: auto;
+    overflow: hidden;
+    list-style: none;
+    margin: 0 0.2rem;
+    cursor: pointer;
+  }
+
+  .thumbnail img {
+    width: 100%;
+    height: auto;
+  }
+
+  .splide__arrow{
+    background: white !important;
+    border-radius: 50% !important;
+    opacity: .5 !important;
+  }
+
+
+  .half-star {
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: relative;
+  }
+
+  .half-star > svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .half-star > svg path:nth-child(1) {
+    fill: yellow;
+  }
+
+  .half-star > svg path:nth-child(2) {
+    fill: grey;
+  }
+
+  #dz_banner_profile.dropzone .dz-preview .dz-image{
+    width: inherit;
+    height: inherit;
+  }
+  .dropzone .dz-preview{
+    min-height: auto;
+  }
+
+  #gallery .splide__arrow--prev{
+    left: -3rem;
+  }
+  #gallery .splide__arrow--next{
+    right: -3rem;
+  }
+
+.star_wrapper {
+    display: inline-block;
+}
+.star_wrapper * {
+    float: right;
+}
+.star_wrapper input {
+    display: none;
+}
+.star_wrapper label {
+    font-size: 30px;
+    color: #a3a3a3;
+    cursor: pointer;
+}
+.star_wrapper label:hover{
+    color: #f59e0b;
+}
+
+.star_wrapper label:hover ~ label {
+    color: #f59e0b;
+}
+
+.star_wrapper input:checked ~ label {
+    color: #f59e0b;
+}
+
+#create_business,
+#business_create_information,
+#business_create_social,
+#business_create_ubication,
+#business_create_gallery,
+#create_product,
+#saved_data,
+#update_profile,
+#update_passowrd{
+    scroll-margin-top: 80px;
+}
+
