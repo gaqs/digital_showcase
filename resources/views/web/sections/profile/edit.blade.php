@@ -43,6 +43,12 @@
                         </div>
 
                         <div>
+                            <x-input-large id="input_lastname" name="lastname" type="text" class="mt-1 block w-full"
+                                :value="old('lastname', $user->lastname)" placeholder="Nombre" maxlength="255" required />
+                            <x-input-error class="mt-2" :messages="$errors->get('lastname')" />
+                        </div>
+
+                        <div>
                             <x-input-large id="input_email" name="email" type="email" class="mt-1 block w-full"
                                 :value="old('email', $user->email)" required placeholder="Correo electrónico" maxlength="255" readonly/>
                             <x-input-error class="mt-2" :messages="$errors->get('email')" />

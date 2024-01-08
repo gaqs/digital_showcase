@@ -16,8 +16,9 @@
 
                 </div>
             </li>
-            @for ($i=0; $i < 2; $i++)
+            @for ($i=0; $i < count($carousel); $i++)
                 @if(!empty($carousel))
+
                 @php
                     $image = show_business_gallery($carousel[$i]['folder']);
                     $image = reset($image);

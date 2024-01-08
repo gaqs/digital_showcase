@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('price')->nullable();
             $table->decimal('score',2,1)->default(5.0);
+            $table->integer('qty_comments');
             $table->string('mercadolibre')->nullable();
             $table->string('facebook')->nullable();
             $table->string('yapo')->nullable();

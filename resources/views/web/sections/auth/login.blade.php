@@ -42,7 +42,7 @@
                         <div class="flex mt-5 gap-3">
                             <div class="basis-1/2">
                                 <a href="#">
-                                    <x-button class=" w-full md:text-center !font-bold !py-3" value="secondary">
+                                    <x-button class="w-full md:text-center !font-bold !py-3" value="secondary">
                                         <img src="{{ asset('img/google.png') }}" alt="" width="15" class="inline mr-2"><span>Acceder con Google</span>
                                     </x-button>
                                 </a>
