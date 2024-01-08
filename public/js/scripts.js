@@ -175,7 +175,10 @@ if( form != null){
     form.addEventListener('submit', (e) => {
         const submitButton = document.querySelector('button[type=submit]');
         submitButton.disabled = true;
-        submitButton.children[0].className = 'fa-solid fa-circle-notch fa-spin';
+        if(submitButton.children[0]){
+            submitButton.children[0].className = 'fa-solid fa-circle-notch fa-spin';
+        }
+
     });
 }
 

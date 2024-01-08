@@ -10,8 +10,8 @@
 
         <!-- Logo -->
         <a class="my-1 mr-12 flex items-center hover:text-rose-600 focus:text-rose-600 lg:mb-0 lg:mt-0" href="{{ route('home.index') }}">
-            <img class="mr-2 h-[40px]" src="{{ asset('img/flag.png') }}" alt="" loading="lazy" />
-            <span class="font-bold text-xl">PM360</span>
+            <!--<img class="mr-2 h-[40px]" src="{{ asset('img/logo.png') }}" alt="" loading="lazy" />-->
+            <span class="font-bold text-xl leading-none">VITRINA<br>PUERTO MONTT</span>
         </a>
 
         <!-- Collapsible navigation container -->

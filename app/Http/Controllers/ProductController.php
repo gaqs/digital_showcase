@@ -43,8 +43,9 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+
         $data = $request->all();
-        //dd($data);
+
         unset($data['_token']);
 
         $data['user_id'] = Auth::user()->id;
@@ -123,9 +124,23 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::find($id);
-        //$product->delete();
+        $folder = $product->folder;
+        if($folder){
 
-        //return Redirect::route('product.index')->with(['status' => 'success', 'message' => 'Producto eliminado correctamente.']);
+            $rmfolder = delete_folder( public_path('uploads/products/'.$folder) );
+
+            if($rmfolder){
+                $product->delete();
+                return Redirect::route('product.index')->with(['status' => 'success', 'message' => 'Producto eliminado correctamente.']);
+            }else{
+                return Redirect::route('product.index')->with(['status' => 'error', 'message' => 'No se logro eliminar el producto.']);
+            }
+
+        }else{
+            return Redirect::route('product.index')->with(['status' => 'error', 'message' => 'No se encuentra la carpeta del producto.']);
+        }
+
+
     }
 
     /**
@@ -147,6 +162,7 @@ class ProductController extends Controller
         $request->session()->put('product_folder', $folder);
 
         $files = $request->file('gallery');
+
         foreach ($files as $file){
             $fileName = date('Ymd').'_'.Str::random(10) .'.'.$file->extension();
             $file->move(public_path('uploads/products/'.$folder), $fileName);

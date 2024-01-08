@@ -42,35 +42,43 @@
 
                 <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
-                        <x-input-large id="input_product-name" name="name" type="text"
-                            class="mt-1 block w-full" :value="old('name', $product->name ?? null)" placeholder="Nombre producto" required />
+                        <x-input-large id="input_product-name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $product->name ?? null)" placeholder="Nombre producto" required />
+                        <span id="name_error" class="text-rose-500 text-xs ml-3 hidden"></span>
                     </div>
                     <div class="col-span-8 mt-1">
-                        <select data-te-select-init data-te-select-size="lg" id="business_id" name="business_id">
+                        <select data-te-select-init data-te-select-size="lg" id="business_id" name="business_id" required>
                             {{ business_list_per_id(old('business_id', $product->business_id ?? null), Auth::user()->id ) }}
                         </select>
                         <div class="text-neutral-400 text-xs leading-normal ml-2">*Seleccione en este listado uno de sus tiendas, la cual venderá el producto que va a ingresar.</div>
+                        <span id="business_id_error" class="text-rose-500 text-xs ml-3 hidden"></span>
                     </div>
+
                     <div class="col-span-4">
                         <div>
-                            <x-input-large id="input_product-stock" name="stock" type="number"
-                                class="mt-1 block w-full" :value="old('stock', $product->stock ?? null)" placeholder="Stock"/>
+                            <x-input-large id="input_product-stock" name="stock" type="number" class="mt-1 block w-full" :value="old('stock', $product->stock ?? null)" placeholder="Stock" required/>
+                            <span id="stock_error" class="text-rose-500 text-xs ml-3 hidden"></span>
                         </div>
                     </div>
+
                     <div class="col-span-6 mb-3 mt-1">
-                        <select data-te-select-init data-te-select-size="lg" data-te-select-init data-te-select-filter="true"  id="category_id" name="category_id">
+                        <select data-te-select-init data-te-select-size="lg" data-te-select-init data-te-select-filter="true"  id="category_id" name="category_id" required>
                             {{ category_list( old('category_id', $product->category_id ?? null) ) }}
                         </select>
+                        <span id="category_id_error" class="text-rose-500 text-xs ml-3 hidden"></span>
                     </div>
+
                     <div class="col-span-6">
                         <x-input-large id="input_product-price" name="price" type="text"
                             class="mt-1 block w-full" oninput="formatearPrecio(this)" :value="old('price', $product->price ?? null)" placeholder="Precio"
                             required />
+                        <span id="price_error" class="text-rose-500 text-xs ml-3 hidden"></span>
                     </div>
-                    <div class="col-span-12">
-                        <x-textarea id="textarea_business-description" name="description"
+
+                    <div class="col-span-12 mb-3">
+                        <x-textarea maxlength="2000" id="textarea_business-description" name="description"
                             placeholder="Descripcion">{{ old('description', $product->description ?? null) }}
                         </x-textarea>
+                        <span id="description_error" class="text-rose-500 text-xs ml-3 hidden"></span>
                     </div>
                 </div>
             </div>
@@ -83,7 +91,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="col-span-2">
                         <label for="dz_product" class="text-neutral-500"> Imágenes </label>
-                        <div id="dz_product" class="dropzone dz-clickeable text-center ">
+                        <div id="dz_product" class="dropzone dz-clickeable text-center" name="dz_product">
                             @csrf
                             <div class="dz-default dz-message text-sm">
                                 <i class="fa-solid fa-upload text-5xl"></i><br>
@@ -92,6 +100,7 @@
 
                         </div>
                         <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB.</div>
+                        <span id="dz_product_error" class="text-rose-500 text-xs ml-3 hidden"></span>
                     </div>
                 </div>
             </div>
@@ -108,8 +117,6 @@
 <script type="module">
     let _token = $('meta[name="csrf-token"]').attr('content');
     let form = document.getElementById('product_edit_form');
-    let select = document.querySelector('[name="business_id"]').value;
-
     var folder = '<?= $product->folder ?? null ?>';
     var images = '<?= json_encode($gallery ?? null) ?>';
     var gal = ( images != 'null') ? Object.values(JSON.parse(images)) : '';
@@ -134,7 +141,10 @@
             'X-CSRF-TOKEN': _token
         },
         init: function(){
+
             this.on("sending", function(file, xhr, data) {
+                let select = document.querySelector('[name="business_id"]').value;
+
                 data.append("folder", folder );
                 data.append("business_id", select );
             });
@@ -167,14 +177,45 @@
         }
     });
 
+    var firstError = '';
     document.querySelector("button[type=submit]").addEventListener("click", function(e) {
         e.preventDefault();
         e.stopPropagation();
 
-        if( gallery.getQueuedFiles().length > 0 ){
-            gallery.processQueue();
-        }else{
-            form.submit();
+        //validacion de datos y agrega error si no esta lleno, ademas valida si todo esta
+        var completeForm = false;
+        var fields = document.querySelectorAll('#product_edit_form input, #product_edit_form select, #product_edit_form textarea');
+        fields.forEach(field => {
+            const errorSpan = document.getElementById(`${field.name}_error`);
+            if (field.value.trim() === '' || field.value == 0) {
+                if( firstError == '' ){
+                    firstError = field;
+                }
+                field.classList.add('border-rose-500');
+                errorSpan.classList.remove('hidden');
+                errorSpan.textContent = 'Campo obligatorio';
+            }else{
+                completeForm = true;
+            }
+        });
+
+        if(completeForm){
+            if( gallery.getQueuedFiles().length > 0 ){
+                gallery.processQueue();
+            }else{
+                var image_error = document.querySelector('#dz_product_error');
+                image_error.classList.remove('hidden');
+                image_error.textContent = 'Agregue al menos una imagen.';
+                //form.submit();
+            }
+        }
+
+        //hace scroll hasta hacer visible el primer error que se guarda en la revicion anterior
+        if (firstError) {
+            firstError.scrollIntoView({
+                behavior: 'smooth',
+                block:'center'
+            });
         }
 
     });
@@ -182,6 +223,8 @@
     gallery.on("successmultiple", function(files, response) {
         form.submit();
     });
+
+
 
 
 </script>

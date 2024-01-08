@@ -45,8 +45,8 @@
                     <div class="grid mt-5 text-center">O Registrate con</div>
                     <div class="flex mt-5 gap-3">
                         <div class="basis-1/2">
-                            <a href="{{ route('login-google') }}">
-                                <x-button class=" w-full md:text-center !font-bold !py-3" value="secondary">
+                            <a href="#">
+                                <x-button class=" w-full md:text-center !font-bold !py-3" value="secondary" disabled="true">
                                     <img src="{{ asset('img/google.png') }}" alt="" width="15"
                                         class="inline mr-2"><span>Acceder con Google</span>
                                 </x-button>
@@ -54,7 +54,7 @@
                         </div>
                         <div class="basis-1/2">
                             <a href="#">
-                                <x-button class="w-full md:text-center !font-bold !py-3" value="secondary">
+                                <x-button class="w-full md:text-center !font-bold !py-3" value="secondary" disabled="true">
                                     <img src="{{ asset('img/icons/facebook_icon.png') }}" alt="" width="18"
                                         class="inline mr-2"><span>Acceder con Facebook</span>
                                 </x-button>

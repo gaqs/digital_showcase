@@ -19,7 +19,7 @@
                         </div>
 
                         <div id="product_price" class="price text-lg text-danger-600 rounded">
-                            ${{ $r->price }}
+                            {{ $r->price }}
                         </div>
                     </div>
                 </a>

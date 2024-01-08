@@ -19,6 +19,7 @@ if (! function_exists('category_list')) {
 if (! function_exists('business_list_per_id')) {
     function business_list_per_id($selected, $user_id){
         $business = Business::where('user_id', $user_id)->get();
+        echo '<option value="0">Seleccione un negocio</option>';
         foreach ($business as $bsns){
             $thisone = ( $bsns->id == $selected) ? 'selected':'';
             echo '<option class="text-xl" value="'.$bsns->id.'" data-folder="'.$bsns->folder.'" '.$thisone.' >'.$bsns->name.'</option>';
@@ -146,6 +147,31 @@ function comment_likes($id){
                     ->count();
 
     return $qty_likes;
+}
+
+function delete_folder($carpeta) {
+
+    if (is_dir($carpeta)) {
+
+        $archivos = scandir($carpeta);
+
+        foreach ($archivos as $archivo) {
+            if ($archivo != "." && $archivo != "..") {
+                $ruta = $carpeta . DIRECTORY_SEPARATOR . $archivo;
+
+                if (is_dir($ruta)) {
+                    delete_folder($ruta);
+                } else {
+                    unlink($ruta);
+                }
+            }
+        }
+        // Finalmente, elimina la carpeta
+        rmdir($carpeta);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 ?>

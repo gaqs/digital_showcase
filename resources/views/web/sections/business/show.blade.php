@@ -67,9 +67,9 @@
             <div class="text-neutral-600 md:text-white">
                 <div id="business_name" class="text-3xl md:text-5xl font-bold">{{ $business->name }}</div>
                 <div id="business_stars" class="inline">
-                    <?= print_stars($avg_score) ?>
+                    <?= print_stars($business->score) ?>
                 </div>
-                <div id="qty_reviews" class="text-sm inline">{{ $qty_comments }} comentarios</div>
+                <div id="qty_reviews" class="text-sm inline">{{ $business->qty_comments }} comentarios</div>
 
                 <div id="business_address">
                     <i class="text-rose-500 fa-solid fa-location-dot"></i> {{ $business->address }}
@@ -113,7 +113,7 @@
                                                     </h5>
                                                     <p
                                                         class="mb-1 text-base font-bold text-neutral-600 dark:text-neutral-200 text-rose-600">
-                                                        ${{ $p->price }}
+                                                        {{ $p->price }}
                                                     </p>
                                                 </div>
                                             </div>
@@ -284,15 +284,15 @@
                         <div id="product_score" class="flex flex-row items-center">
                             <div>
                                 <div id="score" class="bg-green-700 w-fit font-bold text-2xl mr-3 text-white p-3 rounded-xl">
-                                    {{ $avg_score }}
+                                    {{ $business->score }}
                                 </div>
                             </div>
                             <div>
                                 <div id="container_stars" class=""></div>
                                 <div>
-                                    <div id="qty_reviews" class="text-neutral-600">{{ $qty_comments }} comentarios</div>
+                                    <div id="qty_reviews" class="text-neutral-600">{{ $business->qty_comments }} comentarios</div>
                                     <div id="product_stars" class="inline">
-                                        <?= print_stars($avg_score) ?>
+                                        <?= print_stars($business->score) ?>
                                     </div>
                                 </div>
                             </div>

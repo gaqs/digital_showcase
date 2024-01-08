@@ -29,6 +29,79 @@
             <form id="profile_edit_form" method="post" enctype="multipart/form-data" action="{{ route('profile.update') }}">
                 @csrf
                 @method('patch')
+
+                <div class="block rounded-lg bg-white p-6 mt-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+                    <h5 class="mb-2 pb-5 font-medium leading-tight text-neutral-800 dark:text-neutral-50">
+                        <i class="fa-solid fa-user-check text-rose-500"></i> Mi Perfil
+                    </h5>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <x-input-large id="input_name" name="name" type="text" class="mt-1 block w-full"
+                                :value="old('name', $user->name)" placeholder="Nombre" maxlength="255" required />
+                            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                        </div>
+
+                        <div>
+                            <x-input-large id="input_email" name="email" type="email" class="mt-1 block w-full"
+                                :value="old('email', $user->email)" required placeholder="Correo electrónico" maxlength="255" readonly/>
+                            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+
+                            <!-- condicion validacion email
+                            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
+                            @endif
+                            -->
+                        </div>
+
+                        <div>
+                            <x-input-large id="input_phone" name="phone" type="text" class="mt-1 block w-full"
+                                :value="old('phone', $user->phone)" placeholder="Teléfono" maxlength="10"/>
+                            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+                        </div>
+                        <div>
+                            <x-input-large id="input_address" name="address" type="text" class="mt-1 block w-full"
+                                :value="old('address', $user->address)" placeholder="Dirección" maxlength="255"/>
+                            <x-input-error class="mt-2" :messages="$errors->get('address')" />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 gap-4 mt-3">
+                        <div>
+                            <x-textarea id="textarea_description" name="description" class="mt-1 block w-full"
+                                placeholder="Descripción" maxlength="2000">
+                                {{ old('description', $user->description) }}
+                            </x-textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block rounded-lg bg-white p-6 mt-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+                    <h5 class="mb-2 pb-5 font-medium leading-tight text-neutral-800 dark:text-neutral-50">
+                        <i class="fa-solid fa-rss text-rose-500"></i> Mis redes sociales
+                    </h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <x-input-large id="input_facebook" name="facebook" type="url" class="mt-1 block w-full"
+                                :value="old('facebook', $user->facebook)" placeholder="Facebook" maxlength="255"/>
+                            <x-input-error class="mt-2" :messages="$errors->get('facebook')" />
+                        </div>
+                        <div>
+                            <x-input-large id="input_twitter" name="twitter" type="url" class="mt-1 block w-full"
+                                :value="old('twitter', $user->twitter)" placeholder="Twitter" maxlength="255"/>
+                            <x-input-error class="mt-2" :messages="$errors->get('twitter')" />
+                        </div>
+                        <div>
+                            <x-input-large id="input_instagram" name="instagram" type="url" class="mt-1 block w-full"
+                                :value="old('instagram', $user->instagram)" placeholder="Instagram" maxlength="255"/>
+                            <x-input-error class="mt-2" :messages="$errors->get('instagram')" />
+                        </div>
+                        <div>
+                            <x-input-large id="input_tiktok" name="tiktok" type="url" class="mt-1 block w-full"
+                                :value="old('tiktok', $user->tiktok)" placeholder="Tiktok" maxlength="255"  />
+                            <x-input-error class="mt-2" :messages="$errors->get('tiktok')" />
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-12 gap-4 mt-5">
                     <div class="col-span-12 md:col-span-4">
                         <div class="block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
@@ -62,77 +135,6 @@
                     </div>
                 </div>
 
-                <div class="block rounded-lg bg-white p-6 mt-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-                    <h5 class="mb-2 pb-5 font-medium leading-tight text-neutral-800 dark:text-neutral-50">
-                        <i class="fa-solid fa-user-check text-rose-500"></i> Mi Perfil
-                    </h5>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <x-input-large id="input_name" name="name" type="text" class="mt-1 block w-full"
-                                :value="old('name', $user->name)" placeholder="Nombre" required />
-                            <x-input-error class="mt-2" :messages="$errors->get('name')" />
-                        </div>
-
-                        <div>
-                            <x-input-large id="input_email" name="email" type="email" class="mt-1 block w-full"
-                                :value="old('email', $user->email)" required placeholder="Correo electrónico" />
-                            <x-input-error class="mt-2" :messages="$errors->get('email')" />
-
-                            <!-- condicion validacion email
-                            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
-                            @endif
-                            -->
-                        </div>
-
-                        <div>
-                            <x-input-large id="input_phone" name="phone" type="text" class="mt-1 block w-full"
-                                :value="old('phone', $user->phone)" placeholder="Teléfono" />
-                            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
-                        </div>
-                        <div>
-                            <x-input-large id="input_address" name="address" type="text" class="mt-1 block w-full"
-                                :value="old('address', $user->address)" placeholder="Dirección" />
-                            <x-input-error class="mt-2" :messages="$errors->get('address')" />
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 gap-4 mt-3">
-                        <div>
-                            <x-textarea id="textarea_description" name="description" class="mt-1 block w-full"
-                                placeholder="Descripción">
-                                {{ old('description', $user->description) }}
-                            </x-textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="block rounded-lg bg-white p-6 mt-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-                    <h5 class="mb-2 pb-5 font-medium leading-tight text-neutral-800 dark:text-neutral-50">
-                        <i class="fa-solid fa-rss text-rose-500"></i> Mis redes sociales
-                    </h5>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <x-input-large id="input_facebook" name="facebook" type="text" class="mt-1 block w-full"
-                                :value="old('facebook', $user->facebook)" placeholder="Facebook" />
-                            <x-input-error class="mt-2" :messages="$errors->get('facebook')" />
-                        </div>
-                        <div>
-                            <x-input-large id="input_twitter" name="twitter" type="text" class="mt-1 block w-full"
-                                :value="old('twitter', $user->twitter)" placeholder="Twitter" />
-                            <x-input-error class="mt-2" :messages="$errors->get('twitter')" />
-                        </div>
-                        <div>
-                            <x-input-large id="input_instagram" name="instagram" type="text" class="mt-1 block w-full"
-                                :value="old('instagram', $user->instagram)" placeholder="Instagram" />
-                            <x-input-error class="mt-2" :messages="$errors->get('instagram')" />
-                        </div>
-                        <div>
-                            <x-input-large id="input_tiktok" name="tiktok" type="text" class="mt-1 block w-full"
-                                :value="old('tiktok', $user->tiktok)" placeholder="Tiktok" />
-                            <x-input-error class="mt-2" :messages="$errors->get('tiktok')" />
-                        </div>
-                    </div>
-                </div>
                 <div class="flex items-center gap-4 mt-3">
                     <x-button type="submit" lass="!px-7 !pb-3 !pt-3 !text-sm !font-bold" value="danger">
                         Guardar

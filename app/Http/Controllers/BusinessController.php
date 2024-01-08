@@ -63,14 +63,6 @@ class BusinessController extends Controller
         $data['avatar'] = show_business_avatar($data['business']->folder);
         $data['gallery'] = show_business_gallery($data['business']->folder);
 
-        $comments = Comment::select( Comment::raw('count(*) as qty_comments, avg(score) as score') )
-                        ->where('commentable_type', 'App\Models\Business')
-                        ->where('commentable_id', $id)
-                        ->where('parent_id', null)
-                        ->get();
-        $data['qty_comments'] = $comments[0]->qty_comments;
-        $data['avg_score'] = number_format(($comments[0]->score + 5) / 2, 1, '.', ''); //todos los productos parten con 5.0
-
         if( isset(Auth::user()->id) ){
             $data['saves'] = DB::table('user_saves')
                                 ->select('save_id')
@@ -123,7 +115,24 @@ class BusinessController extends Controller
     public function destroy(string $id)
     {
         $business = Business::find($id);
-        $business->delete();
+        $folder = $business->folder;
+        $product = Product::where('business_id', $business->id)->first();
+
+        if( !is_null($product) ){
+            return Redirect::route('business.index')->with(['status' => 'error', 'message' => 'Debe eliminar los productos dentro del negocio antes de borrarlo.']);
+        }else{
+
+            if($folder){
+                $rmfolder = delete_folder( public_path('uploads/business/'.$folder) );
+                if($rmfolder){
+                    $business->delete();
+                    return Redirect::route('business.index')->with(['status' => 'success', 'message' => 'Negocio eliminado correctamente.']);
+                }else{
+                    return Redirect::route('business.index')->with(['status' => 'error', 'message' => 'No se logro eliminar el negocio.']);
+                }
+            }
+
+        }
 
         return Redirect::route('business.index')->with(['status' => 'success', 'message' => 'Negocio eliminado correctamente.']);
     }

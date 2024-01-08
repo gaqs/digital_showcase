@@ -37,7 +37,7 @@
                                     <div>
                                         <div id="stars" class="inline">
                                             <?= print_stars($r->score) ?>
-                                            <div id="qty_reviews" class="text-neutral-600 text-sm">16 comentarios</div>
+                                            <div id="qty_reviews" class="text-neutral-600 text-sm">{{ $r->qty_comments }} comentarios</div>
                                         </div>
                                     </div>
                                 </div>

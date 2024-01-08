@@ -8,7 +8,7 @@
             'button'=>'Editar comentario'
         ])
     @else
-        <article class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
+        <article id="comment_id_{{ $comment->id }}" class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
             <footer class="flex justify-between items-center mb-1">
 
                 @php

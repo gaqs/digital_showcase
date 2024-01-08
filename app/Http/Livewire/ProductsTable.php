@@ -40,9 +40,11 @@ class ProductsTable extends DataTableComponent
                     fn($row) => asset('uploads/products/'.$row->folder.'/'.show_product_picture($row->folder))
             ),
             Column::make('Nombre', 'name')
-                ->sortable(),
+                ->sortable()
+                ->searchable(),
             Column::make('Negocio', 'business.name')
-                ->sortable(),
+                ->sortable()
+                ->searchable(),
             ButtonGroupColumn::make('Acciones')
                 ->unclickable()
                 ->buttons([

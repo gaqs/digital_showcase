@@ -18,6 +18,10 @@ class HomeController extends Controller
                                     ->orderBy('created_at', 'asc')
                                     ->get();
 
+        $data['carousel'] = Business::limit(2)
+                                    ->inRandomOrder()
+                                    ->get();
+
         $data['products'] = Product::select('product.*', 'business.id as b_id' ,'business.name as b_name','business.score as b_score', 'categories.name as c_name', 'categories.tw_color as tw_bg')
                                     ->join('business', 'business.id', '=', 'product.business_id')
                                     ->join('categories', 'categories.id', '=', 'product.category_id')
@@ -25,7 +29,7 @@ class HomeController extends Controller
                                     ->orderBy('business.created_at', 'desc')
                                     ->get();
 
-        $data['business_comments'] = Comment::select('users.name as u_name', 'users.id as u_id', 'users.avatar as u_avatar', 'comments.id as comment_id','comments.body', 'comments.score', 'comments.created_at', 'business.name as b_name', 'business.score as b_score')
+        $data['business_comments'] = Comment::select('users.name as u_name', 'users.id as u_id', 'users.avatar as u_avatar', 'comments.id as comment_id','comments.body', 'comments.score', 'comments.created_at','business.id as business_id', 'business.name as b_name', 'business.score as b_score')
                                     ->leftJoin('users', 'users.id', '=', 'comments.user_id')
                                     ->leftJoin('business', 'business.id', '=', 'comments.commentable_id')
                                     ->where('comments.parent_id', null)
@@ -34,7 +38,7 @@ class HomeController extends Controller
                                     ->limit(3)
                                     ->get();
 
-        $data['products_comments'] = Comment::select('users.name as u_name', 'users.id as u_id', 'users.avatar as u_avatar', 'comments.id as comment_id', 'comments.body', 'comments.score', 'comments.created_at', 'product.name as p_name', 'product.score as p_score')
+        $data['products_comments'] = Comment::select('users.name as u_name', 'users.id as u_id', 'users.avatar as u_avatar', 'comments.id as comment_id', 'comments.body', 'comments.score', 'comments.created_at', 'product.id as product_id', 'product.name as p_name', 'product.score as p_score')
                                     ->leftJoin('users', 'users.id', '=', 'comments.user_id')
                                     ->leftJoin('product', 'product.id', '=', 'comments.commentable_id')
                                     ->where('parent_id', null)

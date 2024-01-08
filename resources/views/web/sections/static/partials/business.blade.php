@@ -46,7 +46,7 @@
                                 <div>
                                     <div id="stars" class="inline">
                                         <?= print_stars($bus->score) ?>
-                                        <div id="qty_reviews" class="text-neutral-600 text-sm">16 comentarios</div>
+                                        <div id="qty_reviews" class="text-neutral-600 text-sm">{{ $bus->qty_comments }} comentarios</div>
                                     </div>
                                 </div>
                             </div>

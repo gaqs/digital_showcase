@@ -35,18 +35,17 @@
                             </div>
                         </div>
                         <p class="mt-3 text-sm text-neutral-600 dark:text-neutral-200">
-                            <span id="date_comment" class="font-bold">{{ beautiful_date($bc->created_at) }}.</span> {{ $bc->body }}
+                            <span id="date_comment" class="font-bold">{{ beautiful_date($bc->created_at) }}.</span>
+                            {{ substr($bc->body,0, 300).'...' }}
                         </p>
-                        <x-link href="#" class="font-bold text-sm">Continuar leyendo > </x-link>
+                        <x-link href="{{ route('business.show', ['id' => $bc->business_id]).'#comment_id_'.$bc->comment_id }}" class="font-bold text-sm">Continuar leyendo > </x-link>
                     </div>
                     <div
                         class="border-t-2 text-right text-neutral-400 border-neutral-100 px-3 py-3 dark:border-neutral-600 dark:text-neutral-50">
                         <div class="flex flex-row gap-5 justify-end">
                             <div id="like_count">
-                                <a href="#">
-                                    <i class="fa-regular hover:fa-solid fa-thumbs-up text-2xl text-green-600"></i>
-                                    {{ comment_likes($bc->comment_id) }}
-                                </a>
+                                <i class="fa-regular hover:fa-solid fa-thumbs-up text-2xl text-green-600"></i>
+                                {{ comment_likes($bc->comment_id) }}
                             </div>
                         </div>
                     </div>
@@ -84,18 +83,18 @@
                             </div>
                         </div>
                         <p class="mt-3 text-sm text-neutral-600 dark:text-neutral-200">
-                            <span id="date_comment" class="font-bold">{{ beautiful_date($pc->created_at) }}.</span> {{ $bc->body }}
+                            <span id="date_comment" class="font-bold">{{ beautiful_date($pc->created_at) }}.</span>
+                            {{ substr($pc->body,0, 300).'...' }}
                         </p>
-                        <x-link href="#" class="font-bold text-sm">Continuar leyendo > </x-link>
+                        <x-link href="{{ route('product.show', ['id' => $pc->product_id]).'#comment_id_'.$pc->comment_id }}" class="font-bold text-sm">Continuar leyendo > </x-link>
                     </div>
                     <div
                         class="border-t-2 text-right text-neutral-400 border-neutral-100 px-3 py-3 dark:border-neutral-600 dark:text-neutral-50">
                         <div class="flex flex-row gap-5 justify-end">
                             <div id="like_count">
-                                <a href="#">
-                                    <i class="fa-regular hover:fa-solid fa-thumbs-up text-2xl text-green-600"></i>
-                                    {{ comment_likes($pc->comment_id) }}
-                                </a>
+                                <i class="fa-regular hover:fa-solid fa-thumbs-up text-2xl text-green-600"></i>
+                                {{ comment_likes($pc->comment_id) }}
+
                             </div>
                         </div>
                     </div>

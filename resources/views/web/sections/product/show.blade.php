@@ -85,15 +85,15 @@
                     <div id="product_score" class="flex flex-row items-center">
                         <div>
                             <div id="score" class="bg-green-700 w-fit font-bold text-2xl mr-3 text-white p-3 rounded-xl">
-                                {{ $avg_score }}
+                                {{ $product->score }}
                             </div>
                         </div>
                         <div>
                             <div id="container_stars" class=""></div>
                             <div>
-                                <div id="qty_reviews" class="text-neutral-600">{{ $qty_comments }} comentarios</div>
+                                <div id="qty_reviews" class="text-neutral-600">{{ $product->qty_comments }} comentarios</div>
                                 <div id="product_stars" class="inline">
-                                    <?= print_stars($avg_score) ?>
+                                    <?= print_stars($product->score) ?>
                                 </div>
                             </div>
                         </div>
@@ -107,7 +107,7 @@
                         <x-link href="#product_description">Saber más &raquo;</x-link>
                     </div>
                     <div id="price" class="price text-xl text-center text-cyan-600 bg-cyan-50 py-2 px-5 w-fit rounded my-5">
-                        $<b>{{ number_format($product->price, 0, ',', '.') }}</b> c/u
+                        <b>{{ $product->price }}</b> c/u
                     </div>
                     <div id="product_buy_link">
                         <b>Donde comprar online:</b>

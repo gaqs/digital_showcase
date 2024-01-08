@@ -17,24 +17,24 @@
                 </div>
             </li>
             @for ($i=0; $i < 2; $i++)
-                @if(empty($business))
+                @if(!empty($carousel))
                 @php
-                    $image = show_business_gallery($business[$i]['folder']);
+                    $image = show_business_gallery($carousel[$i]['folder']);
                     $image = reset($image);
                 @endphp
                 <li class="splide__slide">
                     <div class="h-[550px]">
 
-                        <img src="{{ asset('uploads/business/'.$business[$i]['folder'].'/'.$image) }}" class="block w-full h-full object-cover brightness-50" alt="..." />
+                        <img src="{{ asset('uploads/business/'.$carousel[$i]['folder'].'/'.$image) }}" class="block w-full h-full object-cover brightness-50" alt="..." />
                         <div class="absolute top-1/2 right-0 md:right-56 -translate-y-1/2 text-right pr-5 text-white md:block w-full md:w-96 border-r-8 border-danger">
                             <h5 class="slide_title text-5xl font-bold">
-                                {{ $business[$i]['name'] }}
+                                {{ $carousel[$i]['name'] }}
                             </h5>
                             <p class="slide_subtitle my-3">
-                                <i class="text-rose-500 fa-solid fa-location-dot"></i> {{ $business[$i]['address'] }}
+                                <i class="text-rose-500 fa-solid fa-location-dot"></i> {{ $carousel[$i]['address'] }}
                             </p>
                             <p class="slide_subtitle">
-                               {{ substr($business[$i]['description'], 0, 80) }} ...<x-link href="{{ route('business.show', ['id' => $business[$i]['id'] ]) }}">
+                               {{ substr($carousel[$i]['description'], 0, 80) }} ...<x-link href="{{ route('business.show', ['id' => $carousel[$i]['id'] ]) }}">
                                 Saber más &raquo;
                             </x-link>
                             </p>

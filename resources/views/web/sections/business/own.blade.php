@@ -66,7 +66,7 @@
                                         <div>
                                             <div id="stars" class="inline">
                                                 <?= print_stars($business[$i]->score) ?>
-                                                <div id="qty_reviews" class="text-neutral-600 text-sm">0 comentarios</div>
+                                                <div id="qty_reviews" class="text-neutral-600 text-sm">{{ $business[$i]->qty_comments }} comentarios</div>
                                             </div>
                                         </div>
                                     </div>

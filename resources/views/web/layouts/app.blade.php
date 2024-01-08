@@ -53,38 +53,41 @@
     var button = document.getElementById('save');
     var _token = $('meta[name="csrf-token"]').attr('content');
 
-    button.addEventListener('click', function(){
-        var id = button.getAttribute('data-id');
-        var type = button.getAttribute('data-type');
+    if(button){
+        button.addEventListener('click', function(){
+            var id = button.getAttribute('data-id');
+            var type = button.getAttribute('data-type');
 
-        if( button.classList.contains("button_secondary") ){
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('profile.save') }}",
-                data: 'id='+id+'&type='+type,
-                headers: {
-                    'X-CSRF-TOKEN': _token
-                },
-                success: function(data){
-                    button.classList.replace('button_secondary', 'button_primary');
-                    button.children[0].classList.replace('fa-regular', 'fa-solid');
-                }
-            });
-        }else if(button.classList.contains("button_primary")){
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('profile.delete_save') }}",
-                data: 'id='+id+'&type='+type,
-                headers: {
-                    'X-CSRF-TOKEN': _token
-                },
-                success: function(data){
-                    button.classList.replace('button_primary', 'button_secondary');
-                    button.children[0].classList.replace('fa-solid', 'fa-regular');
-                }
-            });
-        }
+            if( button.classList.contains("button_secondary") ){
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('profile.save') }}",
+                    data: 'id='+id+'&type='+type,
+                    headers: {
+                        'X-CSRF-TOKEN': _token
+                    },
+                    success: function(data){
+                        button.classList.replace('button_secondary', 'button_primary');
+                        button.children[0].classList.replace('fa-regular', 'fa-solid');
+                    }
+                });
+            }else if(button.classList.contains("button_primary")){
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('profile.delete_save') }}",
+                    data: 'id='+id+'&type='+type,
+                    headers: {
+                        'X-CSRF-TOKEN': _token
+                    },
+                    success: function(data){
+                        button.classList.replace('button_primary', 'button_secondary');
+                        button.children[0].classList.replace('fa-solid', 'fa-regular');
+                    }
+                });
+            }
 
-    });
+        });
+    }
+
 });
 </script>
