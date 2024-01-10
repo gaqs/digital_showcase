@@ -39,7 +39,7 @@
                         </div>
 
                         <x-button type="submit" class="mt-5 w-full !font-bold capitalize !py-3 !text-base" value="danger">
-                            Registrarse
+                            <i class="fa-solid fa-address-card"></i> Registrarse
                         </x-button>
                     </form>
                     <div class="grid mt-5 text-center">O Registrate con</div>

@@ -36,16 +36,18 @@
                     </h5>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <x-input-large id="input_name" name="name" type="text" class="mt-1 block w-full"
-                                :value="old('name', $user->name)" placeholder="Nombre" maxlength="255" required />
-                            <x-input-error class="mt-2" :messages="$errors->get('name')" />
-                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <x-input-large id="input_name" name="name" type="text" class="mt-1 block w-full"
+                                    :value="old('name', $user->name)" placeholder="Nombre" maxlength="255" required />
+                                <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                            </div>
 
-                        <div>
-                            <x-input-large id="input_lastname" name="lastname" type="text" class="mt-1 block w-full"
-                                :value="old('lastname', $user->lastname)" placeholder="Nombre" maxlength="255" required />
-                            <x-input-error class="mt-2" :messages="$errors->get('lastname')" />
+                            <div>
+                                <x-input-large id="input_lastname" name="lastname" type="text" class="mt-1 block w-full"
+                                    :value="old('lastname', $user->lastname)" placeholder="Apellido" maxlength="255" required />
+                                <x-input-error class="mt-2" :messages="$errors->get('lastname')" />
+                            </div>
                         </div>
 
                         <div>

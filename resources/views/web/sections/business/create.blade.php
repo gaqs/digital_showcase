@@ -49,21 +49,25 @@
                         <div class="col-span-2">
                             <x-input-large id="input_business-name" name="name" type="text"
                                 class="mt-1 block w-full" :value="old('name', $business->name ?? null)" placeholder="Nombre negocio" required />
+                            <span id="name_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                         <div class="mt-1">
-                            <select data-te-select-init data-te-select-size="lg" data-te-select-init data-te-select-filter="true" id="category_id" name="category_id">
+                            <select data-te-select-init data-te-select-size="lg" data-te-select-init data-te-select-filter="true" id="category_id" name="category_id" required>
                                 {{ category_list( old('category_id', $business->category_id ?? null) ) }}
                             </select>
                             <label data-te-select-label-ref>Categoría</label>
+                            <span id="category_id_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                         <div>
                             <x-input-large id="input_business-keywords" name="keywords" type="text"
-                                class="mt-1 block w-full" :value="old('keywords', $business->keywords ?? null)" placeholder="Palabras clave*" />
+                                class="mt-1 block w-full" :value="old('keywords', $business->keywords ?? null)" placeholder="Palabras clave*" required/>
                             <div class="text-neutral-400 text-xs leading-normal ml-2">*Ingresa palabras separadas por coma (,) que describan tu negocio. Así ayudarán al motor de búsqueda a encontrar información relevante más fácilmente.</div>
+                            <span id="keywords_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                         <div class="col-span-2">
                             <x-textarea id="textarea_business-description" name="description" placeholder="Descripcion" required>{{ old('description', $business->description ?? null) }}
                             </x-textarea>
+                            <span id="description_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                     </div>
                 </div>
@@ -111,8 +115,7 @@
                         <div class="col-span-2">
                             <div class="col-span-2">
                                 <x-input-large id="input_address" name="address" type="text"
-                                    class="mt-1 block w-full" :value="old('address', $business->address ?? null)" placeholder="Dirección"
-                                    required />
+                                    class="mt-1 block w-full" :value="old('address', $business->address ?? null)" placeholder="Dirección"/>
                             </div>
 
                             <div id="map" class="h-80 mt-3"></div>
@@ -121,8 +124,7 @@
                         </div>
                         <div class="hidden">
                             <x-input-large id="input_latitude" name="latitude" type="text"
-                                class="mt-1 block w-full" :value="old('latitude', $business->latitude ?? '-41.46518')" placeholder="Latitud"
-                                required readonly />
+                                class="mt-1 block w-full" :value="old('latitude', $business->latitude ?? '-41.46518')" placeholder="Latitud" required readonly />
                         </div>
                         <div class="hidden">
                             <x-input-large id="input_longitude" name="longitude" type="text"
@@ -131,8 +133,8 @@
                         </div>
                         <div>
                             <x-input-large id="input_business-phone_1" name="phone" type="text"
-                                class="mt-1 block w-full" :value="old('phone', $business->phone ?? null)" placeholder="Teléfono"
-                                required />
+                                class="mt-1 block w-full" :value="old('phone', $business->phone ?? null)" placeholder="Teléfono" required />
+                            <span id="phone_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                         <div>
                             <x-input-large id="input_business-phone_2" name="phone_2" type="text"
@@ -140,8 +142,8 @@
                         </div>
                         <div>
                             <x-input-large id="input_business-email" name="email" type="text"
-                                class="mt-1 block w-full" :value="old('email', $business->email ?? null)" placeholder="Correo electrónico"
-                                required />
+                                class="mt-1 block w-full" :value="old('email', $business->email ?? null)" placeholder="Correo electrónico" required />
+                            <span id="email_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                         <div>
                             <x-input-large id="input_business-email_2" name="email_2" type="text"
@@ -171,6 +173,7 @@
 
                             </div>
                             <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB.</div>
+                            <span id="dz_profile_error" class="text-rose-500 text-xs ml-3 hidden">Imagen obligatoria.</span>
                         </div>
                         <div class="col-span-8">
                             <label for="dz_gallery" class="text-neutral-500"> Galería </label>
@@ -183,6 +186,7 @@
 
                             </div>
                             <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB. Máximo 9 imágenes.</div>
+                            <span id="dz_gallery_error" class="text-rose-500 text-xs ml-3 hidden">Agregue al menos una imagen.</span>
                         </div>
 
                         <div class="flex items-center gap-4 mt-3">
@@ -246,11 +250,14 @@
                         },
                         success: function(data){
                             if( data ){
+                                console.log('server');
                                 file.previewElement.remove();
                             }
-
                         }
                     });
+
+                }else if( r == true){
+                    console.log('preview');
                     file.previewElement.remove();
                 }
             }
@@ -294,27 +301,70 @@
                         headers: {
                             'X-CSRF-TOKEN': _token
                         },
-                        sucess: function(data){
-                            file.previewElement.remove();
+                        success: function(data){
+                            if(data){
+                                file.previewElement.remove();
+                            }
+
                         }
                     });
+
+                }else if( r == true && folder == ''){
+                    console.log('preview');
                     file.previewElement.remove();
                 }
             }
+        });
+
+        var firstError = '';
+        const requiredFields = document.querySelectorAll('#business_edit_form [required]');
+
+        //vuelve a ocultar los mensajes de error cuando se ingrese informacion en los input
+        requiredFields.forEach(field => {
+            field.addEventListener("keydown", function(e){
+                const errorSpan = document.getElementById(`${field.name}_error`);
+                errorSpan.classList.add('hidden');
+                firstError = '';
+            });
         });
 
         document.querySelector("button[type=submit]").addEventListener("click", function(e) {
             e.preventDefault();
             e.stopPropagation();
 
-            if( profile.getQueuedFiles().length > 0 ){
-                profile.processQueue();
-            }
-            else if( gallery.getQueuedFiles().length > 0 ){
-                gallery.processQueue();
+            //verifica que los campos esten completos
+            let allFull = true;
+            requiredFields.forEach(field => {
+                const errorSpan = document.getElementById(`${field.name}_error`);
+                if(field.value.trim() == '' || field.value == 0){
+                    firstError = firstError == '' ? field : firstError;
+                    allFull = false;
+                    errorSpan.classList.remove('hidden');
+                }
+            });
+
+            if( allFull ){
+
+                if( profile.getQueuedFiles().length > 0 ){
+                    profile.processQueue();
+                }
+                else if( gallery.getQueuedFiles().length > 0 ){
+                    gallery.processQueue();
+                }else{
+                    form.submit();
+                    console.log('form submit');
+                }
             }else{
-                form.submit();
+                console.log('campos vacios');
             }
+
+            if (firstError) {
+                firstError.scrollIntoView({
+                    behavior: 'smooth',
+                    block:'center'
+                });
+            }
+
         });
 
         profile.on("success", function(files, response) {
@@ -328,7 +378,6 @@
         gallery.on("successmultiple", function(files, response) {
             form.submit();
         });
-
 
     </script>
 @endsection

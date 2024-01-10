@@ -50,10 +50,12 @@
     cursor: pointer !important;
     pointer-events: all;
 }
+/*
 .dz-max-files-reached {
     pointer-events: none;
     cursor: default;
 }
+*/
 
 .linear_gradient:after{
     background: linear-gradient(180deg,#0000 60%,#131313 100%);

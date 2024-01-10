@@ -35,7 +35,7 @@
                             </div>
 
                             <x-button type="submit" class="mt-5 w-full !font-bold capitalize !py-3 !text-base" value="danger">
-                                Acceder
+                                <i class="fa-solid fa-door-open"></i> Acceder
                             </x-button>
                         </form>
                         <div class="grid mt-5 text-center">O Inicia sesión con</div>

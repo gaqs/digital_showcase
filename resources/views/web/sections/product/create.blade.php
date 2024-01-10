@@ -50,13 +50,13 @@
                             {{ business_list_per_id(old('business_id', $product->business_id ?? null), Auth::user()->id ) }}
                         </select>
                         <div class="text-neutral-400 text-xs leading-normal ml-2">*Seleccione en este listado uno de sus tiendas, la cual venderá el producto que va a ingresar.</div>
-                        <span id="business_id_error" class="text-rose-500 text-xs ml-3 hidden"></span>
+                        <span id="business_id_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                     </div>
 
                     <div class="col-span-4">
                         <div>
                             <x-input-large id="input_product-stock" name="stock" type="number" class="mt-1 block w-full" :value="old('stock', $product->stock ?? null)" placeholder="Stock" required/>
-                            <span id="stock_error" class="text-rose-500 text-xs ml-3 hidden"></span>
+                            <span id="stock_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                     </div>
 
@@ -64,21 +64,21 @@
                         <select data-te-select-init data-te-select-size="lg" data-te-select-init data-te-select-filter="true"  id="category_id" name="category_id" required>
                             {{ category_list( old('category_id', $product->category_id ?? null) ) }}
                         </select>
-                        <span id="category_id_error" class="text-rose-500 text-xs ml-3 hidden"></span>
+                        <span id="category_id_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                     </div>
 
                     <div class="col-span-6">
                         <x-input-large id="input_product-price" name="price" type="text"
                             class="mt-1 block w-full" oninput="formatearPrecio(this)" :value="old('price', $product->price ?? null)" placeholder="Precio"
                             required />
-                        <span id="price_error" class="text-rose-500 text-xs ml-3 hidden"></span>
+                        <span id="price_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                     </div>
 
                     <div class="col-span-12 mb-3">
                         <x-textarea maxlength="2000" id="textarea_business-description" name="description"
                             placeholder="Descripcion">{{ old('description', $product->description ?? null) }}
                         </x-textarea>
-                        <span id="description_error" class="text-rose-500 text-xs ml-3 hidden"></span>
+                        <span id="description_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                     </div>
                 </div>
             </div>
@@ -100,7 +100,7 @@
 
                         </div>
                         <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB.</div>
-                        <span id="dz_product_error" class="text-rose-500 text-xs ml-3 hidden"></span>
+                        <span id="dz_product_error" class="text-rose-500 text-xs ml-3 hidden">Agregue al menos una imagen.</span>
                     </div>
                 </div>
             </div>
@@ -166,7 +166,7 @@
                     headers: {
                         'X-CSRF-TOKEN': _token
                     },
-                    sucess: function(data){
+                    success: function(data){
                         file.previewElement.remove();
                     }
                 });
@@ -178,24 +178,29 @@
     });
 
     var firstError = '';
+    var fields = document.querySelectorAll('#product_edit_form input, #product_edit_form select, #product_edit_form textarea');
+
+    //vuelve a ocultar los mensajes de error cuando se ingrese informacion en los input
+    fields.forEach(field => {
+        field.addEventListener("keydown", function(e){
+            const errorSpan = document.getElementById(`${field.name}_error`);
+            errorSpan.classList.add('hidden');
+            firstError = '';
+        });
+    });
+
     document.querySelector("button[type=submit]").addEventListener("click", function(e) {
         e.preventDefault();
         e.stopPropagation();
 
         //validacion de datos y agrega error si no esta lleno, ademas valida si todo esta
-        var completeForm = false;
-        var fields = document.querySelectorAll('#product_edit_form input, #product_edit_form select, #product_edit_form textarea');
+        let completeForm = true;
         fields.forEach(field => {
             const errorSpan = document.getElementById(`${field.name}_error`);
             if (field.value.trim() === '' || field.value == 0) {
-                if( firstError == '' ){
-                    firstError = field;
-                }
-                field.classList.add('border-rose-500');
+                firstError = firstError == '' ? field : firstError;
+                completeForm = false
                 errorSpan.classList.remove('hidden');
-                errorSpan.textContent = 'Campo obligatorio';
-            }else{
-                completeForm = true;
             }
         });
 
@@ -205,7 +210,6 @@
             }else{
                 var image_error = document.querySelector('#dz_product_error');
                 image_error.classList.remove('hidden');
-                image_error.textContent = 'Agregue al menos una imagen.';
                 //form.submit();
             }
         }
