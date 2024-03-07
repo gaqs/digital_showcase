@@ -12,7 +12,7 @@
             <footer class="flex justify-between items-center mb-1">
 
                 @php
-                    $avatar = ($comment->user->avatar == null) ? 'uploads/users/default_avatar.jpg' : 'uploads/users/'.$comment->user->id.'/'.$comment->user->avatar;
+                    $avatar = ($comment->user->avatar == null) ? 'uploads/users/default/_avatar.jpg' : 'uploads/users/'.$comment->user->id.'/'.$comment->user->avatar;
                 @endphp
 
                 <div class="flex items-center">

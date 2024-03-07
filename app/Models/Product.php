@@ -46,6 +46,7 @@ class Product extends Model
         'mercadolibre',
         'facebook',
         'yapo',
+        'aliexpress',
         'web',
         'others',
         'stock'

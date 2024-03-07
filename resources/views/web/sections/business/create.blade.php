@@ -51,14 +51,14 @@
                                 class="mt-1 block w-full" :value="old('name', $business->name ?? null)" placeholder="Nombre negocio" required />
                             <span id="name_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
-                        <div class="mt-1">
+                        <div class="md:col-span-1 col-span-2 mt-1">
                             <select data-te-select-init data-te-select-size="lg" data-te-select-init data-te-select-filter="true" id="category_id" name="category_id" required>
                                 {{ category_list( old('category_id', $business->category_id ?? null) ) }}
                             </select>
                             <label data-te-select-label-ref>Categoría</label>
                             <span id="category_id_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
-                        <div>
+                        <div class="md:col-md-2 col-span-1">
                             <x-input-large id="input_business-keywords" name="keywords" type="text"
                                 class="mt-1 block w-full" :value="old('keywords', $business->keywords ?? null)" placeholder="Palabras clave*" required/>
                             <div class="text-neutral-400 text-xs leading-normal ml-2">*Ingresa palabras separadas por coma (,) que describan tu negocio. Así ayudarán al motor de búsqueda a encontrar información relevante más fácilmente.</div>
@@ -102,7 +102,10 @@
                             <x-input-large id="input_business-yapo" name="yapo" type="url"
                                 class="mt-1 block w-full" :value="old('yapo', $business->yapo ?? null)" placeholder="Yapo" />
                         </div>
-
+                        <div>
+                            <x-input-large id="input_business-aliexpress" name="aliexpress" type="url"
+                                class="mt-1 block w-full" :value="old('aliexpress', $business->aliexpress ?? null)" placeholder="Aliexpress" />
+                        </div>
                     </div>
 
                 </div>
@@ -131,26 +134,26 @@
                                 class="mt-1 block w-full" :value="old('longitude', $business->longitude ?? '-72.93816')" placeholder="Longitud"
                                 required readonly />
                         </div>
-                        <div>
+                        <div class="col-span-2 md:col-span-1">
                             <x-input-large id="input_business-phone_1" name="phone" type="text"
                                 class="mt-1 block w-full" :value="old('phone', $business->phone ?? null)" placeholder="Teléfono" required />
                             <span id="phone_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
-                        <div>
-                            <x-input-large id="input_business-phone_2" name="phone_2" type="text"
-                                class="mt-1 block w-full" :value="old('phone_2', $business->phone_2 ?? null)" placeholder="Teléfono #2" />
+                        <div class="col-span-2 md:col-span-1">
+                            <x-input-large id="input_business-whatsapp" name="whatsapp" type="text" maxlength="12"
+                                class="mt-1 block" :value="old('whatsapp', $business->whatsapp ?? null)" placeholder="Whatsapp" />
                         </div>
-                        <div>
+                        <div class="col-span-2 md:col-span-1">
                             <x-input-large id="input_business-email" name="email" type="text"
                                 class="mt-1 block w-full" :value="old('email', $business->email ?? null)" placeholder="Correo electrónico" required />
                             <span id="email_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
-                        <div>
+                        <div class="col-span-2 md:col-span-1">
                             <x-input-large id="input_business-email_2" name="email_2" type="text"
                                 class="mt-1 block w-full" :value="old('email_2', $business->email_2 ?? null)" placeholder="Correo electrónico #2" />
                         </div>
-                        <div class="col-span-2">
-                            <x-input-large id="input_business-web" name="web" type="text"
+                        <div class="col-span-2 md:col-span-1">
+                            <x-input-large id="input_business-web" name="web" type="url"
                                 class="mt-1 block w-full" :value="old('web', $business->web ?? null)" placeholder="Página web" />
                         </div>
 
@@ -162,7 +165,7 @@
                         <i class="fa-solid fa-images text-rose-500"></i> Imágenes y opciones de galería
                     </h5>
                     <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-4">
+                        <div class="col-span-12 md:col-span-4">
                             <label for="dz_profile" class="text-neutral-500"> Logo de empresa </label>
                             <div id="dz_profile" class="dropzone dz-clickeable grid grid-cols-1 justify-items-center">
                                 @csrf
@@ -173,9 +176,9 @@
 
                             </div>
                             <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB.</div>
-                            <span id="dz_profile_error" class="text-rose-500 text-xs ml-3 hidden">Imagen obligatoria.</span>
+                            <span id="dz_profile_error" class="text-rose-500 text-xs"></span>
                         </div>
-                        <div class="col-span-8">
+                        <div class="col-span-12 md:col-span-8">
                             <label for="dz_gallery" class="text-neutral-500"> Galería </label>
                             <div id="dz_gallery" class="dropzone dz-clickeable grid grid-cols-3 justify-items-center">
                                 @csrf
@@ -186,7 +189,7 @@
 
                             </div>
                             <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB. Máximo 9 imágenes.</div>
-                            <span id="dz_gallery_error" class="text-rose-500 text-xs ml-3 hidden">Agregue al menos una imagen.</span>
+                            <span id="dz_gallery_error" class="text-rose-500 text-xs"></span>
                         </div>
 
                         <div class="flex items-center gap-4 mt-3">
@@ -204,12 +207,10 @@
     <script type="module">
         var folder = '<?= $business->folder ?? null ?>';
         var avatar = '<?= $avatar ?? null ?>';
-        var images = '<?= json_encode($gallery ?? null) ?>';
-        var gal = ( images != 'null') ? Object.values(JSON.parse(images)) : '';
+        var images = '<?= isset($gallery) ? json_encode($gallery):null ?>';
+        var gal = ( images != '') ? Object.values(JSON.parse(images)) : '';
 
         let form = document.getElementById('business_edit_form');
-        let sendForm = false;
-
         var _token = $('meta[name="csrf-token"]').attr('content');
 
         let profile = new dz("#dz_profile", {
@@ -225,41 +226,44 @@
             resizeWidth: 500,
             resizeHeight: 500,
             resizeMethod: 'crop',
+            maxFilesize: 20000000,
             headers: {
                 'X-CSRF-TOKEN': _token
             },
             init: function(){
-                this.on("sending", function(file, xhr, data) {
+                this.on("sending", function(file, xhr, data) { //añade nombre carpeta si usuario edita el negocio
                     data.append( "folder", folder );
                 });
 
-                if( avatar != ''){
+                if( avatar != ''){   //añade imagen si es que el usuario edita el negocio
                     let mockFile = { name: avatar, size: 12345 };
                     this.displayExistingFile(mockFile, '/uploads/business/'+avatar);
                 }
             },
+            addedfiles: function(file){
+                for (let i=0; i < file.length; i++) {
+                    if (file[i].size > 20000000) { // This is the maximum file size in bytes
+                        $('#dz_profile_error').html('El peso maximo de la imagen debe ser de 2MB');
+                        file[i].previewElement.remove();
+                    }
+                }
+            },
             removedfile: function(file){
                 var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
-                if( r == true && folder != '' ){
+                if( r == true && folder != '' ){//elimina imagenes previamente subidas o al momento de la creacion
                     $.ajax({
                         type: 'POST',
                         url: "{{ route('business.delete_file') }}",
-                        data: { file: folder+'/'+file.name },
+                        data: { file: file.name },
                         headers: {
                             'X-CSRF-TOKEN': _token
                         },
                         success: function(data){
-                            if( data ){
-                                console.log('server');
-                                file.previewElement.remove();
-                            }
+                            if( data ){ file.previewElement.remove(); }
                         }
                     });
 
-                }else if( r == true){
-                    console.log('preview');
-                    file.previewElement.remove();
-                }
+                }else if( r == true ){ file.previewElement.remove(); }
             }
         });
 
@@ -275,23 +279,31 @@
             autoProcessQueue: false,
             uploadMultiple: true,
             parallelUploads: 10,
-            maxFilesize: 3000000,
+            maxFilesize: 20000000,
             headers: {
                 'X-CSRF-TOKEN': _token
             },
             init: function(){
-                this.on("sending", function(file, xhr, data) {
+                this.on("sending", function(file, xhr, data) { //añade nombre carpeta si usuario edita el negocio
                     data.append( "folder", folder );
                 });
 
-                if( gal != '' ){
+                if( gal != '' ){ //añade imagenes si es que el usuario edita el negocio
                     gal.forEach(x => {
                         let mockFile = { name: x, size: 12345 };
                         this.displayExistingFile(mockFile, '/uploads/business/'+folder+'/'+x);
                     });
                 }
             },
-            removedfile: function(file){
+            addedfiles: function(file){
+                for (let j=0; j < file.length; j++) {
+                    if (file[j].size > 20000000) { // This is the maximum file size in bytes
+                        $('#dz_gallery_error').html('El peso máximo de las imágenes debe ser de 2MB');
+                        file[j].previewElement.remove();
+                    }
+                }
+            },
+            removedfile: function(file){ //elimina imagenes previamente subidas o al momento de la creacion
                 var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
                 if( r == true && folder != '' ){
                     $.ajax({
@@ -302,17 +314,11 @@
                             'X-CSRF-TOKEN': _token
                         },
                         success: function(data){
-                            if(data){
-                                file.previewElement.remove();
-                            }
-
+                            if(data){ file.previewElement.remove(); }
                         }
                     });
 
-                }else if( r == true && folder == ''){
-                    console.log('preview');
-                    file.previewElement.remove();
-                }
+                }else if( r == true && folder == ''){ file.previewElement.remove();  }
             }
         });
 
@@ -343,19 +349,25 @@
                 }
             });
 
-            if( allFull ){
+            //1era vez subiendo imagenes y ambas deben estar con imagenes
+            if( allFull && folder == '' ){
 
+                if( profile.getQueuedFiles().length > 0 && gallery.getQueuedFiles().length >= 3 ){
+                    profile.processQueue();
+                }else{
+                    alert('Por favor, asegúrate de subir al menos una imagen en perfil y minimo tres en la galeria.');
+                }
+            }
+
+            //editando imagenes
+            if( allFull && folder != '' ){
                 if( profile.getQueuedFiles().length > 0 ){
                     profile.processQueue();
-                }
-                else if( gallery.getQueuedFiles().length > 0 ){
+                }else if( gallery.getQueuedFiles().length > 0  ){
                     gallery.processQueue();
                 }else{
                     form.submit();
-                    console.log('form submit');
                 }
-            }else{
-                console.log('campos vacios');
             }
 
             if (firstError) {
@@ -375,9 +387,8 @@
             }
         });
 
-        gallery.on("successmultiple", function(files, response) {
-            form.submit();
-        });
+        gallery.on("successmultiple", function(files, response) { form.submit(); });
+
 
     </script>
 @endsection

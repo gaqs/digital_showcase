@@ -43,7 +43,7 @@
                 <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
                         <x-input-large id="input_product-name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $product->name ?? null)" placeholder="Nombre producto" required />
-                        <span id="name_error" class="text-rose-500 text-xs ml-3 hidden"></span>
+                        <span id="name_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                     </div>
                     <div class="col-span-8 mt-1">
                         <select data-te-select-init data-te-select-size="lg" id="business_id" name="business_id" required>
@@ -83,6 +83,32 @@
                 </div>
             </div>
 
+            <div id="product_create_social" class="block rounded-lg bg-white p-6 mt-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+                <h5 class="mb-2 pb-1 font-medium leading-tight text-neutral-800 dark:text-neutral-50">
+                    <i class="fa-solid fa-share-nodes text-rose-500"></i> Redes sociales
+                </h5>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <x-input-large id="input_product-mercadolibre" name="mercadolibre" type="url"
+                            class="mt-1 block w-full" :value="old('mercadolibre', $product->mercadolibre ?? null)" placeholder="Mercado Libre" />
+                    </div>
+                    <div>
+                        <x-input-large id="input_product-facebook" name="facebook" type="url"
+                            class="mt-1 block w-full" :value="old('facebook', $product->facebook ?? null)" placeholder="Facebook" />
+                    </div>
+                    <div>
+                        <x-input-large id="input_product-yapo" name="yapo" type="url"
+                            class="mt-1 block w-full" :value="old('yapo', $product->yapo ?? null)" placeholder="Yapo" />
+                    </div>
+                    <div>
+                        <x-input-large id="input_product-aliexpress" name="aliexpress" type="url"
+                            class="mt-1 block w-full" :value="old('aliexpress', $product->aliexpress ?? null)" placeholder="Aliexpress" />
+                    </div>
+                </div>
+
+            </div>
+
             <div id="product_gallery" class="block rounded-lg bg-white p-6 mt-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                 <h5 class="mb-2 pb-1 font-medium leading-tight text-neutral-800 dark:text-neutral-50">
                     <i class="fa-solid fa-images text-rose-500"></i> Galería
@@ -100,7 +126,7 @@
 
                         </div>
                         <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB.</div>
-                        <span id="dz_product_error" class="text-rose-500 text-xs ml-3 hidden">Agregue al menos una imagen.</span>
+                        <span id="dz_product_error" class="text-rose-500 text-xs dz_product_error"></span>
                     </div>
                 </div>
             </div>
@@ -111,15 +137,16 @@
 
         </form>
 
-
     </div>
 </section>
 <script type="module">
-    let _token = $('meta[name="csrf-token"]').attr('content');
-    let form = document.getElementById('product_edit_form');
     var folder = '<?= $product->folder ?? null ?>';
-    var images = '<?= json_encode($gallery ?? null) ?>';
-    var gal = ( images != 'null') ? Object.values(JSON.parse(images)) : '';
+    var images = '<?= isset($gallery) ? json_encode($gallery):null ?>';
+    var gal = ( images != '') ? Object.values(JSON.parse(images)) : '';
+
+    let form = document.getElementById('product_edit_form');
+
+    let _token = $('meta[name="csrf-token"]').attr('content');
 
     let gallery = new dz("#dz_product", {
         url:"{{ route('product.gallery') }}",
@@ -133,7 +160,7 @@
         autoProcessQueue: false,
         uploadMultiple: true,
         parallelUploads: 4,
-        maxFilesize: 3000000,
+        maxFilesize: 20000000,
         resizeWidth: 800,
         resizeHeight: 700,
         resizeMethod: 'crop',
@@ -141,12 +168,8 @@
             'X-CSRF-TOKEN': _token
         },
         init: function(){
-
             this.on("sending", function(file, xhr, data) {
-                let select = document.querySelector('[name="business_id"]').value;
-
                 data.append("folder", folder );
-                data.append("business_id", select );
             });
 
             if( gal != '' ){
@@ -156,7 +179,15 @@
                 });
             }
         },
-        removedfile: function(file){
+        addedfiles: function(file){
+            for (let j=0; j < file.length; j++) {
+                if (file[j].size > 20000000) { // This is the maximum file size in bytes
+                    $('#dz_product_error').html('El peso máximo de las imágenes debe ser de 2MB');
+                    file[j].previewElement.remove();
+                }
+            }
+        },
+        removedfile: function(file){ //elimina imagenes previamente subidas o al momento de la creacion
             var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
             if( r == true && folder != '' ){
                 $.ajax({
@@ -167,21 +198,19 @@
                         'X-CSRF-TOKEN': _token
                     },
                     success: function(data){
-                        file.previewElement.remove();
+                        if(data){ file.previewElement.remove(); }
                     }
                 });
 
-                file.previewElement.remove();
-
-            }
+            }else if( r == true && folder == ''){ file.previewElement.remove();  }
         }
     });
 
     var firstError = '';
-    var fields = document.querySelectorAll('#product_edit_form input, #product_edit_form select, #product_edit_form textarea');
+    var requiredFields = document.querySelectorAll('#product_edit_form input, #product_edit_form select, #product_edit_form textarea');
 
     //vuelve a ocultar los mensajes de error cuando se ingrese informacion en los input
-    fields.forEach(field => {
+    requiredFields.forEach(field => {
         field.addEventListener("keydown", function(e){
             const errorSpan = document.getElementById(`${field.name}_error`);
             errorSpan.classList.add('hidden');
@@ -194,23 +223,30 @@
         e.stopPropagation();
 
         //validacion de datos y agrega error si no esta lleno, ademas valida si todo esta
-        let completeForm = true;
-        fields.forEach(field => {
+        let allFull = true;
+        requiredFields.forEach(field => {
             const errorSpan = document.getElementById(`${field.name}_error`);
             if (field.value.trim() === '' || field.value == 0) {
                 firstError = firstError == '' ? field : firstError;
-                completeForm = false
+                allFull = false
                 errorSpan.classList.remove('hidden');
             }
         });
 
-        if(completeForm){
+        //1era vez subiendo imagenes o editando
+        if( allFull && folder == '' ){
             if( gallery.getQueuedFiles().length > 0 ){
                 gallery.processQueue();
             }else{
-                var image_error = document.querySelector('#dz_product_error');
-                image_error.classList.remove('hidden');
-                //form.submit();
+                alert('Por favor, asegúrate de subir al menos una imagen a su galería');
+            }
+        }
+        //editando imagenes
+        if( allFull && folder != '' ){
+            if( gallery.getQueuedFiles().length > 0 ){
+                gallery.processQueue();
+            }else{
+                form.submit();
             }
         }
 
@@ -227,9 +263,6 @@
     gallery.on("successmultiple", function(files, response) {
         form.submit();
     });
-
-
-
 
 </script>
 @endsection

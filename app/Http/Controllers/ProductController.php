@@ -113,7 +113,10 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $product::find($request->id)->update($request->all());
+        $data = $request->all();
+        unset($data['_token']);
+
+        $product::find($request->id)->update($data);
 
         return Redirect::route('product.edit', ['id' => $request->id])->with(['status' => 'success', 'message' => 'Producto editado correctamente']);
     }

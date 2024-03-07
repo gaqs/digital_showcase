@@ -10,7 +10,7 @@ module.exports = {
         "./resources/**/*.vue",
         "./node_modules/tw-elements/dist/js/**/*.js",
         "./public/js/*",
-        './vendor/usamamuneerchaudhary/commentify/*'
+        './package/usamamuneerchaudhary/commentify/*'
     ],
 
     theme: {

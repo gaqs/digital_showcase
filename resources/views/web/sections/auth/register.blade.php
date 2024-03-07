@@ -30,11 +30,11 @@
                             <x-input-error :messages="$errors->get('email')" class="mt-1" />
                         </div>
                         <div class="mt-4">
-                            <x-input-float id="input_password" type="password" name="password" required placeholder="Contraseña" />
+                            <x-input-float id="input_password" type="text" name="password" required placeholder="Contraseña" />
                             <x-input-error :messages="$errors->get('password')" class="mt-1" />
                         </div>
                         <div class="mt-4">
-                            <x-input-float id="input_password_2" type="password" name="password_confirmation" required placeholder="Confirmar contraseña" />
+                            <x-input-float id="input_password_2" type="text" name="password_confirmation" required placeholder="Confirmar contraseña" />
                             <x-input-error :messages="$errors->get('password')" class="mt-1" />
                         </div>
 

@@ -28,7 +28,6 @@ class BusinessFactory extends Factory
             'description' => fake()->realText(200, 2),
             'address' => fake()->streetAddress(),
             'phone' => fake()->e164PhoneNumber(),
-            'phone_2' => fake()->e164PhoneNumber(),
             'web' => fake()->url(),
             'facebook' => fake()->url(),
             'instagram' => fake()->url(),
@@ -36,6 +35,8 @@ class BusinessFactory extends Factory
             'tiktok' => fake()->url(),
             'mercadolibre' => fake()->url(),
             'yapo' => fake()->url(),
+            'whatsapp' => fake()->e164PhoneNumber(),
+            'aliexpress' => fake()->url(),
             'latitude' => fake()->latitude(-40.216944, -44.050278),
             'longitude' => fake()->longitude(-74.816944, -71.566944),
         ];

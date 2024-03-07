@@ -38,7 +38,10 @@ class ProductsTable extends DataTableComponent
             ImageColumn::make('Avatar')
                 ->location(
                     fn($row) => asset('uploads/products/'.$row->folder.'/'.show_product_picture($row->folder))
-            ),
+                )
+                ->attributes(fn($row) => [
+                    'style' => 'max-width: 100px'
+                ]),
             Column::make('Nombre', 'name')
                 ->sortable()
                 ->searchable(),

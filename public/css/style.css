@@ -74,6 +74,7 @@
     margin: 1rem auto 0;
     padding: 0;
     justify-content: center;
+    max-width: 200px;
   }
 
   .thumbnail {
@@ -172,5 +173,9 @@
 #update_profile,
 #update_passowrd{
     scroll-margin-top: 80px;
+}
+
+.dropzone.dz-started .dz-message{
+    display: inherit !important;
 }
 

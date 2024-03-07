@@ -9,7 +9,7 @@
             @foreach($business_comments as $bc)
 
             @php
-                $avatar = ($bc->u_avatar == null) ? 'uploads/users/default_avatar.jpg' : 'uploads/users/'.$bc->u_id.'/'.$bc->u_avatar;
+                $avatar = ($bc->u_avatar == null) ? 'uploads/users/default/_avatar.jpg' : 'uploads/users/'.$bc->u_id.'/'.$bc->u_avatar;
             @endphp
 
             <div class="col-span-12 md:col-span-4">
@@ -57,7 +57,8 @@
             @foreach($products_comments as $pc)
 
             @php
-                $avatar = ($pc->u_avatar == null) ? 'uploads/users/default_avatar.jpg' : 'uploads/users/'.$pc->u_id.'/'.$pc->u_avatar;
+
+                $avatar = ($pc->u_avatar == null) ? 'uploads/users/default/_avatar.jpg' : 'uploads/users/'.$pc->u_id.'/'.$pc->u_avatar;
             @endphp
 
             <div class="col-span-12 md:col-span-4">

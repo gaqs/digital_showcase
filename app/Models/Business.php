@@ -50,7 +50,6 @@ class Business extends Model
         'description',
         'address',
         'phone',
-        'phone_2',
         'web',
         'facebook',
         'instagram',

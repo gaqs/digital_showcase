@@ -310,7 +310,7 @@
                                 <img src="{{ asset('img/icons/facebook_icon.png') }}" alt="" width="50"
                                     class="">
                             </a>
-                            <a href="{{ $business->instagran }}" target="_blank">
+                            <a href="{{ $business->instagram }}" target="_blank">
                                 <img src="{{ asset('img/icons/instagram_icon.png') }}" alt="" width="50"
                                     class="">
                             </a>
@@ -334,7 +334,7 @@
                                 <img src="{{ asset('img/icons/aliexpress_icon.png') }}" alt=""
                                     width="50" class="">
                             </a>
-                            <a href="{{ $business->whatapp }}" target="_blank">
+                            <a href="https://wa.me/{{ $business->whatsapp }}" target="_blank">
                                 <img src="{{ asset('img/icons/whatsapp_icon.png') }}" alt="" width="50"
                                     class="">
                             </a>

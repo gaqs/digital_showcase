@@ -48,7 +48,7 @@
                             <img class="rounded-t-lg object-cover md:h-auto md:w-60 md:rounded-none md:rounded-l-lg"
                                 src="{{ asset($avatar) }}" alt="" />
 
-                            <div class="flex flex-col justify-start p-6 pb-0">
+                            <div class="flex flex-col justify-start p-6 pb-0 w-full">
                                 <h5 class="text-xl font-medium text-neutral-900 dark:text-neutral-50">
                                     {{ $business[$i]->name }}
                                 </h5>

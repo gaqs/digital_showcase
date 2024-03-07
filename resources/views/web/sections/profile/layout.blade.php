@@ -40,7 +40,7 @@
                 </button>
 
 
-                <div id="navigation_list" class="!visible hidden md:grid " data-te-collapse-item aria-labelledby="navigation">
+                <div id="navigation_list" class="!visible hidden md:grid mb-5" data-te-collapse-item aria-labelledby="navigation">
                     <div class="block rounded-lg bg-white py-6 px-0 pl-1 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 text-neutral-500 text-sm">
                         <div class="-mr-1">
                             <a href="{{ route('profile.home') }}#create_business" aria-current="true"
