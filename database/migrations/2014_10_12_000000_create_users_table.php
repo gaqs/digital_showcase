@@ -18,17 +18,9 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('address')->nullable();
-            $table->string('description', 1000)->nullable();
-            $table->string('facebook')->nullable();
-            $table->string('instagram')->nullable();
-            $table->string('twitter')->nullable();
-            $table->string('tiktok')->nullable();
-            $table->string('avatar')->nullable();
-            $table->string('banner')->nullable();
             $table->string('ext_id')->nullable();
             $table->string('ext_auth')->nullable();
+            $table->emun('role',['user','editor','admin','superadmin'])->default('user');
             $table->rememberToken();
             $table->timestamps();
         });

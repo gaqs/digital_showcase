@@ -1,9 +1,8 @@
 <x-app-layout>
     <div class="container-xl pt-28 pb-20 md:pt-40 md:pb-20">
-        <div class="grid grid-cols-11">
-            <div class="col-span-12 md:col-start-4 md:col-span-5">
-                <div
-                    class="block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+        <div class="grid grid-cols-12">
+            <div class="col-span-12 md:col-start-5 md:col-span-4">
+                <div class="block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                     <h5 class="py-4 text-xl font-semibold leading-tight text-neutral-800 dark:text-neutral-50 text-center">
                         Inicia sesión
                     </h5>

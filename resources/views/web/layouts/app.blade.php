@@ -11,13 +11,14 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
 
-        <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+        <!-- Pollyfill? -->
 
         <!-- Scripts -->
         @vite(['resources/css/app.css','resources/js/app.js'])
 
-        <link rel="stylesheet" href="{{ asset('css/style.css') }}?v=1.1">
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}?v=1.2">
         <link rel="stylesheet" href="{{ asset('css/share-buttons.css') }}">
 
     </head>

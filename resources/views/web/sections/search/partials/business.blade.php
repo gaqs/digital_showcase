@@ -2,9 +2,9 @@
     @include('web.sections.static.partials.search')
 </div>
 
-<div class="md:container container-xl">
+<div class="md:container-xl container-xl">
     <div class="grid grid-cols-12 gap-4">
-        <div class="col-span-12 md:col-span-7">
+        <div class="col-span-12 md:col-span-6">
 
             @foreach ( $results as $r )
             @php
@@ -14,13 +14,13 @@
                 <div id="business_container" class="mb-4 border-4 border-neutral flex flex-col rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 md:flex-row cursor-pointer" >
                     <div id="marker_info" class="hidden" data-lat="{{ $r->latitude }}" data-lng="{{ $r->longitude }}" data-name="{{ $r->name }}" data-address="{{ $r->address }}"></div>
                     <img class="h-96 w-full rounded-t-lg object-cover md:h-auto md:w-48 md:rounded-none md:rounded-l-lg" src="{{ asset($avatar ?? 'img/business/1.jpg') }}" alt="" />
-                    <div class="flex flex-col justify-start p-6 pb-0">
+                    <div class="flex flex-col justify-start p-6 pb-0 w-full">
                         <h5 class="text-xl font-medium text-neutral-900 dark:text-neutral-50">
                             {{ $r->name }}
                         </h5>
                         <span class="mb-4"><i class="text-rose-500 fa-solid fa-location-dot"></i> {{ $r->address }}</span>
                         <p class="text-base text-sm text-neutral-600 dark:text-neutral-200 mb-2">
-                            {{ substr($r->description, 0, 100) }}...
+                            {{ strip_tags(substr($r->description, 0, 200)) }}...
                             <br>
                         </p>
 
@@ -60,82 +60,59 @@
                 {{ $results->onEachSide(2)->links('vendor.pagination.tailwind') }}
             </div>
         </div>
-        <div class="hidden md:block md:col-span-5 sticky top-0 h-screen">
-            <div id="mapSearch" class="h-full"></div>
-            <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAP_KEY') }}&callback=initMapSearch&libraries=places&v=weekly" defer></script>
+        <div class="hidden md:block md:col-span-6 sticky top-0 h-screen">
+            <div id="mapSearch" class="h-full w-full"></div>
         </div>
     </div>
 </div>
 <script>
 
-function initMapSearch() {
-    const map = new google.maps.Map(document.getElementById("mapSearch"), {
-        center: { lat: -41.47002, lng: -72.94078 },
-        zoom: 5,
-        mapTypeControl: false,
-    });
+var lat_value = '-41.47002';
+var lon_value = '-72.94078';
 
-    var locations = document.querySelectorAll('#marker_info');
+window.addEventListener('load', function() {
+    // Crear nuevo marcador (arrastrable)
+    const map = L.map('mapSearch').setView(coorDefault, 14);
 
-    let infowindows = [];
+    // Añadir capa de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
-    locations.forEach(l => {
-        const lat = parseFloat(l.getAttribute('data-lat'));
-        const lng = parseFloat(l.getAttribute('data-lng'));
-        const name = l.getAttribute('data-name');
-        const address = l.getAttribute('data-address');
+    marker = L.marker([lat_value, lon_value], {
+        draggable: false,
+    }).addTo(map);
 
-        const marker = new google.maps.Marker({
-            position: { lat: lat, lng: lng },
-            map,
-            anchorPoint: new google.maps.Point(0, -29),
-        });
+    businesses = document.querySelectorAll('#business_container');
 
-        const infowindowContent = `<div id="infowindow-content-search">
-                                        <span id="place-name" class="title text-lg font-semibold"><b>${name}</b></span><br />
-                                        <span id="place-address" class="font-medium">
-                                            <i class="text-rose-500 fa-solid fa-location-dot"></i> ${address}
-                                        </span>
-                                        <br><br>
-                                        <span>
-                                            <a href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" target="_blank" class="text-danger-700 focus:outline-none mt-3">
-                                                Ver en Google Maps
-                                            </a>
-                                        </span>
-                                    </div>`;
+    businesses.forEach(function(business) {
+        var marker_info = business.querySelector('#marker_info');
+        
+        business.addEventListener('click', function() {
 
-        const infowindow = new google.maps.InfoWindow();
-        infowindow.setContent(infowindowContent);
+            var lat = marker_info.getAttribute('data-lat');
+            var lng = marker_info.getAttribute('data-lng');
+            var name = marker_info.getAttribute('data-name');
+            var address = marker_info.getAttribute('data-address');
 
-        infowindows.push(infowindow);
+            // Actualizar la posición del marcador
+            marker.setLatLng([lat, lng]);
+            map.setView([lat, lng], 16);
 
-        var business = l.parentNode;
-
-        business.addEventListener('click', () => {
-
-            closeAllInfoWindows();
-
-            map.setCenter(marker.getPosition());
-            map.setZoom(15);
-            infowindow.open(map,marker);
+            // Quitar border-danger de todos los negocios
+            businesses.forEach(function(b) {
+                b.classList.remove('border-danger');
+            });
 
             business.classList.add('border-danger');
 
+            // Mostrar popup con información del negocio
+            marker.bindPopup(`<b>${name}</b><br>${address}`).openPopup();
         });
+
     });
-
-    function closeAllInfoWindows() {
-        document.querySelectorAll('#business_container').forEach(business => {
-            business.classList.remove('border-danger');
-        })
-        infowindows.forEach(info => {
-            info.close();
-        });
-    }
-
-}
-
-window.initMapSearch = initMapSearch;
+    
+});
 </script>
 
 

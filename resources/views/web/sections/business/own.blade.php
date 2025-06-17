@@ -72,8 +72,7 @@
                                     </div>
                                 </div>
                                 <p class="text-base text-sm text-neutral-600 dark:text-neutral-200 mb-2">
-                                    {{ substr($business[$i]->description, 0, 100) }}...<x-link
-                                        class="text-right text-sm mb-4" href="#">Leer más &raquo;</x-link>
+                                    {{ strip_tags(substr($business[$i]->description, 0, 100)) }}...<x-link class="text-right text-sm mb-4" href="#">Leer más &raquo;</x-link>
                                     <br>
                                 </p>
 
@@ -85,7 +84,7 @@
                                                 <x-button value="success"><i class="fa-solid fa-eye"></i> Ver</x-button>
                                             </a>
                                             <a href="{{ route('business.edit', ['id' => $business[$i]->id]) }}">
-                                                <x-button><i class="fa-solid fa-pen-to-square"></i> Editar</x-button>
+                                                <x-button value="primary"><i class="fa-solid fa-pen-to-square"></i> Editar</x-button>
                                             </a>
                                         </div>
                                         <form id="delete_something" class="ml-1" action="{{ route('business.destroy',['id' => $business[$i]->id ]) }}" method="post">

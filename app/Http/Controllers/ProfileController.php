@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\UserProfile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,17 +18,18 @@ class ProfileController extends Controller
 
     public function index(Request $request): View
     {
-        //dd($request->user());
         return view('web.sections.profile.home', [
             'user' => $request->user(),
+            'profile' => UserProfile::where('user_id', $request->user()->id)->first(),
         ]);
     }
 
     public function show(Request $request)
     {
         $data['user'] = User::find($request->id);
+        $data['profile'] = UserProfile::where('user_id', $request->id)->first();
         $data['business'] = Business::where('user_id',$request->id)->get();
-
+        
         return view('web.sections.profile.show', $data);
     }
 
@@ -38,6 +40,7 @@ class ProfileController extends Controller
     {
         return view('web.sections.profile.edit', [
             'user' => $request->user(),
+            'profile' => UserProfile::where('user_id', $request->user()->id)->first(),
         ]);
     }
 
@@ -46,13 +49,21 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+
+        //$request->user()->fill($request->validated());
+        $user = $request->user();
+        $user->fill($request->only(['name','lastname','email']));
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
+
+        //Guardar la información del perfil
+        $user_profile = UserProfile::where('user_id', $request->user()->id)->first();
+        $user_profile->fill($request->only(['phone','address','description','facebook','instagram','x','tiktok']));
+        $user_profile->save();
 
         return Redirect::route('profile.edit')->with(['status' => 'success', 'message' => 'Usuario editado correctamente']);
     }

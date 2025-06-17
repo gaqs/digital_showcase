@@ -17,7 +17,7 @@ return new class extends Migration
             $table->double('score');
             $table->integer('qty_comments');
             $table->integer('user_id');
-            $table->integer('category_id');
+            $table->integer('categories_id');
             $table->string('keywords')->nullable();
             $table->string('email');
             $table->string('email_2')->nullable();

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('business_id');
             $table->integer('user_id');
-            $table->integer('category_id');
+            $table->integer('categories_id');
             $table->string('name');
             $table->string('description');
             $table->string('price')->nullable();

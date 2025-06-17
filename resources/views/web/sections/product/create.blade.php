@@ -61,10 +61,10 @@
                     </div>
 
                     <div class="col-span-6 mb-3 mt-1">
-                        <select data-te-select-init data-te-select-size="lg" data-te-select-init data-te-select-filter="true"  id="category_id" name="category_id" required>
-                            {{ category_list( old('category_id', $product->category_id ?? null) ) }}
+                        <select data-te-select-init data-te-select-size="lg" data-te-select-init data-te-select-filter="true"  id="categories_id" name="categories_id" required>
+                            {{ category_list( old('categories_id', $product->categories_id ?? null) ) }}
                         </select>
-                        <span id="category_id_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
+                        <span id="categories_id_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                     </div>
 
                     <div class="col-span-6">
@@ -75,9 +75,8 @@
                     </div>
 
                     <div class="col-span-12 mb-3">
-                        <x-textarea maxlength="2000" id="textarea_business-description" name="description"
-                            placeholder="Descripcion">{{ old('description', $product->description ?? null) }}
-                        </x-textarea>
+                        <div id="wysiwyg">{!! old('description', $product->description ?? null) !!}</div>
+                        <textarea maxlength="2000" id="textarea_product-description" name="description" class="hidden"></textarea>
                         <span id="description_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                     </div>
                 </div>
@@ -140,6 +139,23 @@
     </div>
 </section>
 <script type="module">
+
+    const quill = new Quill('#wysiwyg',{
+            theme:'snow',
+            placeholder: 'Descripcion...',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'align': [] }],
+                    ['blockquote', 'code-block'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['clean']
+                ]
+            }
+        });
+
+
     var folder = '<?= $product->folder ?? null ?>';
     var images = '<?= isset($gallery) ? json_encode($gallery):null ?>';
     var gal = ( images != '') ? Object.values(JSON.parse(images)) : '';
@@ -207,7 +223,7 @@
     });
 
     var firstError = '';
-    var requiredFields = document.querySelectorAll('#product_edit_form input, #product_edit_form select, #product_edit_form textarea');
+    var requiredFields = document.querySelectorAll('#business_edit_form [required]');
 
     //vuelve a ocultar los mensajes de error cuando se ingrese informacion en los input
     requiredFields.forEach(field => {
@@ -222,16 +238,31 @@
         e.preventDefault();
         e.stopPropagation();
 
+        document.getElementById('textarea_product-description').value = quill.root.innerHTML;
+
         //validacion de datos y agrega error si no esta lleno, ademas valida si todo esta
         let allFull = true;
         requiredFields.forEach(field => {
             const errorSpan = document.getElementById(`${field.name}_error`);
-            if (field.value.trim() === '' || field.value == 0) {
+            if (field.value.trim() === '' || field.value == 0 ) {
                 firstError = firstError == '' ? field : firstError;
                 allFull = false
-                errorSpan.classList.remove('hidden');
+                if( errorSpan != null ){
+                    //errorSpan.classList.remove('hidden');
+                }
+
             }
         });
+
+        //hace scroll hasta hacer visible el primer error que se guarda en la revicion anterior
+        console.log(firstError)
+        if (firstError) {
+            const offset = 400;
+            window.scrollTo({
+                top: offset,
+                behavior: 'smooth',
+            });
+        }
 
         //1era vez subiendo imagenes o editando
         if( allFull && folder == '' ){
@@ -250,13 +281,7 @@
             }
         }
 
-        //hace scroll hasta hacer visible el primer error que se guarda en la revicion anterior
-        if (firstError) {
-            firstError.scrollIntoView({
-                behavior: 'smooth',
-                block:'center'
-            });
-        }
+
 
     });
 

@@ -10,6 +10,8 @@ use Illuminate\Support\Str;
 use App\Models\Business;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\UserProfile;
+
 use Usamamuneerchaudhary\Commentify\Models\Comment;
 use Illuminate\Support\Facades\DB;
 
@@ -58,6 +60,7 @@ class BusinessController extends Controller
     {
         $data['business'] = Business::find($id);
         $data['user'] = User::find($data['business']->user_id);
+        $data['profile'] = UserProfile::where('user_id',$data['business']->user_id)->first();
         $data['products'] = Product::where('business_id', $id)->get();
 
         $data['avatar'] = show_business_avatar($data['business']->folder);

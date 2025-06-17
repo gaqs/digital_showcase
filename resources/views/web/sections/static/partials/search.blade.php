@@ -15,8 +15,8 @@
                 <x-input-large id="input_search" class="w-full" type="text" name="search" placeholder="Ingrese lo que quiera buscar" value="{{ request()->search }}" />
             </div>
             <div class="col-span-12 md:col-span-4 mb-3">
-                <select data-te-select-init data-te-select-size="lg" data-te-select-init data-te-select-filter="true" id="category_id" name="category_id">
-                    {{ category_list( old('category_id', request()->category_id ?? 0) ) }}
+                <select data-te-select-init data-te-select-size="lg" data-te-select-init data-te-select-filter="true" id="categories_id" name="categories_id">
+                    {{ category_list( old('categories_id', request()->categories_id ?? 0) ) }}
                 </select>
                 <label data-te-select-label-ref>Categoría</label>
             </div>

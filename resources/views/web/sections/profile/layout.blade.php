@@ -1,7 +1,7 @@
 <x-app-layout>
     @php
-        $avatar = Auth::user()->avatar == '' ? 'uploads/users/default/_avatar.jpg' : 'uploads/users/'.Auth::user()->id.'/'.Auth::user()->avatar;
-        $banner = Auth::user()->banner == '' ? 'uploads/users/default/_banner.jpg' : 'uploads/users/'.Auth::user()->id.'/'.Auth::user()->banner;
+        $avatar = $avatar == null ? 'uploads/users/default/_avatar.jpg' : 'uploads/users/'.Auth::user()->id.'/'.$avatar;
+        $banner = $banner == null ? 'uploads/users/default/_banner.jpg' : 'uploads/users/'.Auth::user()->id.'/'.$banner;
     @endphp
     <a href="{{ route('profile.edit') }}">
         <x-button class="absolute z-10 top-80 right-5" value="danger">Editar perfil</x-button>

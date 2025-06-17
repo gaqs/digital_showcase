@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Usamamuneerchaudhary\Commentify\Traits\Commentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -43,17 +42,18 @@ class Business extends Model
     protected $fillable = [
         'name',
         'score',
-        'category_id',
+        'categories_id',
         'keywords',
         'email',
         'email_2',
         'description',
         'address',
+        'number',
         'phone',
         'web',
         'facebook',
         'instagram',
-        'twitter',
+        'x',
         'tiktok',
         'mercadolibre',
         'yapo',
@@ -64,4 +64,12 @@ class Business extends Model
         'folder',
         'updated_at'
     ];
+
+    /**
+     * Get the products for the business.
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

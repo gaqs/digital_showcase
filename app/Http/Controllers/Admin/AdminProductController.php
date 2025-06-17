@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\User;
+use App\Models\Business;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class AdminProductController extends Controller
 {
@@ -13,7 +16,7 @@ class AdminProductController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.sections.products.index');
     }
 
     /**
@@ -45,7 +48,11 @@ class AdminProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return view('admin.sections.products.edit', [
+            'product' => Product::findOrFail($product->id),
+            'user' => User::select('id','name','lastname')->findOrFail($product->user_id),
+            'business' => Business::select('id','name')->findOrFail($product->business_id),
+        ]);
     }
 
     /**
@@ -53,7 +60,27 @@ class AdminProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $product->fill($request->only([
+            'business_id',
+            'user_id',
+            'categories_id',
+            'name',
+            'description',
+            'price',
+            'mercadolibre',
+            'facebook',
+            'yapo',
+            'aliexpress',
+            'other',
+            'stock',
+        ]));
+        
+        if($product->isDirty()){
+            $product->save();
+        }
+        
+
+        return Redirect::route('admin_product.edit', $product)->with(['status' => 'success', 'message' => 'Producto editado correctamente']);
     }
 
     /**

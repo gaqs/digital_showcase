@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Business;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class AdminBusinessController extends Controller
 {
@@ -13,7 +14,7 @@ class AdminBusinessController extends Controller
      */
     public function index()
     {
-        return view('admin.business.index');
+        return view('admin.sections.business.index');
     }
 
     /**
@@ -21,7 +22,7 @@ class AdminBusinessController extends Controller
      */
     public function create()
     {
-        return view('admin.business.show');
+        return view('admin.sections.business.show');
     }
 
     /**
@@ -45,7 +46,7 @@ class AdminBusinessController extends Controller
      */
     public function edit(Business $business)
     {
-        return view('admin.business.edit', ['business' => Business::findOrFail($business->id)]);
+        return view('admin.sections.business.edit', ['business' => Business::findOrFail($business->id)]);
     }
 
     /**
@@ -53,7 +54,33 @@ class AdminBusinessController extends Controller
      */
     public function update(Request $request, Business $business)
     {
-        //
+        $business->fill($request->only([
+            'name',
+            'categories_id',
+            'keywords',
+            'email',
+            'email_2',
+            'description',
+            'phone',
+            'whatsapp',
+            'web',
+            'facebook',
+            'instagram',
+            'x',
+            'tiktok',
+            'mercadolibre',
+            'yapo',
+            'aliexpress',
+            'address',
+            'latitude',
+            'longitude',
+        ]));
+        
+        if($business->isDirty()){
+            $business->save();
+        }
+        
+        return Redirect::route('admin_business.edit', $business)->with(['status' => 'success', 'message' => 'Negocio editado correctamente']);
     }
 
     /**

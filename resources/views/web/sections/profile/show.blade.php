@@ -1,7 +1,7 @@
 <x-app-layout>
     @php
-        $avatar = $user->avatar ? 'uploads/users/' . $user->id . '/' . $user->avatar : 'uploads/users/default/_avatar.jpg';
-        $banner = $user->banner ? 'uploads/users/' . $user->id . '/' . $user->banner : 'uploads/users/default/_banner.jpg';
+        $avatar = isset($profile->avatar) ? 'uploads/users/' . $user->id . '/' . $profile->avatar : 'uploads/users/default/_avatar.jpg';
+        $banner = isset($profile->banner) ? 'uploads/users/' . $user->id . '/' . $profile->banner : 'uploads/users/default/_banner.jpg';
     @endphp
     <div class="relative overflow-hidden bg-cover bg-no-repeat p-20 mt-20 text-center"
         style="background-image: url('{{ asset($banner) }}'); height: 300px"></div>
@@ -20,9 +20,6 @@
                             <div class="text-neutral-700 text-2xl font-bold">
                                 {{ $user->name }}
                             </div>
-                            <div class="text-neutral-700">
-                                {{ $user->email }}
-                            </div>
                         </div>
                         <div class="mt-5">
                             <ul>
@@ -34,7 +31,7 @@
                                         </div>
                                         <div>
                                             <div class="text-info-700">Sitio Web</div>
-                                            <div class="text-sm">{{ $user->web }}</div>
+                                            <div class="text-sm">{{ $profile->web }}</div>
                                         </div>
                                     </div>
                                 </li>
@@ -58,7 +55,7 @@
                                         </div>
                                         <div>
                                             <div class="text-info-700">Teléfono</div>
-                                            <div class="text-sm">{{ $user->phone }}</div>
+                                            <div class="text-sm">{{ $profile->phone }}</div>
                                         </div>
                                     </div>
                                 </li>
@@ -69,7 +66,7 @@
                                         </div>
                                         <div>
                                             <div class="text-info-700">Dirección</div>
-                                            <div class="text-sm">{{ $user->address }}</div>
+                                            <div class="text-sm">{{ $profile->address }}</div>
                                         </div>
                                     </div>
                                 </li>
@@ -105,7 +102,7 @@
                                         {{ $bus->address }}
                                     </span>
                                     <p class="text-base text-sm text-neutral-600 dark:text-neutral-200 mb-2">
-                                        {{ substr($bus->description, 0, 100) }}...<x-link  href="{{ route('business.show', ['id' => $bus->id]) }}"> Saber más &raquo; </x-link>
+                                        {{ strip_tags(substr($bus->description, 0, 200)) }}...<x-link  href="{{ route('business.show', ['id' => $bus->id]) }}"> Saber más &raquo; </x-link>
                                         <br>
                                     </p>
 

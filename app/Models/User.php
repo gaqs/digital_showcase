@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Usamamuneerchaudhary\Commentify\Models\CommentLike;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -24,16 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'lastname',
         'email',
         'password',
-        'phone',
-        'address',
-        'phone',
-        'description',
-        'facebook',
-        'instagram',
-        'twitter',
-        'tiktok',
-        'avatar',
-        'banner',
+        'role',
         'ext_id',
         'ext_auth'
     ];
@@ -63,5 +55,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function likes(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(CommentLike::class);
+    }
+
+    /**
+     * Check if the user has a specific role.
+     *
+     * @param  string  $role
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        return $this->role === $role;
     }
 }

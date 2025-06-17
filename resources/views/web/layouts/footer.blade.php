@@ -86,6 +86,12 @@
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae ultricies felis, a bibendum
                     nibh. Nulla pretium eget mauris ac hendrerit.
                 </p>
+                <p class="mb-4 mt-5 flex items-center justify-center md:justify-start font-semibold">
+                    <a href="{{ route('admin.index') }}" target="_blank">
+                        <i class="fas fa-user-cog"></i>
+                        ACCESO ADMINISTRADOR
+                    </a>
+                </p>
             </div>
             <!-- Useful links section -->
             <div class="">

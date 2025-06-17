@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Business;
 use App\Models\Product;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -11,7 +10,6 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class ProductsTable extends DataTableComponent
 {

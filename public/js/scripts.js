@@ -15,17 +15,19 @@ scoreContainer.forEach( scoreContainer => {
 
 //navbar animation on scroll
 var navbar = document.getElementById('navbar_top');
-document.addEventListener("DOMContentLoaded", function(){
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 150) {
-          navbar.classList.add('fixed-top');
-          navbar_height = navbar.offsetHeight;
-        } else {
-            navbar.classList.remove('fixed-top');
-        }
+//if navbar exist
+if (navbar !== null) {
+    document.addEventListener("DOMContentLoaded", function(){
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 150) {
+            navbar.classList.add('fixed-top');
+            navbar_height = navbar.offsetHeight;
+            } else {
+                navbar.classList.remove('fixed-top');
+            }
+        });
     });
-});
-
+}
 
 //change the color of the rrss icon if href dosent exist
 window.addEventListener('load', function() {
@@ -42,7 +44,17 @@ window.addEventListener('load', function() {
 });
 
 
-//Google Map API
+/*-----------------LEAFLET MAP-----------------------*/ 
+
+function cortarHastaPuertoMontt(texto) {
+    const corte = "Puerto Montt";
+    const idx = texto.indexOf(corte);
+    if (idx !== -1) {
+        return texto.substring(0, idx-2);
+    }
+    return texto;
+}
+
 var lat = document.getElementById('input_latitude');
 var lon = document.getElementById('input_longitude');
 
@@ -51,96 +63,191 @@ var lon_value = (lon != null) ? lon.value : '-72.94078';
 
 const coorDefault = { lat: parseFloat(lat_value), lng: parseFloat(lon_value) };
 
-function initMap() {
-    const map = new google.maps.Map(document.getElementById("map"), {
-        center: coorDefault,
-        zoom: 15,
-        mapTypeControl: false,
+window.addEventListener('load', function() {
+
+    //verify if id map is loaded
+    if (document.getElementById('map') === null) return; // Salir si el elemento no existe
+
+    // Inicializar el mapa centrado en Santiago de Chile
+    const map = L.map('map').setView(coorDefault, 13);
+
+    // Añadir capa de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Variables globales
+    let marker = null;
+    let selectedAddress = null;
+    let debounceTimer = null;
+
+    var markerIcon = L.icon({
+        iconSize: [60, 60], // Tamaño del icono
     });
 
-    const options = {
-        fields: ["formatted_address", "geometry", "name"],
-        strictBounds: false,
+    // Elementos del DOM
+    const addressInput = document.getElementById('input_address');
+    const suggestionsContainer = document.getElementById('suggestions_container');
+
+    const addressLoading = document.getElementById('address_loading');
+
+    const latitudeInput = document.getElementById('input_latitude');
+    const longitudeInput = document.getElementById('input_longitude');
+
+    // Configurar Nominatim (limitado a Chile)
+    const nominatimEndpoint = 'https://nominatim.openstreetmap.org/search';
+    const nominatimParams = {
+        format: 'json',
+        countrycodes: 'cl', // Limitar a Chile,
+        addressdetails: 1,
+        namedetails: 1,
+        limit: 5,
+        'accept-language': 'es' // Para resultados en español
     };
 
-    const input = document.getElementById("input_address");
-
-    if(input != null){
-
-        const autocomplete = new google.maps.places.Autocomplete(input, options);
-
-        autocomplete.bindTo("bounds", map);
-
-        var name = document.getElementById('business_name') ?? '';
-        var address = document.getElementById('business_address') ?? '';
-
-        name = (name != '') ? name.innerHTML : '';
-        address = (address != '') ? address.innerHTML : '';
-
-        const infowindowContent = `<div id="infowindow-content">
-                                        <span id="place-name" class="title text-lg font-semibold"><b>${name}</b></span><br />
-                                        <span id="place-address" class="font-medium">
-                                            ${address}
-                                        </span>
-                                    </div>`;
-
-        const infowindow = new google.maps.InfoWindow();
-        infowindow.setContent(infowindowContent);
-
-        const marker = new google.maps.Marker({
-            position: coorDefault,
-            map,
-            draggable: true,
-            anchorPoint: new google.maps.Point(0, -29),
+    // Función para obtener sugerencias de direcciones
+    async function getAddressSuggestions(query) {
+        if (!query || query.length < 3) return [];
+        
+        const params = new URLSearchParams({
+            ...nominatimParams,
+            q: query + ', Puerto Montt'
         });
-
-        google.maps.event.addListener(marker, 'dragend', function(evt){
-            lat.value = evt.latLng.lat().toFixed(5);
-            lon.value = evt.latLng.lng().toFixed(5);
-        });
-
-        google.maps.event.addListener(marker, 'click', function(evt){
-            if( name != ''){
-                infowindow.open(map,marker);
-            }
-        });
-
-        autocomplete.addListener("place_changed", () => {
-            infowindow.close();
-            marker.setVisible(false);
-
-            const place = autocomplete.getPlace();
-
-            if (!place.geometry || !place.geometry.location) {
-                window.alert("No details available for input: '" + place.name + "'");
-                return;
-            }
-
-            if (place.geometry.viewport) {
-                map.fitBounds(place.geometry.viewport);
-            } else {
-                map.setCenter(place.geometry.location);
-                map.setZoom(17);
-            }
-
-            marker.setPosition(place.geometry.location);
-            marker.setVisible(true);
-            //infowindowContent.children["place-name"].textContent = place.name;
-            //infowindowContent.children["place-address"].textContent = place.formatted_address;
-
-            lat.value = marker.getPosition().lat().toFixed(5);
-            lon.value = marker.getPosition().lng().toFixed(5);
-
-            if( name != ''){
-                infowindow.open(map,marker);
-            }
-        });
-
+        
+        try {
+            const response = await fetch(`${nominatimEndpoint}?${params.toString()}`);
+            if (!response.ok) throw new Error('Error en la respuesta del servidor');
+            
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error al obtener sugerencias:', error);
+            return [];
+        }
     }
 
-}
+    // Función para mostrar sugerencias
+    function showSuggestions(suggestions) {
+        if (suggestions.length === 0) {
+            suggestionsContainer.style.display = 'none';
+            return;
+        }
+        
+        suggestionsContainer.innerHTML = '';
+        
+        suggestions.forEach(suggestion => {
+            const item = document.createElement('div');
+            item.className = 'suggestion-item';
+            // Mostrar la dirección formateada
+            const address = cortarHastaPuertoMontt(suggestion.display_name);
+            item.innerHTML = address;
+            
+            item.addEventListener('click', () => {
+                selectSuggestion(suggestion);
+            });
+            
+            suggestionsContainer.appendChild(item);
+        });
+        
+        suggestionsContainer.style.display = 'block';
+    }
 
-window.initMap = initMap;
+    // Función para seleccionar una sugerencia
+    function selectSuggestion(suggestion) {
+        //console.log('Sugerencia seleccionada:', suggestion);
+        const saddress = suggestion.address;
+        const selectedAddress = cortarHastaPuertoMontt(suggestion.display_name);
+        addressInput.value = selectedAddress;
+        suggestionsContainer.style.display = 'none';
+        
+        // Centrar el mapa en la ubicación seleccionada
+        const lat = parseFloat(suggestion.lat);
+        const lon = parseFloat(suggestion.lon);
+
+        //console.log(lat+', ' + lon);
+        
+        // Actualizar coordenadas en pantalla
+        latitudeInput.value = lat.toFixed(5);
+        longitudeInput.value = lon.toFixed(5);
+        
+        // Eliminar marcador anterior si existe
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        // Crear nuevo marcador (arrastrable)
+        marker = L.marker([lat, lon], {
+            draggable: true
+        }).addTo(map);
+
+        marker.bindPopup('<b>¿Aqui no es? MUEVEME!</b>').openPopup();
+
+        // Centrar el mapa en la nueva ubicación
+        map.setView([lat, lon], 16);
+
+        marker.on('drag', function(e) {
+            const newLatLng = e.latlng;
+            latitudeInput.value = newLatLng.lat.toFixed(5);
+            longitudeInput.value = newLatLng.lng.toFixed(5);
+        });
+        
+        // Escuchar eventos de arrastre del marcador
+        marker.on('dragend', function() {
+            const newLatLng = marker.getLatLng();
+            latitudeInput.value = newLatLng.lat.toFixed(5);
+            longitudeInput.value = newLatLng.lng.toFixed(5);
+
+            marker.bindPopup('<b>¿Ahora si?</b>').openPopup();
+        });
+    }
+
+    // Evento de entrada para el campo de búsqueda
+    addressInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        if(addressLoading) addressLoading.style.display = 'inline-block'; 
+        debounceTimer = setTimeout(async () => {            
+            const query = addressInput.value.trim();
+            if (query.length >= 3) {
+                const suggestions = await getAddressSuggestions(query);
+                showSuggestions(suggestions);
+                if(addressLoading) addressLoading.style.display = 'none'; // Ocultar ícono
+            } else {
+                suggestionsContainer.style.display = 'none';
+                if(addressLoading) addressLoading.style.display = 'none'; // Ocultar ícono
+            }
+        }, 300);
+    });
+
+    // Ocultar sugerencias al hacer clic fuera
+    document.addEventListener('click', (e) => {
+        if (e.target !== addressInput) {
+            suggestionsContainer.style.display = 'none';
+        }
+    });
+
+    // Evento para permitir que los clics en las sugerencias no se cierren
+    suggestionsContainer.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
+    // Crear nuevo marcador (arrastrable)
+    marker = L.marker([lat_value, lon_value], {
+        draggable: true,
+    }).addTo(map);
+
+    marker.on('drag', function(e) {
+        const newLatLng = e.latlng;
+        latitudeInput.value = newLatLng.lat.toFixed(5);
+        longitudeInput.value = newLatLng.lng.toFixed(5);
+    });
+
+    marker.on('dragend', function() {
+        const newLatLng = marker.getLatLng();
+        latitudeInput.value = newLatLng.lat.toFixed(5);
+        longitudeInput.value = newLatLng.lng.toFixed(5);
+    });
+})
+
+/*-----------------LEAFLET MAP-----------------------*/ 
 
 //global form for deleting
 var delete_form = document.getElementById('delete_something');
@@ -168,7 +275,6 @@ if( delete_link != null ){
     });
 }
 
-
 //global submit button load
 const form = document.querySelector('form');
 if( form != null){
@@ -178,7 +284,6 @@ if( form != null){
         if(submitButton.children[0]){
             submitButton.children[0].className = 'fa-solid fa-circle-notch fa-spin';
         }
-
     });
 }
 
@@ -187,5 +292,33 @@ function formatearPrecio(input) {
     let valor = input.value.replace(/[^0-9]/g, '');
     valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
-    input.value = '$' + valor;
+    input.value = valor;
 }
+
+//dark mode change
+document.addEventListener('DOMContentLoaded', () => {
+    const darkModeSwitch = document.getElementById('dark_mode_switch');
+    const htmlElement = document.documentElement;
+
+    // Aplicar el tema guardado en localStorage al cargar la página
+    if (!darkModeSwitch) return; // Asegurarse de que el switch existe
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        htmlElement.classList.add('dark');
+        darkModeSwitch.checked = true;
+    } else {
+        htmlElement.classList.remove('dark');
+        darkModeSwitch.checked = false;
+    }
+
+    // Cambiar entre los modos oscuro y claro al alternar el switch
+    darkModeSwitch.addEventListener('change', () => {
+        if (darkModeSwitch.checked) {
+            htmlElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark'); // Guardar preferencia en localStorage
+        } else {
+            htmlElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light'); // Guardar preferencia en localStorage
+        }
+    });
+});

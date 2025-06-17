@@ -10,15 +10,10 @@
     @else
         <article id="comment_id_{{ $comment->id }}" class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
             <footer class="flex justify-between items-center mb-1">
-
-                @php
-                    $avatar = ($comment->user->avatar == null) ? 'uploads/users/default/_avatar.jpg' : 'uploads/users/'.$comment->user->id.'/'.$comment->user->avatar;
-                @endphp
-
                 <div class="flex items-center">
                     <div class="flex flex-row content-center">
                         <div class="mr-3" id="user_avatar">
-                            <img src="{{ asset( $avatar) }}" alt="{{$comment->user->name}}" class="w-12 rounded-full" alt="Avatar" />
+                            <img src="{{ asset($comment->user->avatar()) }}" alt="{{$comment->user->name}}" class="w-12 rounded-full" />
                         </div>
                         <div>
                             <p class="font-bold" id="user_name">{{Str::ucfirst($comment->user->name)}}</p>

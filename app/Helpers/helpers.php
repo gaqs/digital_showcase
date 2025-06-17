@@ -1,8 +1,10 @@
 <?php
 use App\Models\Business;
-use App\Models\User;
+use App\Models\UserProfile;
 use App\Models\Category;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 if (! function_exists('category_list')) {
     function category_list($selected){
@@ -29,18 +31,17 @@ if (! function_exists('business_list_per_id')) {
 
 }
 
-if( ! function_exists('manage_files')) {
+if( ! function_exists('manage_profile_files')) {
     function manage_profile_files($request, $field_name)
     {
         $user_id = Auth::user()->id;
 
         if ($request->hasFile($field_name)) {
-            $fileName = User::find($user_id)->$field_name;
+            $user = UserProfile::firstOrCreate(['user_id' => $user_id]);
+            $fileName = $user->$field_name;
 
-            if ($fileName == '') {
+            if (empty($fileName)) {
                 $fileName = $field_name . '_' . Str::random(10) . '.' . $request->file($field_name)->extension();
-
-                $user = User::find($user_id);
                 $user->$field_name = $fileName;
                 $user->save();
             }
@@ -49,7 +50,6 @@ if( ! function_exists('manage_files')) {
         }
 
         return response()->json(['success' => 200]);
-
     }
 }
 
@@ -171,6 +171,20 @@ function delete_folder($carpeta) {
         return true;
     } else {
         return false;
+    }
+}
+
+
+if (! function_exists('role_list')) {
+    function role_list($selected){
+
+        $roles = ['user','editor','admin','superadmin'];
+        
+        foreach ($roles as $rol) {
+            $selectedRole = ($rol == $selected) ? 'selected' : '';
+            echo '<option class="text-xl" value="'.$rol.'" '.$selectedRole.'>'.ucfirst($rol).'</option>';
+        }
+
     }
 }
 

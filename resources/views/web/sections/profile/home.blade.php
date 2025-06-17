@@ -38,7 +38,7 @@
                         <ul>
                             <li><x-link href="{{ route('profile.edit') }}">Editar tu perfil</x-link></li>
                             <li><x-link href="{{ route('password.home') }}">Cambiar contraseña</x-link></li>
-                            <li><x-link href="{{  route('business.create')  }}">Crear nuevo negocio</x-link></li>
+                            <li><x-link href="{{ route('business.create')  }}">Crear nuevo negocio</x-link></li>
                             <li><x-link href="{{ route('product.create') }}">Crear nuevo producto</x-link></li>
                         </ul>
                     </div>
@@ -55,22 +55,22 @@
                     </h5>
                     <div class="flex flex-col">
                         <div class="font-bold">Dirección</div>
-                        <div class="mb-4">{{ Auth::user()->address }}</div>
+                        <div class="mb-4">{{ $profile->address }}</div>
                         <div class="font-bold">Teléfono</div>
-                        <div class="mb-4">{{ Auth::user()->phone }}</div>
+                        <div class="mb-4">{{ $profile->phone }}</div>
                         <div class="font-bold mb-2">RRSS</div>
                     </div>
                     <div id="rrss" class="grid grid-cols-4 gap-4">
-                        <a href="{{ Auth::user()->facebook }}" target="_blank" data-te-toggle="tooltip" data-te-placement="top" title="Facebook">
+                        <a href="{{ $profile->facebook }}" target="_blank" data-te-toggle="tooltip" data-te-placement="top" title="Facebook">
                             <img src="{{ asset('img/icons/facebook_icon.png') }}" alt="" width="50" class="">
                         </a>
-                        <a href="{{ Auth::user()->instagram }}" target="_blank">
+                        <a href="{{ $profile->instagram }}" target="_blank">
                             <img src="{{ asset('img/icons/instagram_icon.png') }}" alt="" width="50" class="">
                         </a>
-                        <a href="{{ Auth::user()->twitter }}" target="_blank">
+                        <a href="{{ $profile->twitter }}" target="_blank">
                             <img src="{{ asset('img/icons/twitter_icon.png') }}" alt="" width="50" class="">
                         </a>
-                        <a href="{{ Auth::user()->tiktok }}" target="_blank">
+                        <a href="{{ $profile->tiktok }}" target="_blank">
                             <img src="{{ asset('img/icons/tiktok_icon.png') }}" alt="" width="50" class="">
                         </a>
                     </div>

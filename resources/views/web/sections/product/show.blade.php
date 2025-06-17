@@ -21,7 +21,7 @@
                                 $i = 0;
 
                                 foreach ($images as $img) {
-                                    echo '<li class="splide__slide">
+                                    echo '<li class="splide__slide flex justify-center">
                                             <img src="'.$base_url.$img.'" class="" alt="">
                                          </li>';
                                 }
@@ -103,11 +103,11 @@
 
                     <div id="product_resumen" class="mt-3">
                         <div class="font-bold">Resumen:</div>
-                        {{ substr($product->description,0,150) }}...
-                        <x-link href="#product_description">Saber más &raquo;</x-link>
+                        {{ strip_tags(substr($business->description, 0, 200)) }}... <x-link class="text-right text-sm mb-4" href="#product_description">Leer más &raquo;</x-link>
+
                     </div>
                     <div id="price" class="price text-xl text-center text-cyan-600 bg-cyan-50 py-2 px-5 w-fit rounded my-5">
-                        <b>{{ $product->price }}</b> c/u
+                        <b>${{ $product->price }}</b> c/u
                     </div>
                     <div id="product_buy_link">
                         <b>Donde comprar online:</b>
@@ -159,10 +159,10 @@
                     </div>
                 </div>
             </div>
-            <div id="product_comments" class="col-span-12">
+            <div id="product_description" class="col-span-12">
                 <div class="block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                     <h5 class="text-xl mb-5 font-medium">Descripción</h5>
-                    <p>{{ $product->description }}</p>
+                    <div class="descriptions">{!! $product->description !!}</div>
                 </div>
             </div>
         </div>

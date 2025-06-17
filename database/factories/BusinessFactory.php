@@ -21,7 +21,7 @@ class BusinessFactory extends Factory
             'name' => fake()->company(),
             'score' => fake()->numberBetween(0,5),
             'user_id' => fake()->numberBetween(1,20),
-            'category_id' => fake()->numberBetween(1,21),
+            'categories_id' => fake()->numberBetween(1,21),
             'keywords' => fake()->words(4, true),
             'email' => fake()->email(),
             'email_2' => fake()->email(),

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4bab67c5e00b2e5f0a984bde7db1c8c3",
+    "content-hash": "79d6afb66a3b2f87eab31a01caa967db",
     "packages": [
         {
             "name": "brick/math",
@@ -5896,7 +5896,7 @@
             "version": "dev-main",
             "dist": {
                 "type": "path",
-                "url": "./packages/usamamuneerchaudhary/commentify",
+                "url": "packages/usamamuneerchaudhary/commentify",
                 "reference": "fecff5892bc623b98c8da8c9b9dd7cae8b49bae3"
             },
             "require": {

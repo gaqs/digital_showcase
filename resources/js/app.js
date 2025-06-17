@@ -9,11 +9,17 @@ window.Splide = Splide;
 import Dropzone from 'dropzone';
 window.dz = Dropzone;
 
-import JQuery from 'jquery';
+import JQuery, { trumbowyg } from 'jquery';
 window.$ = JQuery;
 
 import Alpine from 'alpinejs';
 window.Alpine = Alpine;
+
+import L from 'leaflet';
+window.L = L;
+
+import Quill from 'quill';
+window.Quill = Quill;
 
 Alpine.start();
 

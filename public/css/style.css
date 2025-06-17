@@ -179,3 +179,64 @@
     display: inherit !important;
 }
 
+#suggestions_container{
+  border: 1px solid rgb(211, 211, 211);
+  border-radius: 0 0 10px 10px;
+  display: none;;
+}
+.suggestion-item{
+  padding: 5px 0px 5px 10px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover{
+  background: #f3f4f6;
+}
+
+.suggestion-marker{
+  color: #9fa6b2;
+  margin-right: 10px;
+}
+
+#coordinates{
+  position: absolute;
+  display: flex;
+  margin: -50px 0 0 0;
+  right: 0;
+  z-index: 999;
+  pointer-events: none;
+}
+
+#coordinates input{
+    border: 1px solid #dc4c64;
+    border-radius: 5px;
+    padding-left: 5px;
+    width: 110px;
+    margin-right: 8px;
+    padding-right: 5px;
+}
+
+/* QUILL */
+.ql-container{
+  height: inherit !important;
+  position: inherit !important;
+  height: 200px !important;
+  border-radius: 0 0 3px 3px;
+  font-size: 1rem;
+}
+.ql-toolbar{
+  border-radius: 3px 3px 0 0 ;
+}
+.ql-editor.ql-blank::before{
+  left: 40px;
+  font-size: 1rem;
+}
+.ql-editor{
+  font-family: 'Jost', sans-serif !important;
+}
+
+.descriptions h1 { font-size: 2em; font-weight: bold; }
+.descriptions h2 { font-size: 1.5em; font-weight: bold; margin-bottom: 0.75rem; }
+.descriptions ol { list-style-type: disc; margin-left: 3.5em; }
+.descriptions ul { list-style-type: decimal; margin-left: 3.5em; }
+.descriptions li { margin-bottom: 0.5rem; position: relative;}

@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\User as BaseUser;
 use Usamamuneerchaudhary\Commentify\Database\Factories\UserFactory;
 use Usamamuneerchaudhary\Commentify\Traits\HasUserAvatar;
 
+use App\Models\UserProfile;
+
 class User extends BaseUser
 {
     use HasUserAvatar, HasFactory;
@@ -30,5 +32,10 @@ class User extends BaseUser
     public function likes(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(CommentLike::class);
+    }
+
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class);
     }
 }

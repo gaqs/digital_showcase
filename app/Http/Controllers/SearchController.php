@@ -45,8 +45,8 @@ class SearchController extends Controller
                         ->orWhere('keywords', 'like', "%{$request->search}%");
                 }
 
-                if ($request->category_id != 0) {
-                    $query->where('category_id', $request->category_id);
+                if ($request->categories_id != 0) {
+                    $query->where('categories_id', $request->categories_id);
                 }
             })
             ->paginate(5);
@@ -58,15 +58,15 @@ class SearchController extends Controller
 
         }else if( $request->option == 1 ){
             $data['results'] = Product::join('business', 'business.id', '=', 'product.business_id')
-            ->join('categories', 'categories.id', '=', 'product.category_id')
+            ->join('categories', 'categories.id', '=', 'product.categories_id')
             ->select('product.*', 'business.name as b_name','business.score as b_score', 'categories.name as c_name', 'categories.tw_color as tw_bg')
             ->where(function ($query) use ($request) {
                 if ($request->search != '') {
                     $query->where('product.name', 'like', "%{$request->search}%")
                         ->orWhere('product.description', 'like', "%{$request->search}%");
                 }
-                if ($request->category_id != 0) {
-                    $query->where('product.category_id', $request->category_id);
+                if ($request->categories_id != 0) {
+                    $query->where('product.categories_id', $request->categories_id);
                 }
                 if( $request->business_id != ''){
                     $query->where('product.business_id', $request->business_id);

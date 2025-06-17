@@ -8,6 +8,9 @@ use App\Http\Controllers\SearchController;
 
 use App\Http\Controllers\Admin\AdminHomeController;
 use App\Http\Controllers\Admin\AdminBusinessController;
+use App\Http\Controllers\Admin\AdminProductController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminCommentController;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ExternalAuthController;
@@ -25,9 +28,26 @@ use App\Http\Controllers\Auth\ExternalAuthController;
 
 /* -- Admin Route -- */
 
-Route::middleware('admin')->group(function () {
+Route::middleware(['auth', 'verified', 'can:access-admin'])->group(function () {
+    Route::get('admin',[AdminHomeController::class, 'index'])->name('admin.index');
+    Route::get('admin/index',[AdminHomeController::class, 'index'])->name('admin.index');
+
     Route::get('admin/dashboard',[AdminHomeController::class, 'show'])->name('admin.dashboard');
     Route::get('admin/logout',[AdminHomeController::class, 'destroy'])->name('admin.logout');
+
+    Route::resource('admin/users', AdminUserController::class, [
+        'names' => [
+            'index'   => 'admin_users.index',
+            'create'  => 'admin_users.create',
+            'store'   => 'admin_users.store',
+            'show'    => 'admin_users.show',
+            'edit'    => 'admin_users.edit',
+            'update'  => 'admin_users.update',
+            'destroy' => 'admin_users.destroy'
+        ]
+    ]);
+    Route::post('admin/avatar', [AdminUserController::class, 'avatar'])->name('admin_users.avatar');
+    Route::post('admin/banner', [AdminUserController::class, 'banner'])->name('admin_users.banner');
 
     Route::resource('admin/business', AdminBusinessController::class, [
         'names' => [
@@ -41,11 +61,30 @@ Route::middleware('admin')->group(function () {
         ]
     ]);
 
-});
-Route::middleware('guest')->group(function(){
-    Route::get('admin',[AdminHomeController::class, 'index'])->name('admin.index');
-    Route::get('admin/index',[AdminHomeController::class, 'index'])->name('admin.index');
-    Route::post('admin/login',[AdminHomeController::class, 'store'])->name('admin.login');
+    Route::resource('admin/products', AdminProductController::class, [
+        'names' => [
+            'index'   => 'admin_product.index',
+            'create'  => 'admin_product.create',
+            'store'   => 'admin_product.store',
+            'show'    => 'admin_product.show',
+            'edit'    => 'admin_product.edit',
+            'update'  => 'admin_product.update',
+            'destroy' => 'admin_product.destroy'
+        ]
+    ]);
+
+    Route::resource('admin/comments', AdminCommentController::class, [
+        'names' => [
+            'index'   => 'admin_comment.index',
+            'create'  => 'admin_comment.create',
+            'store'   => 'admin_comment.store',
+            'show'    => 'admin_comment.show',
+            'edit'    => 'admin_comment.edit',
+            'update'  => 'admin_comment.update',
+            'destroy' => 'admin_comment.destroy'
+        ]
+    ]);
+
 });
 
 /* -- End Admin Route -- */
@@ -80,7 +119,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/profile/delete_save', [ProfileController::class, 'delete_save'])->name('profile.delete_save');
     Route::get('/profile/saved', [ProfileController::class, 'saved'])->name('profile.saved');
 
-    //Business auth
+    //Business crud
     Route::get('/profile/business/index', [BusinessController::class, 'index'])->name('business.index');
     Route::get('/profile/business/create', [BusinessController::class, 'create'])->name('business.create');
     Route::post('/business/store', [BusinessController::class, 'store'])->name('business.store');
@@ -92,7 +131,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/business/gallery', [BusinessController::class, 'gallery'])->name('business.gallery');
     Route::post('/business/delete_file', [BusinessController::class, 'delete_file'])->name('business.delete_file');
 
-    //product auth
+    //product crud
     Route::get('/profile/product/index', [ProductController::class, 'index'])->name('product.index');
     Route::get('/profile/product/create', [ProductController::class, 'create'])->name('product.create');
     Route::post('/product/store', [ProductController::class, 'store'])->name('product.store');

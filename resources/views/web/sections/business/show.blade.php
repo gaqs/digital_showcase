@@ -72,7 +72,8 @@
                 <div id="qty_reviews" class="text-sm inline">{{ $business->qty_comments }} comentarios</div>
 
                 <div id="business_address">
-                    <i class="text-rose-500 fa-solid fa-location-dot"></i> {{ $business->address }}
+                    <i class="text-rose-500 fa-solid fa-road"></i> {{ $business->address }}
+                    <i class="text-rose-500 fa-solid fa-hashtag ms-3"></i>{{ $business->number }}
                 </div>
             </div>
         </div>
@@ -86,9 +87,9 @@
                         <h5 class="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
                             Descripción
                         </h5>
-                        <p class="mb-4 text-neutral-600 dark:text-neutral-200">
-                            {{ $business->description }}
-                        </p>
+                        <div class="mb-4 text-neutral-600 dark:text-neutral-200 descriptions">
+                            {!! $business->description !!}
+                        </div>
                     </div>
                 </div>
                 <div>
@@ -151,12 +152,7 @@
                         <p class="mb-4 text-sm text-neutral-600 dark:text-neutral-200">
                         <div class="grid grid-cols-12">
                             <div class="col-span-12">
-                                <input id="input_latitude" class="hidden" value="{{ $business->latitude }}">
-                                <input id="input_longitude" class="hidden" value="{{ $business->longitude }}">
-
-                                <div id="map" class="h-80"></div>
-
-                                <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAP_KEY') }}&callback=initMap&libraries=places&v=weekly" defer></script>
+                                <div id="mapBusiness" class="h-80"></div>
                             </div>
                             <div class="col-span-12 mt-2 justify-self-end">
                                 <a href="https://www.google.com/maps/search/?api=1&query={{ $business->latitude }},{{ $business->longitude }}" target="_blank" class="text-danger">
@@ -267,7 +263,7 @@
                                     </div>
                                     <div>
                                         <div class="text-info-700">Dirección</div>
-                                        <div id="business_address" class="text-sm">{{ $business->address }}</div>
+                                        <div id="business_address" class="text-sm">{{ $business->address }} #{{ $business->number }}</div>
                                     </div>
                                 </div>
                             </li>
@@ -349,8 +345,8 @@
                         <div class="text-sm text-neutral-600 dark:text-neutral-200">
 
                             @php
-                                $avatar = ($user->avatar) ? 'uploads/users/' . $user->id . '/' . $user->avatar : 'uploads/users/default/_avatar.jpg';
-                                $banner = ($user->banner) ? 'uploads/users/' . $user->id . '/' . $user->banner : 'uploads/users/default/_banner.jpg';
+                                $avatar = isset($profile->avatar) ? 'uploads/users/' . $user->id . '/' . $profile->avatar : 'uploads/users/default/_avatar.jpg';
+                                $banner = isset($profile->banner) ? 'uploads/users/' . $user->id . '/' . $profile->banner : 'uploads/users/default/_banner.jpg';
                             @endphp
 
                             <div class="relative bg-cover bg-no-repeat text-center"
@@ -428,6 +424,27 @@
 
     splide.mount();
 
+    var lat_value = '{{ $business->latitude }}';
+    var lon_value = '{{ $business->longitude }}';
 
+    const coorDefault = { lat: parseFloat(lat_value), lng: parseFloat(lon_value) }
+
+    window.addEventListener('load', function() {
+        // Crear nuevo marcador (arrastrable)
+        const map = L.map('mapBusiness').setView(coorDefault, 17);
+
+        // Añadir capa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        let marker = L.marker([lat_value, lon_value], {
+            draggable: false,
+        }).addTo(map);
+
+        marker.bindPopup('<b>¡Justo aquí!</b>').openPopup();
+
+    });
+        
 
 </script>

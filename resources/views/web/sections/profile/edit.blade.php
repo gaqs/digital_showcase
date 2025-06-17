@@ -63,12 +63,12 @@
 
                         <div>
                             <x-input-large id="input_phone" name="phone" type="text" class="mt-1 block w-full"
-                                :value="old('phone', $user->phone)" placeholder="Teléfono" maxlength="10"/>
+                                :value="old('phone', $profile->phone ?? '')" placeholder="Teléfono" maxlength="10"/>
                             <x-input-error class="mt-2" :messages="$errors->get('phone')" />
                         </div>
                         <div>
                             <x-input-large id="input_address" name="address" type="text" class="mt-1 block w-full"
-                                :value="old('address', $user->address)" placeholder="Dirección" maxlength="255"/>
+                                :value="old('address', $profile->address ?? '')" placeholder="Dirección" maxlength="255"/>
                             <x-input-error class="mt-2" :messages="$errors->get('address')" />
                         </div>
                     </div>
@@ -76,7 +76,7 @@
                         <div>
                             <x-textarea id="textarea_description" name="description" class="mt-1 block w-full"
                                 placeholder="Descripción" maxlength="2000">
-                                {{ old('description', $user->description) }}
+                                {{ old('description', $profile->description ?? '') }}
                             </x-textarea>
                         </div>
                     </div>
@@ -89,22 +89,22 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <x-input-large id="input_facebook" name="facebook" type="url" class="mt-1 block w-full"
-                                :value="old('facebook', $user->facebook)" placeholder="Facebook" maxlength="255"/>
+                                :value="old('facebook', $profile->facebook ?? '')" placeholder="Facebook" maxlength="255"/>
                             <x-input-error class="mt-2" :messages="$errors->get('facebook')" />
                         </div>
                         <div>
-                            <x-input-large id="input_twitter" name="twitter" type="url" class="mt-1 block w-full"
-                                :value="old('twitter', $user->twitter)" placeholder="Twitter" maxlength="255"/>
-                            <x-input-error class="mt-2" :messages="$errors->get('twitter')" />
+                            <x-input-large id="input_x" name="x" type="url" class="mt-1 block w-full"
+                                :value="old('x', $profile->x ?? '')" placeholder="X" maxlength="255"/>
+                            <x-input-error class="mt-2" :messages="$errors->get('x')" />
                         </div>
                         <div>
                             <x-input-large id="input_instagram" name="instagram" type="url" class="mt-1 block w-full"
-                                :value="old('instagram', $user->instagram)" placeholder="Instagram" maxlength="255"/>
+                                :value="old('instagram', $profile->instagram ?? '')" placeholder="Instagram" maxlength="255"/>
                             <x-input-error class="mt-2" :messages="$errors->get('instagram')" />
                         </div>
                         <div>
                             <x-input-large id="input_tiktok" name="tiktok" type="url" class="mt-1 block w-full"
-                                :value="old('tiktok', $user->tiktok)" placeholder="Tiktok" maxlength="255"  />
+                                :value="old('tiktok', $profile->tiktok ?? '')" placeholder="Tiktok" maxlength="255"  />
                             <x-input-error class="mt-2" :messages="$errors->get('tiktok')" />
                         </div>
                     </div>

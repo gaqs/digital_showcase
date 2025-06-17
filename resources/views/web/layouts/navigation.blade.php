@@ -48,6 +48,8 @@
                     </div>
                     <x-dropdown value="{{ 'Hola '.Auth::user()->name }}" type="link">
                         <x-dropdown-link :href="route('profile.home')"><i class="fa-solid fa-user"></i> Mi perfil</x-dropdown-link>
+                        <x-dropdown-link :href="route('profile.home')"><i class="fa-solid fa-building-circle-check"></i> Crear negocio</x-dropdown-link>
+                        <x-dropdown-link :href="route('profile.home')"><i class="fa-solid fa-icons"></i> Crear producto</x-dropdown-link>
                         <form action="{{ route('logout') }}" method="post">
                             @csrf
                             <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">

@@ -47,16 +47,15 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="col-span-2">
-                            <x-input-large id="input_business-name" name="name" type="text"
-                                class="mt-1 block w-full" :value="old('name', $business->name ?? null)" placeholder="Nombre negocio" required />
+                            <x-input-large id="input_business-name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $business->name ?? null)" placeholder="Nombre Negocio" required />
                             <span id="name_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                         <div class="md:col-span-1 col-span-2 mt-1">
-                            <select data-te-select-init data-te-select-size="lg" data-te-select-init data-te-select-filter="true" id="category_id" name="category_id" required>
-                                {{ category_list( old('category_id', $business->category_id ?? null) ) }}
+                            <select data-te-select-init data-te-select-size="lg" data-te-select-init data-te-select-filter="true" id="categories_id" name="categories_id" required>
+                                {{ category_list( old('categories_id', $business->categories_id ?? null) ) }}
                             </select>
                             <label data-te-select-label-ref>Categoría</label>
-                            <span id="category_id_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
+                            <span id="categories_id_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                         <div class="md:col-md-2 col-span-1">
                             <x-input-large id="input_business-keywords" name="keywords" type="text"
@@ -65,8 +64,9 @@
                             <span id="keywords_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                         <div class="col-span-2">
-                            <x-textarea id="textarea_business-description" name="description" placeholder="Descripcion" required>{{ old('description', $business->description ?? null) }}
-                            </x-textarea>
+                            <div id="wysiwyg">{!! old('description', $business->description ?? null) !!}</div>
+                            <textarea id="textarea_business-description" class="hidden" name="description" placeholder="Descripcion">
+                            </textarea>
                             <span id="description_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                     </div>
@@ -83,8 +83,8 @@
                                 class="mt-1 block w-full" :value="old('facebook', $business->facebook ?? null)" placeholder="Facebook" />
                         </div>
                         <div>
-                            <x-input-large id="input_business-twitter" name="twitter" type="url"
-                                class="mt-1 block w-full" :value="old('twitter', $business->twitter ?? null)" placeholder="Twitter" />
+                            <x-input-large id="input_business-twitter" name="x" type="url"
+                                class="mt-1 block w-full" :value="old('x', $business->twitter ?? null)" placeholder="X" />
                         </div>
                         <div>
                             <x-input-large id="input_business-instagram" name="instagram" type="url"
@@ -114,45 +114,61 @@
                     <h5 class="mb-2 pb-1 font-medium leading-tight text-neutral-800 dark:text-neutral-50">
                         <i class="fa-solid fa-map-location text-rose-500"></i> Ubicación
                     </h5>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="col-span-2">
-                            <div class="col-span-2">
-                                <x-input-large id="input_address" name="address" type="text"
-                                    class="mt-1 block w-full" :value="old('address', $business->address ?? null)" placeholder="Dirección"/>
+                    <div class="grid grid-cols-12 md:grid-cols-12 gap-4">
+
+                        <!-- MAP -->
+                        <div class="col-span-8 relative">
+                            <x-input-large id="input_address" name="address" type="text" class="mt-1 block w-full" :value="old('address', $business->address ?? null)" placeholder="Calle"/>
+                            <span id="address_loading" class="absolute right-[10px] top-[60%] -translate-y-1/2 hidden">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </span>
+                            <div id="suggestions_container" class="absolute bg-white w-full z-[9999]"></div>
+                        </div>
+                        <div class="col-span-4">
+                            <x-input-large id="input_number" name="number" type="text" class="mt-1 block w-full" :value="old('number', $business->number ?? null)" placeholder="Número"/>
+                        </div>
+                        <div class="col-span-12 relative">
+                            <h5 class="mb-2 pb-1 font-medium leading-tight text-neutral-800 dark:text-neutral-50">
+                                <i class="fas fa-map-marker-alt text-rose-500"></i> Coordenadas
+                            </h5>
+                            <div id="map" class="h-96 mt-3"></div>
+                            <div id="coordinates">
+                                <input id="input_latitude" name="latitude" type="text" class="" value=" <?= old('latitude', $business->latitude ?? '-41.46518') ?>" placeholder="Latitud" required readonly />
+                                <input id="input_longitude" name="longitude" type="text" class="" value="<?= old('longitude', $business->longitude ?? '-72.93816') ?>" placeholder="Longitud" required readonly />
                             </div>
-
-                            <div id="map" class="h-80 mt-3"></div>
-                            <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAP_KEY') }}&callback=initMap&libraries=places&v=weekly" defer></script>
-
                         </div>
-                        <div class="hidden">
-                            <x-input-large id="input_latitude" name="latitude" type="text"
-                                class="mt-1 block w-full" :value="old('latitude', $business->latitude ?? '-41.46518')" placeholder="Latitud" required readonly />
+                        <!-- MAP -->
+                        
+                        
+                        <div class="col-span-12 md-col-span-6">
+                            <h5 class="mt-2 font-medium leading-tight text-neutral-800 dark:text-neutral-50">
+                                <i class="fas fa-phone text-rose-500"></i> Datos de Contacto
+                            </h5>
                         </div>
-                        <div class="hidden">
-                            <x-input-large id="input_longitude" name="longitude" type="text"
-                                class="mt-1 block w-full" :value="old('longitude', $business->longitude ?? '-72.93816')" placeholder="Longitud"
-                                required readonly />
-                        </div>
-                        <div class="col-span-2 md:col-span-1">
-                            <x-input-large id="input_business-phone_1" name="phone" type="text"
-                                class="mt-1 block w-full" :value="old('phone', $business->phone ?? null)" placeholder="Teléfono" required />
+                        <div class="col-span-12 md:col-span-6">
+                            <div class="relative flex flex-wrap items-stretch mt-1">
+                                <span class="flex items-center whitespace-nowrap rounded-s border border-e-0 border-solid border-neutral-200 px-3 text-center text-base text-surface dark:border-white/10 dark:text-white bg-secondary-100">+569</span>
+                                <x-input-large id="input_business-phone" name="phone" type="text" maxlength="12" class="" :value="old('phone', $business->phone ?? null)" placeholder="Teléfono" />
+                            </div>
                             <span id="phone_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
+
                         </div>
-                        <div class="col-span-2 md:col-span-1">
-                            <x-input-large id="input_business-whatsapp" name="whatsapp" type="text" maxlength="12"
-                                class="mt-1 block" :value="old('whatsapp', $business->whatsapp ?? null)" placeholder="Whatsapp" />
+                        <div class="col-span-12 md:col-span-6">
+                            <div class="relative flex flex-wrap items-stretch mt-1">
+                                <span class="flex items-center whitespace-nowrap rounded-s border border-e-0 border-solid border-neutral-200 px-3 text-center text-base text-surface dark:border-white/10 dark:text-white bg-secondary-100">+569</span>
+                                <x-input-large id="input_business-whatsapp" name="whatsapp" type="text" maxlength="12" class="" :value="old('whatsapp', $business->whatsapp ?? null)" placeholder="Whatsapp" />
+                            </div>
                         </div>
-                        <div class="col-span-2 md:col-span-1">
+                        <div class="col-span-12 md:col-span-6">
                             <x-input-large id="input_business-email" name="email" type="text"
                                 class="mt-1 block w-full" :value="old('email', $business->email ?? null)" placeholder="Correo electrónico" required />
                             <span id="email_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
-                        <div class="col-span-2 md:col-span-1">
+                        <div class="col-span-12 md:col-span-6">
                             <x-input-large id="input_business-email_2" name="email_2" type="text"
                                 class="mt-1 block w-full" :value="old('email_2', $business->email_2 ?? null)" placeholder="Correo electrónico #2" />
                         </div>
-                        <div class="col-span-2 md:col-span-1">
+                        <div class="col-span-12 md:col-span-6">
                             <x-input-large id="input_business-web" name="web" type="url"
                                 class="mt-1 block w-full" :value="old('web', $business->web ?? null)" placeholder="Página web" />
                         </div>
@@ -205,6 +221,22 @@
     </section>
 
     <script type="module">
+
+        const quill = new Quill('#wysiwyg',{
+            theme:'snow',
+            placeholder: 'Descripcion...',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'align': [] }],
+                    ['blockquote', 'code-block'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['clean']
+                ]
+            }
+        });
+    
         var folder = '<?= $business->folder ?? null ?>';
         var avatar = '<?= $avatar ?? null ?>';
         var images = '<?= isset($gallery) ? json_encode($gallery):null ?>';
@@ -337,6 +369,8 @@
         document.querySelector("button[type=submit]").addEventListener("click", function(e) {
             e.preventDefault();
             e.stopPropagation();
+
+            document.getElementById('textarea_business-description').value = quill.root.innerHTML;
 
             //verifica que los campos esten completos
             let allFull = true;

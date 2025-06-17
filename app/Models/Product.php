@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Usamamuneerchaudhary\Commentify\Traits\Commentable;
 
 class Product extends Model
@@ -39,8 +38,11 @@ class Product extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'business_id',
+        'categories_id',
+        'user_id',
         'name',
-        'descripton',
+        'description',
         'price',
         'score',
         'mercadolibre',
@@ -49,11 +51,19 @@ class Product extends Model
         'aliexpress',
         'web',
         'others',
-        'stock'
+        'stock',
     ];
 
-    public function business(): HasOne
+    public function business()
     {
-        return $this->hasOne(Business::class);
+        return $this->belongsTo(Business::class);
+    }
+
+    /**
+     * Get the category that the product belongs to.
+     */
+    public function categories()
+    {
+        return $this->belongsTo(Category::class);
     }
 }
