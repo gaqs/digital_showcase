@@ -57,9 +57,11 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])->group(function () {
             'show'    => 'admin_business.show',
             'edit'    => 'admin_business.edit',
             'update'  => 'admin_business.update',
-            'destroy' => 'admin_business.destroy'
+            'destroy' => 'admin_business.destroy',
         ]
     ]);
+
+    Route::post('admin/home/delete_file', [AdminHomeController::class, 'delete_file'])->name('admin_home.delete_file');
 
     Route::resource('admin/products', AdminProductController::class, [
         'names' => [

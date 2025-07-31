@@ -82,7 +82,10 @@ window.addEventListener('load', function() {
     let debounceTimer = null;
 
     var markerIcon = L.icon({
-        iconSize: [60, 60], // Tamaño del icono
+        iconUrl: '/img/marker_2.svg', // Ruta al icono del marcador
+        iconSize: [60, 60],           // Ajusta el tamaño según tu SVG
+        iconAnchor: [30, 60],         // Ajusta el ancla según tu SVG
+        popupAnchor: [0, -60]
     });
 
     // Elementos del DOM
@@ -176,6 +179,7 @@ window.addEventListener('load', function() {
         }
         // Crear nuevo marcador (arrastrable)
         marker = L.marker([lat, lon], {
+            icon: markerIcon,
             draggable: true
         }).addTo(map);
 
@@ -231,6 +235,7 @@ window.addEventListener('load', function() {
 
     // Crear nuevo marcador (arrastrable)
     marker = L.marker([lat_value, lon_value], {
+        icon: markerIcon,
         draggable: true,
     }).addTo(map);
 

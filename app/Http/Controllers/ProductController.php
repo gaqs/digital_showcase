@@ -50,6 +50,8 @@ class ProductController extends Controller
 
         $data['user_id'] = Auth::user()->id;
         $data['folder'] = $request->session()->get('product_folder');
+        $data['created_at'] = now();
+        $data['updated_at'] = now();
 
         $product = Product::insertGetId($data);
 
@@ -115,6 +117,7 @@ class ProductController extends Controller
     {
         $data = $request->all();
         unset($data['_token']);
+        $data['updated_at'] = now();
 
         $product::find($request->id)->update($data);
 
@@ -148,29 +151,33 @@ class ProductController extends Controller
 
     /**
      * Store a newly created gallery.
+     * folder name: {business_id}_{str_random(10)}_{unixtime}
      */
     public function gallery(Request $request)
     {
         $folder = $request->folder;
-        if( $folder == '' ){
-            $folder = $request->business_id.'_'.Str::random(10);
-            $db_folder = Product::where('folder', $folder)->first();
-
-            while( !empty($db_folder->folder) ){
-                $folder = $request->business_id.'_'.Str::random(10);
+        //si no hay nombre de carpeta en $folder, genera una que no exista en la DB
+        if( $folder == '' || empty($folder)){
+            do{
+                $folder = $request->business_id.'_'.str_random(10).'_'.time();
                 $db_folder = Product::where('folder', $folder)->first();
-            }
+            }while($db_folder);
         }
 
         $request->session()->put('product_folder', $folder);
 
+        //crea la carpeta si no existe
+        $folder_path = public_path('uploads/products/' . $folder);
+        if (!is_dir($folder_path)) { mkdir($folder_path, 0775, true); }
+
+        //mueve los archivos a la carpeta
         $files = $request->file('gallery');
-
-        foreach ($files as $file){
-            $fileName = date('Ymd').'_'.Str::random(10) .'.'.$file->extension();
-            $file->move(public_path('uploads/products/'.$folder), $fileName);
+        if( $files ){
+            foreach ($files as $file){
+                $file_name = time().'_'.str_random(10) .'.'.$file->extension();
+                $file->move($folder_path, $file_name);
+            }
         }
-
     }
 
     public function delete_file(Request $request)

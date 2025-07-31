@@ -1,6 +1,9 @@
 :root {
     --theme: #F41b3b !important
 }
+.color-amber{
+  color: #f59e0b;
+}
 
 .font-sans{
     font-family: 'Jost', sans-serif !important;

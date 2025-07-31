@@ -3,9 +3,9 @@
 		<ul class="splide__list">
 			<li class="splide__slide">
                 <div class="h-[550px]">
-
                     <img src="{{ asset('img/puertomontt.jpg') }}" class="block w-full h-full object-cover brightness-50" alt="..." />
                     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-left pl-5 text-white md:block w-full md:w-auto border-l-8 border-danger">
+                        <img src="{{ asset('img/logo_muni_2.png') }}" class="h-full w-72 mb-4" alt="...">
                         <h5 class="slide_title text-5xl text-white font-bold animate__animated animate__fadeInLeft">
                             Encuentra increibles lugares en Puerto Montt
                         </h5>
@@ -27,15 +27,15 @@
                     <div class="h-[550px]">
 
                         <img src="{{ asset('uploads/business/'.$carousel[$i]['folder'].'/'.$image) }}" class="block w-full h-full object-cover brightness-50" alt="..." />
-                        <div class="absolute top-1/2 right-0 md:right-56 -translate-y-1/2 text-right pr-5 text-white md:block w-full md:w-96 border-r-8 border-danger">
+                        <div class="absolute top-1/2 right-0 md:right-80 -translate-y-1/2 text-right pr-5 text-white md:block md:w-[50%] border-r-8 border-danger">
                             <h5 class="slide_title text-5xl font-bold">
                                 {{ $carousel[$i]['name'] }}
                             </h5>
                             <p class="slide_subtitle my-3">
-                                <i class="text-rose-500 fa-solid fa-location-dot"></i> {{ $carousel[$i]['address'] }}
+                                <i class="text-rose-500 fa-solid fa-location-dot"></i> {{ $carousel[$i]['address'] }}</span>
                             </p>
                             <p class="slide_subtitle">
-                               {{ substr($carousel[$i]['description'], 0, 80) }} ...<x-link href="{{ route('business.show', ['id' => $carousel[$i]['id'] ]) }}">
+                               {{ strip_tags(substr($carousel[$i]['description'], 0, 200)) }} ...<x-link href="{{ route('business.show', ['id' => $carousel[$i]['id'] ]) }}">
                                 Saber más &raquo;
                             </x-link>
                             </p>
@@ -50,14 +50,19 @@
 </section>
 
 <script type="module">
+
     var header = new Splide( '#splide_header', {
         type  : 'fade',
         rewind: true,
         speed: 900,
-        clones: 0
-    });
-
-    header.mount();
+        clones: 0,
+        autoScroll: {
+            speed: 0.5,
+            pauseOnHover: false,
+            pauseOnFocus: false,
+            rewind: true,
+        }
+    }).mount({ AutoScroll }); //NEED FIX
 
     header.on('active', function(e) {
         const title = e.slide.querySelector('.slide_title');

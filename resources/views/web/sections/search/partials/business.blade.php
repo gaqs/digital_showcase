@@ -4,8 +4,14 @@
 
 <div class="md:container-xl container-xl">
     <div class="grid grid-cols-12 gap-4">
-        <div class="col-span-12 md:col-span-6">
+        @if( $results->isEmpty() )
+            <div class="col-span-12 flex flex-col items-center justify-center mt-28">
+                <img src="{{ asset('img/lost.svg') }}" alt="No results" class="w-80 mb-2">
+                <p><i>- "Donde estoy?, aquí no hay nada."</i></p>
+            </div>
+        @else
 
+        <div class="col-span-12 md:col-span-6">
             @foreach ( $results as $r )
             @php
                 $avatar = 'uploads/business/'.show_business_avatar($r->folder);
@@ -63,6 +69,7 @@
         <div class="hidden md:block md:col-span-6 sticky top-0 h-screen">
             <div id="mapSearch" class="h-full w-full"></div>
         </div>
+        @endif
     </div>
 </div>
 <script>
@@ -72,6 +79,8 @@ var lon_value = '-72.94078';
 
 window.addEventListener('load', function() {
     // Crear nuevo marcador (arrastrable)
+    const coorDefault = { lat: parseFloat(lat_value), lng: parseFloat(lon_value) };
+    
     const map = L.map('mapSearch').setView(coorDefault, 14);
 
     // Añadir capa de OpenStreetMap
@@ -79,7 +88,15 @@ window.addEventListener('load', function() {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
+    var markerIcon = L.icon({
+            iconUrl: '/img/marker_2.svg', // Ruta al icono del marcador
+            iconSize: [60, 60],           // Ajusta el tamaño según tu SVG
+            iconAnchor: [30, 60],         // Ajusta el ancla según tu SVG
+            popupAnchor: [0, -60]
+        });
+
     marker = L.marker([lat_value, lon_value], {
+        icon: markerIcon,
         draggable: false,
     }).addTo(map);
 

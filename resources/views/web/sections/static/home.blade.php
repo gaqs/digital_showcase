@@ -7,8 +7,8 @@
             </div>
         </div>
     </div>
-    @include('web.sections.static.partials.products')
     @include('web.sections.static.partials.business')
+    @include('web.sections.static.partials.products')
     @include('web.sections.static.partials.comments')
     @include('web.sections.static.partials.aboutus')
 </x-app-layout>

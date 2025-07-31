@@ -63,7 +63,7 @@
                 <i class="fa-brands fa-facebook !text-neutral-300"></i>
             </a>
             <a href="#!" class="mr-6 text-neutral-300 dark:text-neutral-200">
-                <i class="fa-brands fa-twitter !text-neutral-300"></i>
+                <img src="{{ asset('img/icons/x_fontawesome.svg') }}" class="invert-[70] w-[18px] h-[18px] mt-[3px]" alt="">
             </a>
             <a href="#!" class="mr-6 text-neutral-300 dark:text-neutral-200">
                 <i class="fa-brands fa-instagram !text-neutral-300"></i>
@@ -83,8 +83,7 @@
                     Municipalidad de Puerto Montt
                 </h6>
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae ultricies felis, a bibendum
-                    nibh. Nulla pretium eget mauris ac hendrerit.
+                    La Municipalidad de Puerto Montt, a través de Dideco y su Subdirección de Desarrollo Económico Local, impulsa diversas iniciativas orientadas al fortalecimiento del ecosistema emprendedor local.
                 </p>
                 <p class="mb-4 mt-5 flex items-center justify-center md:justify-start font-semibold">
                     <a href="{{ route('admin.index') }}" target="_blank">
@@ -118,11 +117,11 @@
                 </h6>
                 <p class="mb-4 flex items-center justify-center md:justify-start">
                     <i class="fa-solid fa-house mr-2"></i>
-                    Av. Presidente Ibañez #600
+                    Av. Presidente Ibañez #600 - 2do piso.
                 </p>
                 <p class="mb-4 flex items-center justify-center md:justify-start">
                     <i class="fa-solid fa-envelope mr-2 !text-neutral-300"></i>
-                    info@example.com
+                    info@subdelpuertomontt.com
                 </p>
                 <p class="mb-4 flex items-center justify-center md:justify-start">
                     <i class="fa-solid fa-phone mr-2"></i>
@@ -135,7 +134,7 @@
 <!--Copyright section-->
 <div class="bg-neutral-700 p-6 text-center text-neutral-300 dark:bg-neutral-700">
     <span>© 2023 Copyright:</span>
-    <a class="font-semibold text-neutral-300 dark:text-neutral-400" href="https://tailwind-elements.com/">
+    <a class="font-semibold text-neutral-300 dark:text-neutral-400" href="#!>
         Gustavo Quilodrán | gaqs.02@gmail.com
     </a>
 </div>

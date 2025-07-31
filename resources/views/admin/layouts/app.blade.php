@@ -63,7 +63,7 @@
                         <ul class="mt-10">
                             <li class="text-sm">CONTENIDO</li>
                         </ul>
-                        <ul class=" ml-5 w-100 text-surface dark:text-white">
+                        <ul class="ml-5 w-100 text-surface dark:text-white">
                             <li class="w-full border-b-2 border-neutral-100 py-4 dark:border-white/10">
                                <a href="{{ route('admin_users.index') }}"><i class="fas fa-users mr-1"></i> Usuarios</a>
                             </li>
@@ -86,6 +86,14 @@
                             </li>
                             <li class="w-full border-b-2 border-neutral-100 py-4 dark:border-white/10">
                                 <a href="#"><i class="fas fa-briefcase mr-1"></i> Contraseñas</a>
+                            </li>
+                        </ul>
+
+                        <ul class="ml-5 mt-10">
+                            <li>
+                                <a href="{{ route('home.index') }}">
+                                    <i class="fas fa-long-arrow-alt-left"></i> Volver a la pagina oficinal
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -125,4 +133,34 @@
 
         form.submit();
     });
+
+
+    /* Global admin delete files from business or products */
+    let deleteButton = document.querySelectorAll('#delete_file');
+
+    if (deleteButton.length > 0) {
+        deleteButton.forEach( button => {
+            button.addEventListener('click', function(e){
+                var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
+                if (r){
+                    var _token = $('meta[name="csrf-token"]').attr('content');
+                    let fileRoute = this.getAttribute('data-file');
+                    let type = this.getAttribute('data-type');  
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('admin_home.delete_file') }}", 
+                        data: { file: fileRoute, type: type},
+                        headers: {
+                            'X-CSRF-TOKEN': _token
+                        },
+                        success: function(data){
+                            location.reload();
+                        }
+                    });
+                }
+            });
+        });
+    }
+    
+
 </script>

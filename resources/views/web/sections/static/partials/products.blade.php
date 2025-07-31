@@ -1,11 +1,13 @@
 <section id="products" class="md:px-20">
-    <div class="container-xl relative pt-20">
+    <div class="container-xl relative pt-32">
         <div class="grid grid-cols-12 text-center" id="products_categories">
             <div class="col-span-12 mb-5">
                 <h4 class="text-rose-500">Productos destacados</h4>
                 <h2 class="text-3xl text-neutral-900 font-bold w-full">Nuevos para ti</h2>
             </div>
         </div>
+
+        @if( empty($products))
         <section id="product_splide" class="splide" aria-label="Listado de productos">
             <div class="splide__track">
                   <ul class="splide__list">
@@ -49,6 +51,12 @@
                   </ul>
             </div>
         </section>
+        @else
+        <section id="product_splide" aria-label="No hay productos" class="text-center">
+            <img src="{{ asset('img/camping.svg') }}" alt="" class="w-[400px] mx-auto mb-5">
+            <p><i>- "Limpio y vacío, perfecto para un camping".</i></p>
+        </section>
+        @endif
     </div>
 </section>
 <script type="module">

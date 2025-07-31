@@ -46,7 +46,7 @@
                         <span id="name_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                     </div>
                     <div class="col-span-8 mt-1">
-                        <select data-te-select-init data-te-select-size="lg" id="business_id" name="business_id" required>
+                        <select data-te-select-init data-te-select-size="lg" id="business_id" name="business_id" {{ isset($product->business_id) ? 'disabled':'' }} required>
                             {{ business_list_per_id(old('business_id', $product->business_id ?? null), Auth::user()->id ) }}
                         </select>
                         <div class="text-neutral-400 text-xs leading-normal ml-2">*Seleccione en este listado uno de sus tiendas, la cual venderá el producto que va a ingresar.</div>
@@ -186,6 +186,7 @@
         init: function(){
             this.on("sending", function(file, xhr, data) {
                 data.append("folder", folder );
+                data.append("business_id", document.getElementById('business_id').value);
             });
 
             if( gal != '' ){
@@ -193,6 +194,10 @@
                     let mockFile = { name: x, size: 12345 };
                     this.displayExistingFile(mockFile, '/uploads/products/'+folder+'/'+x);
                 });
+
+                var existingFiles = gal.length;
+                this.options.maxFiles = 4 - existingFiles; //actualiza el maximo de imagenes que se pueden subir
+
             }
         },
         addedfiles: function(file){
@@ -223,7 +228,7 @@
     });
 
     var firstError = '';
-    var requiredFields = document.querySelectorAll('#business_edit_form [required]');
+    var requiredFields = document.querySelectorAll('#product_edit_form [required]');
 
     //vuelve a ocultar los mensajes de error cuando se ingrese informacion en los input
     requiredFields.forEach(field => {
@@ -248,14 +253,17 @@
                 firstError = firstError == '' ? field : firstError;
                 allFull = false
                 if( errorSpan != null ){
-                    //errorSpan.classList.remove('hidden');
+                    errorSpan.classList.remove('hidden');
                 }
 
             }
         });
 
+        if(allFull == false){
+            alert('Le faltan completar algunos campos obligatorios.');
+        }
+
         //hace scroll hasta hacer visible el primer error que se guarda en la revicion anterior
-        console.log(firstError)
         if (firstError) {
             const offset = 400;
             window.scrollTo({
@@ -280,9 +288,6 @@
                 form.submit();
             }
         }
-
-
-
     });
 
     gallery.on("successmultiple", function(files, response) {

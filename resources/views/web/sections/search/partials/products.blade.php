@@ -1,8 +1,16 @@
 <div class="my-3">
     @include('web.sections.static.partials.search')
 </div>
-<div class="md:container container-xl">
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
+<div class="container-xl">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-4 mt-5">
+        @if( $results->isEmpty() )
+            <div class="col-span-12 md:col-span-4 flex flex-col items-center justify-center mt-28">
+                <img src="{{ asset('img/empty.svg') }}" alt="No results" class="w-80 mb-2">
+                <p><i>- "Mira lo que encontré..."</i></p>
+                <p><i>- "Espera, ahí no hay nada..."</i></p>
+                <p><i>- "Exacto!"</i></p>
+            </div>
+        @endif
         @foreach ( $results as $r )
 
             <div id="product_container" class="relative flex flex-col justify-between block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">

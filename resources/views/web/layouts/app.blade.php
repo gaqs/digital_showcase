@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Digital Showcase') }}</title>
@@ -18,7 +19,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css','resources/js/app.js'])
 
-        <link rel="stylesheet" href="{{ asset('css/style.css') }}?v=1.2">
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('css/share-buttons.css') }}">
 
     </head>
@@ -43,8 +44,9 @@
         @include('web.layouts.footer')
     </body>
 </html>
-<script src="{{ asset('js/scripts.js') }}"></script>
+
 <script src="{{ asset('js/share-buttons.js') }}"></script>
+<script src="{{ asset('js/scripts.js') }}"></script>
 <script>
 
     //save and delete business on profile

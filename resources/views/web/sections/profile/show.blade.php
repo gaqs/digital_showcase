@@ -84,8 +84,9 @@
                 <div class="grid grid-cols-1 justify-items-center gap-4">
 
                     @if (count($business) == 0)
-                        <div class="col-span-12 mb-5">
-                            <p class="p-10">El usuario no tiene negocios creados.</p>
+                        <div class="col-span-12 flex flex-col items-center justify-center mt-28">
+                            <img src="{{ asset('img/no-business.svg') }}" alt="No results" class="w-96 mb-2">
+                            <p><i>- "Aquí pondría mis negocios... ¡SI TUVIERA ALGUNO!"</i></p>
                         </div>
                     @else
                         @foreach ($business as $bus)

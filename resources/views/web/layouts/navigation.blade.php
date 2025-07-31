@@ -1,5 +1,5 @@
 <!-- Main navigation container -->
-<nav class="flex-no-wrap {{  request()->routeIs('home.index') ? 'lg:bg-transparent lg:text-white bg-white text-neutral-700' : 'bg-white text-neutral-700' }} absolute top-0 left-0 right-0 z-20 w-full items-center justify-between bg-neutral-100 py-3 dark:bg-neutral-600 dark:shadow-black/10 lg:flex-wrap lg:justify-start lg:py-5 z-30" id="navbar_top" data-te-navbar-ref>
+<nav class="flex-no-wrap {{  request()->routeIs('home.index') ? 'lg:bg-transparent lg:text-white bg-white text-neutral-700' : 'bg-white text-neutral-700' }} absolute top-0 left-0 right-0 z-[9999] w-full items-center justify-between bg-neutral-100 py-3 dark:bg-neutral-600 dark:shadow-black/10 lg:flex-wrap lg:justify-start lg:py-5" id="navbar_top" data-te-navbar-ref>
 
     <div class="flex w-full flex-wrap items-center justify-between px-3 lg:px-20">
         <!-- Hamburger button for mobile view -->
@@ -29,7 +29,7 @@
                     Productos
                 </x-nav-link>
                 <x-nav-link  href="#" >
-                    Nosotros
+                    Oficios (pronto)
                 </x-nav-link>
                 <!--
                 <x-dropdown value="Negocios" type="link">
@@ -48,8 +48,11 @@
                     </div>
                     <x-dropdown value="{{ 'Hola '.Auth::user()->name }}" type="link">
                         <x-dropdown-link :href="route('profile.home')"><i class="fa-solid fa-user"></i> Mi perfil</x-dropdown-link>
-                        <x-dropdown-link :href="route('profile.home')"><i class="fa-solid fa-building-circle-check"></i> Crear negocio</x-dropdown-link>
-                        <x-dropdown-link :href="route('profile.home')"><i class="fa-solid fa-icons"></i> Crear producto</x-dropdown-link>
+                        <x-dropdown-link href="{{ route('business.create') }}#create_business"><i class="fa-solid fa-building-circle-check"></i> Crear negocio</x-dropdown-link>
+                        <x-dropdown-link href="{{ route('product.create') }}#create_product"><i class="fa-solid fa-icons"></i> Crear producto</x-dropdown-link>
+                        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin')
+                            <x-dropdown-link :href="route('admin.index')"><i class="fa-solid fa-gear"></i> Administrador</x-dropdown-link>
+                        @endif
                         <form action="{{ route('logout') }}" method="post">
                             @csrf
                             <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">

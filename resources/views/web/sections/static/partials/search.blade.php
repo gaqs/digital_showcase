@@ -11,7 +11,7 @@
                     <x-radio name="option" :checked="(request()->option) == 1 ? 'checked' : null" id="input-radio-business" value="1">Productos</x-radio>
                 </div>
             </div>
-            <div class="col-span-12 md:col-span-6">
+            <div class="col-span-12 md:col-span-6 mb-3">
                 <x-input-large id="input_search" class="w-full" type="text" name="search" placeholder="Ingrese lo que quiera buscar" value="{{ request()->search }}" />
             </div>
             <div class="col-span-12 md:col-span-4 mb-3">

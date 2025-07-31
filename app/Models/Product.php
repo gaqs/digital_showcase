@@ -52,6 +52,9 @@ class Product extends Model
         'web',
         'others',
         'stock',
+        'folder',
+        'created_at',
+        'updated_at'
     ];
 
     public function business()

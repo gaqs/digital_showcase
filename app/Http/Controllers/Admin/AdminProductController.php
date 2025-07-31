@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Business;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Intervention\Image\Laravel\Facades\Image;
 
 class AdminProductController extends Controller
 {
@@ -78,7 +79,25 @@ class AdminProductController extends Controller
         if($product->isDirty()){
             $product->save();
         }
+
         
+        $folder = $request->folder;
+        $folder_path = public_path('uploads/products/'.$folder);
+
+        $files = $request->file('gallery');
+
+        if( $files ){
+            foreach ($files as $file){
+                $file_name = time().'_'.str_random(10) .'.'.$file->extension();
+                //$file->move($folder_path, $file_name);
+                
+                $save_path = $folder_path . '/' . $file_name;
+
+                $img = Image::read($file)->cover(800,700,'center');
+                $img->save($save_path);
+
+            }
+        }
 
         return Redirect::route('admin_product.edit', $product)->with(['status' => 'success', 'message' => 'Producto editado correctamente']);
     }

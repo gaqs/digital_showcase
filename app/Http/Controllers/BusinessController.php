@@ -45,6 +45,8 @@ class BusinessController extends Controller
 
         $data['user_id'] = Auth::user()->id;
         $data['folder'] = $request->session()->get('business_folder');
+        $data['created_at'] = now();
+        $data['updated_at'] = now();
 
         $business = Business::insertGetId($data);
 
@@ -106,6 +108,7 @@ class BusinessController extends Controller
         if($request->session()->has('business_folder')){
             $data['folder'] = $request->session()->get('business_folder');
         }
+        $data['updated_at'] = now();
 
         $business::find($request->id)->update($data);
 
@@ -143,31 +146,36 @@ class BusinessController extends Controller
     public function avatar(Request $request){
 
         $folder = $request->folder;
-        if( $folder == 'default' || $folder == null){
-            $folder = Str::random(10);
-            $db_folder = Business::where('folder', $folder)->first();
 
-            while( !empty($db_folder->folder) ){
-                $folder = Str::random(10);
+        //si no hay nombre de carpeta en $folder, genera una que no exista en la DB
+        if( $folder == '' || empty($folder)){
+            do{
+                $folder = str_random(10).'_'.time();
                 $db_folder = Business::where('folder', $folder)->first();
-            }
+            }while($db_folder);
         }
+
         $request->session()->put('business_folder', $folder);
 
+        //crea la carpeta si no existe
+        $folder_path = public_path('uploads/business/' . $folder);
+        if (!is_dir($folder_path)) { mkdir($folder_path, 0775, true); }
+
         if ($request->hasFile('profile')) {
-            $fileName = '_avatar.'.$request->file('profile')->extension();
-            $request->file('profile')->move(public_path('uploads/business/'.$folder), $fileName);
+            $file_name = '_avatar.'.$request->file('profile')->extension();
+            $request->file('profile')->move( $folder_path, $file_name);
         }
 
         return response()->json([ 'success' => 200 ]);
 
     }
+    
     public function gallery(Request $request){
         $folder = ($request->folder == 'default' || $request->folder == null ) ? $request->session()->get('business_folder') : $request->folder;
 
         $files = $request->file('gallery');
         foreach ($files as $file){
-            $fileName = Str::random(10)  .'.'.$file->extension();
+            $fileName = str_random(10).'_'.time().'.'.$file->extension();
             $file->move(public_path('uploads/business/'.$folder), $fileName);
         }
     }

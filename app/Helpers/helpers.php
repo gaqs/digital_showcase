@@ -53,6 +53,10 @@ if( ! function_exists('manage_profile_files')) {
     }
 }
 
+
+/*
+return the business avatar folder, name and extension 'ugxIKlsdjw/_avatar.jpg'
+*/
 if( ! function_exists('show_business_avatar')) {
     function show_business_avatar($folder) {
         if( $folder != 'default' || $folder != null ){
@@ -123,7 +127,7 @@ function print_stars($rating) {
     $rating = max(0, min($rating, $total_stars));
 
     for ($i = 1; $i <= $rating; $i++) {
-        $html .= '<i class="fa-solid fa-star text-amber-500"></i>';
+        $html .= '<i class="fa-solid fa-star color-amber"></i>';
     }
     for ($i = $rating + 1; $i <= $total_stars; $i++) {
         $html .= '<i class="fa-solid fa-star text-neutral-400"></i>';
@@ -188,4 +192,12 @@ if (! function_exists('role_list')) {
     }
 }
 
-?>
+if (! function_exists('str_random')) {
+    function str_random($length = 10){
+
+        return substr(str_shuffle(str_repeat('0123456789abcdefghijklmnopqrstuvwxyz', $length)), 0, $length);
+
+    }
+}
+
+

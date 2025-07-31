@@ -62,6 +62,7 @@ class ProfileController extends Controller
 
         //Guardar la información del perfil
         $user_profile = UserProfile::where('user_id', $request->user()->id)->first();
+
         $user_profile->fill($request->only(['phone','address','description','facebook','instagram','x','tiktok']));
         $user_profile->save();
 

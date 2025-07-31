@@ -1,10 +1,10 @@
 <section id="aboutus">
-    <div class="container-xl relative md:px-20 py-20">
+    <div class="container mx-auto relative md:px-20 py-32 ">
         <div class="grid grid-cols-12 gap-4 content-center">
-            <div class="col-span-12 md:col-span-7">
-                <img src="{{ asset('img/team_collab.png') }}" alt="" class="w-full">
+            <div class="col-span-12 md:col-span-6">
+                <img src="{{ asset('img/logo_muni.png') }}" alt="" class="w-[80%] p-10">
             </div>
-            <div class="col-span-12 md:col-span-5 text-center md:text-left">
+            <div class="col-span-12 md:col-span-6 text-center md:text-left">
                 <div>
                     <h4 class="text-rose-500">Informacion relevante</h4>
                     <h2 class="text-3xl text-neutral-900 font-bold w-full">Nosotros</h2>

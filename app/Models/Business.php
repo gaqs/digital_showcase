@@ -62,6 +62,7 @@ class Business extends Model
         'latitude',
         'longitude',
         'folder',
+        'created_at',
         'updated_at'
     ];
 

@@ -30,12 +30,15 @@
                             <x-input-error :messages="$errors->get('email')" class="mt-1" />
                         </div>
                         <div class="mt-4">
-                            <x-input-float id="input_password" type="text" name="password" required placeholder="Contraseña" />
+                            <x-input-float id="input_password" type="password" name="password" required placeholder="Contraseña" />
                             <x-input-error :messages="$errors->get('password')" class="mt-1" />
                         </div>
                         <div class="mt-4">
-                            <x-input-float id="input_password_2" type="text" name="password_confirmation" required placeholder="Confirmar contraseña" />
+                            <x-input-float id="input_password_2" type="password" name="password_confirmation" required placeholder="Confirmar contraseña" />
                             <x-input-error :messages="$errors->get('password')" class="mt-1" />
+                        </div>
+                        <div class="mt-4">
+                            <x-checkbox id="conditions">He leido y acepto los <x-link href="">Terminos y Condiciones de Uso</x-link></x-checkbox>
                         </div>
 
                         <x-button type="submit" class="mt-5 w-full !font-bold capitalize !py-3 !text-base" value="danger">
@@ -44,7 +47,7 @@
                     </form>
                     <div class="grid mt-5 text-center">O Registrate con</div>
                     <div class="flex mt-5 gap-3">
-                        <div class="basis-1/2">
+                        <div class="w-full">
                             <a href="#">
                                 <x-button class=" w-full md:text-center !font-bold !py-3" value="secondary" disabled="true">
                                     <img src="{{ asset('img/google.png') }}" alt="" width="15"
@@ -52,6 +55,7 @@
                                 </x-button>
                             </a>
                         </div>
+                        <!--
                         <div class="basis-1/2">
                             <a href="#">
                                 <x-button class="w-full md:text-center !font-bold !py-3" value="secondary" disabled="true">
@@ -60,6 +64,7 @@
                                 </x-button>
                             </a>
                         </div>
+                        -->
                     </div>
                     <div class="grid mt-5 text-center">¿Ya tienes una cuenta? <x-link class="contents"
                             href="{{ route('login') }}">Inicia sesión</x-link>

@@ -39,13 +39,14 @@
                         </form>
                         <div class="grid mt-5 text-center">O Inicia sesión con</div>
                         <div class="flex mt-5 gap-3">
-                            <div class="basis-1/2">
+                            <div class="w-full">
                                 <a href="#">
                                     <x-button class="w-full md:text-center !font-bold !py-3" value="secondary">
                                         <img src="{{ asset('img/google.png') }}" alt="" width="15" class="inline mr-2"><span>Acceder con Google</span>
                                     </x-button>
                                 </a>
                             </div>
+                            <!--
                             <div class="basis-1/2">
                                 <a href="#">
                                     <x-button class="w-full md:text-center !font-bold !py-3" value="secondary">
@@ -53,6 +54,7 @@
                                     </x-button>
                                 </a>
                             </div>
+                            -->
                         </div>
                         <div class="grid mt-5 text-center">¿No tienes una cuenta? <x-link class="contents" href="{{ route('register') }}">Registrate</x-link></div>
 

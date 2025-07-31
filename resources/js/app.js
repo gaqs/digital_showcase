@@ -6,6 +6,9 @@ initTE({ Animate, Carousel, Datepicker, Input, Offcanvas, Ripple, Dropdown, Coll
 import Splide from '@splidejs/splide';
 window.Splide = Splide;
 
+import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
+window.AutoScroll = AutoScroll;
+
 import Dropzone from 'dropzone';
 window.dz = Dropzone;
 

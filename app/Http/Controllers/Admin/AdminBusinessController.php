@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Business;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
+use Intervention\Image\Laravel\Facades\Image;
 
 class AdminBusinessController extends Controller
 {
@@ -72,6 +74,7 @@ class AdminBusinessController extends Controller
             'yapo',
             'aliexpress',
             'address',
+            'number',
             'latitude',
             'longitude',
         ]));
@@ -79,7 +82,32 @@ class AdminBusinessController extends Controller
         if($business->isDirty()){
             $business->save();
         }
-        
+
+        $folder = $request->folder;
+        $filePath = public_path('uploads/business/'.$folder);
+
+        if( $request->hasFile('gallery')){
+            foreach ($request->file('gallery') as $file){
+                $fileName = Str::random(10)  .'.'.$file->extension();
+                $file->move( $filePath , $fileName);
+            }
+        }
+
+        if( $request->hasFile('avatar')){
+            $avatar = $request->file('avatar');
+
+            $old_avatar = show_business_avatar($folder);
+            if ($old_avatar != '') {
+                $avatar_path = public_path('uploads/business/'. show_business_avatar($folder));
+                unlink( $avatar_path );
+            }
+            
+            $save_path = public_path('uploads/business/'.$folder.'/_avatar.'.$avatar->extension());
+
+            $img = Image::read($avatar)->cover(500,500,'center');
+            $img->save($save_path);
+        }
+       
         return Redirect::route('admin_business.edit', $business)->with(['status' => 'success', 'message' => 'Negocio editado correctamente']);
     }
 
@@ -90,4 +118,5 @@ class AdminBusinessController extends Controller
     {
         //
     }
+
 }

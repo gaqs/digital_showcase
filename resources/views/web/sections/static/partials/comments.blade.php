@@ -1,13 +1,15 @@
 <section id="comments">
-    <div class="container-xl relative md:px-20 py-20">
+    <div class="container-xl relative md:px-20 pt-32">
         <div class="grid grid-cols-12 text-center gap-8" id="business_categories">
             <div class="col-span-12">
                 <h4 class="text-rose-500">Comentarios recientes</h4>
                 <h2 class="text-3xl text-neutral-900 font-bold w-full">Última actividad</h2>
             </div>
-
+            @php
+                $b_count = count($business_comments);
+                $p_count = count($products_comments);
+            @endphp
             @foreach($business_comments as $bc)
-
             @php
                 $avatar = ($bc->u_avatar == null) ? 'uploads/users/default/_avatar.jpg' : 'uploads/users/'.$bc->u_id.'/'.$bc->u_avatar;
             @endphp
@@ -54,10 +56,19 @@
 
             @endforeach
 
+            @if($b_count < 3)
+                @for($i = 0; $i < 3 - $b_count; $i++)
+                    <div class="col-span-12 md:col-span-4 flex flex-col items-center justify-center">
+                        <img src="{{ asset('img/post.svg') }}" alt="Sin comentario" class="w-80">
+                        <p class="mt-3"><i>- "Falta un comentario aquí..."</i></p>
+                    </div>
+                @endfor
+            @endif
+
+
             @foreach($products_comments as $pc)
 
             @php
-
                 $avatar = ($pc->u_avatar == null) ? 'uploads/users/default/_avatar.jpg' : 'uploads/users/'.$pc->u_id.'/'.$pc->u_avatar;
             @endphp
 
@@ -103,6 +114,15 @@
             </div>
 
             @endforeach
+
+            @if($p_count < 3)
+                @for($i = 0; $i < 3 - $p_count; $i++)
+                    <div class="col-span-12 md:col-span-4 flex flex-col items-center justify-center">
+                        <img src="{{ asset('img/post.svg') }}" alt="Sin comentario" class="w-80 scale-x-[-1]">
+                        <p class="mt-3"><i>- "Falta algo aquí..."</i></p>
+                    </div>
+                @endfor
+            @endif
 
         </div>
     </div>

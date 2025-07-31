@@ -172,8 +172,8 @@
             dictCancelUpload: '<i class="fa-solid fa-ban"></i>',
             paramName: 'avatar',
             autoProcessQueue: false,
-            resizeWidth: 300,
-            resizeHeight: 300,
+            resizeWidth: 200,
+            resizeHeight: 200,
             resizeMethod: 'crop',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')

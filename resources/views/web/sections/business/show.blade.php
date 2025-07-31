@@ -93,6 +93,25 @@
                     </div>
                 </div>
                 <div>
+                    <div class="block rounded-lg bg-white p-6 mb-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+                        <h5 class="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
+                            Ubicación
+                        </h5>
+                        <p class="mb-4 text-sm text-neutral-600 dark:text-neutral-200">
+                        <div class="grid grid-cols-12">
+                            <div class="col-span-12">
+                                <div id="mapBusiness" class="h-80"></div>
+                            </div>
+                            <div class="col-span-12 mt-2 justify-self-end">
+                                <a href="https://www.google.com/maps/search/?api=1&query={{ $business->latitude }},{{ $business->longitude }}" target="_blank" class="text-danger">
+                                    Ver ubicación en Google Maps &raquo;
+                                </a>
+                            </div>
+                        </div>
+                        </p>
+                    </div>
+                </div>
+                <div>
                     <div class="block rounded-lg bg-white p-6 pb-3 mb-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                         <h5 class="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
                             Productos
@@ -128,7 +147,7 @@
 
                             </div>
                             @else
-                                <p class="mt-5">No hay productos ingresados.</p>
+                                <p class="mt-5">No hay productos</p>
                             @endif
 
                             @if( count($products) != 0 )
@@ -144,25 +163,7 @@
                         </div>
                     </div>
                 </div>
-                <div>
-                    <div class="block rounded-lg bg-white p-6 mb-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-                        <h5 class="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
-                            Ubicación
-                        </h5>
-                        <p class="mb-4 text-sm text-neutral-600 dark:text-neutral-200">
-                        <div class="grid grid-cols-12">
-                            <div class="col-span-12">
-                                <div id="mapBusiness" class="h-80"></div>
-                            </div>
-                            <div class="col-span-12 mt-2 justify-self-end">
-                                <a href="https://www.google.com/maps/search/?api=1&query={{ $business->latitude }},{{ $business->longitude }}" target="_blank" class="text-danger">
-                                    Ver ubicación en Google Maps &raquo;
-                                </a>
-                            </div>
-                        </div>
-                        </p>
-                    </div>
-                </div>
+                
                 <div class="block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                     @include('web.sections.business.comments')
                 </div>
@@ -310,8 +311,8 @@
                                 <img src="{{ asset('img/icons/instagram_icon.png') }}" alt="" width="50"
                                     class="">
                             </a>
-                            <a href="{{ $business->twitter }}" target="_blank">
-                                <img src="{{ asset('img/icons/twitter_icon.png') }}" alt="" width="50"
+                            <a href="{{ $business->x }}" target="_blank">
+                                <img src="{{ asset('img/icons/x_icon.png') }}" alt="" width="50"
                                     class="">
                             </a>
                             <a href="{{ $business->tiktok }}" target="_blank">
@@ -438,7 +439,15 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
+        var markerIcon = L.icon({
+            iconUrl: '/img/marker_2.svg', // Ruta al icono del marcador
+            iconSize: [60, 60],           // Ajusta el tamaño según tu SVG
+            iconAnchor: [30, 60],         // Ajusta el ancla según tu SVG
+            popupAnchor: [0, -60]
+        });
+
         let marker = L.marker([lat_value, lon_value], {
+            icon: markerIcon,
             draggable: false,
         }).addTo(map);
 

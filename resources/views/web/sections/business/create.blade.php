@@ -321,10 +321,14 @@
                 });
 
                 if( gal != '' ){ //añade imagenes si es que el usuario edita el negocio
+                    console.log(gal);
                     gal.forEach(x => {
-                        let mockFile = { name: x, size: 12345 };
+                        let mockFile = { name: x };
                         this.displayExistingFile(mockFile, '/uploads/business/'+folder+'/'+x);
                     });
+                    
+                    var existingFiles = gal.length;
+                    this.options.maxFiles = 9 - existingFiles; //actualiza el maximo de imagenes que se pueden subir
                 }
             },
             addedfiles: function(file){
@@ -379,9 +383,22 @@
                 if(field.value.trim() == '' || field.value == 0){
                     firstError = firstError == '' ? field : firstError;
                     allFull = false;
-                    errorSpan.classList.remove('hidden');
+                    errorSpan.classList.remove('hidden');');
                 }
             });
+
+            if(allFull == false){
+                alert('Le faltan completar algunos campos obligatorios.');
+            }
+
+            //hace scroll hasta hacer visible el primer error que se guarda en la revicion anterior
+            if (firstError) {
+                const offset = 400;
+                window.scrollTo({
+                    top: offset,
+                    behavior: 'smooth',
+                });
+            }
 
             //1era vez subiendo imagenes y ambas deben estar con imagenes
             if( allFull && folder == '' ){
@@ -403,14 +420,6 @@
                     form.submit();
                 }
             }
-
-            if (firstError) {
-                firstError.scrollIntoView({
-                    behavior: 'smooth',
-                    block:'center'
-                });
-            }
-
         });
 
         profile.on("success", function(files, response) {

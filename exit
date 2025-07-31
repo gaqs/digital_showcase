@@ -1,0 +1,35 @@
+[33mcommit 5b7efb1ed4188a6509487dfd7f188b9d403da6a2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Gustavo Quilodran <gaqs.02@gmail.com>
+Date:   Tue Jun 17 12:34:50 2025 -0400
+
+    Se reemplaza Google Maps por Leaflet, se agrega sugerencia de calle, se separa la calle del numero, actualizaciones visuales. Sistema de administracion actualizado para visualizacion de textos descriptivos en negocio y productos.
+
+[33mcommit e4d7ea9ee4d7963f1296e72091a273bac6c2812e[m
+Author: Gustavo Quilodran <gaqs.02@gmail.com>
+Date:   Thu Mar 7 11:13:22 2024 -0300
+
+    actualizacion de errores en creacion de productos y negocios, validacion de tamaños de imagenes y limitar el envio del form si no hay imagenes en los dropzone al crear, fixes varios.
+
+[33mcommit c474b07293a439064a389c0a86e37f48c6b9d25e[m
+Author: Gustavo Quilodran <gaqs.02@gmail.com>
+Date:   Wed Jan 10 11:38:08 2024 -0300
+
+    Actualizacion botones de registro e inicio de sesion al para que estos muestren el icono de espera, ademas se actualiza las funcionalidades de la creacion de producto y negocios, ademas de validar los datos obligatorios
+
+[33mcommit cad9503543a63f7f5b320aa967e31ef3564004f5[m
+Author: Gustavo Quilodran <gaqs.02@gmail.com>
+Date:   Mon Jan 8 11:36:00 2024 -0300
+
+    se agrega apellido al registro, actualizacion de migraciones, y fix carousel del home cuando no hya negocios creados
+
+[33mcommit 4a75f4f18ba38648419ca75e5845799af891cebb[m
+Author: Gustavo Quilodran <gaqs.02@gmail.com>
+Date:   Mon Jan 8 08:48:07 2024 -0300
+
+    fix diversos errores encontrados por practicantee, informe errores en correo. Arreglo de visualizacion de imagenes que no se guardan de manera correcta, se agregan imagenes por defecto, actualizacion de base de datos para guardar la cantidad de comentarios y score promedio, se realiza esta actualizacion por cada comentario subido, entre otros.
+
+[33mcommit 85f37460e60bb56276c67a9aac2b783805e7884f[m
+Author: Gustavo Quilodran <gaqs.02@gmail.com>
+Date:   Tue Dec 12 09:41:34 2023 -0300
+
+    Primer commit plataforma de vitrina digital para el fomento en el comercio local, Laravel 10, breeze, socialite, tinker, livewire-tables, commentfy

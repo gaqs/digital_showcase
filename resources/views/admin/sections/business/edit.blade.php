@@ -4,7 +4,7 @@
             <x-button value="primary"><i class="fas fa-long-arrow-alt-left"></i> Volver</x-button>
         </a>
     </div>
-    <form id="form" action="{{ route('admin_business.update', ['business' => $business->id]) }}" method="POST">
+    <form id="form" action="{{ route('admin_business.update', ['business' => $business->id]) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         @include('admin.sections.business.form')
