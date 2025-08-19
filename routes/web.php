@@ -5,12 +5,14 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\TradeController;
 
 use App\Http\Controllers\Admin\AdminHomeController;
 use App\Http\Controllers\Admin\AdminBusinessController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminCommentController;
+use App\Http\Controllers\Admin\AdminTradeController;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ExternalAuthController;
@@ -75,6 +77,18 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])->group(function () {
         ]
     ]);
 
+    Route::resource('admin/trade', AdminTradeController::class, [
+        'names' => [
+            'index'   => 'admin_trade.index',
+            'create'  => 'admin_trade.create',
+            'store'   => 'admin_trade.store',
+            'show'    => 'admin_trade.show',
+            'edit'    => 'admin_trade.edit',
+            'update'  => 'admin_trade.update',
+            'destroy' => 'admin_trade.destroy',
+        ]
+    ]);
+
     Route::resource('admin/comments', AdminCommentController::class, [
         'names' => [
             'index'   => 'admin_comment.index',
@@ -103,6 +117,10 @@ Route::get('/business/{id}', [BusinessController::class, 'show'])->name('busines
 //Products
 Route::get('/product', [ProductController::class, 'index'])->name('product.home');
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
+
+//Trades
+Route::get('/trade', [TradeController::class, 'index'])->name('trade.home');
+Route::get('/trade/{id}', [TradeController::class, 'show'])->name('trade.show');
 
 //Search
 Route::get('/search/results', [SearchController::class, 'show'])->name('search.show');
@@ -143,6 +161,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/product/gallery', [ProductController::class, 'gallery'])->name('product.gallery');
     Route::post('/product/delete_file', [ProductController::class, 'delete_file'])->name('product.delete_file');
+
+    //trade crud
+    Route::get('/profile/trade/index', [TradeController::class, 'index'])->name('trade.index');
+    Route::get('/profile/trade/create', [TradeController::class, 'create'])->name('trade.create');
+    Route::post('/trade/store', [TradeController::class, 'store'])->name('trade.store');
+    Route::get('/profile/trade/edit/{id}', [TradeController::class, 'edit'])->name('trade.edit');
+    Route::patch('/trade/update/{id}', [TradeController::class, 'update'])->name('trade.update');
+    Route::delete('/trade/{id}', [TradeController::class, 'destroy'])->name('trade.destroy');
+
+    Route::post('/trade/avatar', [TradeController::class, 'avatar'])->name('trade.avatar');
+    Route::post('/trade/gallery', [TradeController::class, 'gallery'])->name('trade.gallery');
+    Route::post('/trade/banner', [TradeController::class, 'banner'])->name('trade.banner');
+    Route::post('/trade/delete_file', [TradeController::class, 'delete_file'])->name('trade.delete_file');
 
 });
 

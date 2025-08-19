@@ -26,14 +26,7 @@
             </p>
         </header>
 
-        @if (request()->routeIs('product.create'))
-            <form id="product_edit_form" method="post" enctype="multipart/form-data" action="{{ route('product.store') }}" class="mt-6 space-y-6">
-            @csrf
-        @else
-            <form id="product_edit_form" method="post" enctype="multipart/form-data" action="{{ route('product.update', ['id' => $product->id ]) }}" class="mt-6 space-y-6">
-            @csrf
-            @method('patch')
-        @endif
+        <form id="product_edit_form" method="post" enctype="multipart/form-data" action="#" class="mt-6 space-y-6">
 
             <div id="product_create_information" class="block rounded-lg bg-white p-6 mt-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                 <h5 class="mb-2 pb-1 font-medium leading-tight text-neutral-800 dark:text-neutral-50">
@@ -115,8 +108,8 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="col-span-2">
-                        <label for="dz_product" class="text-neutral-500"> Imágenes </label>
-                        <div id="dz_product" class="dropzone dz-clickeable text-center" name="dz_product">
+                        <label for="dz_gallery" class="text-neutral-500"> Imágenes </label>
+                        <div id="dz_gallery" class="dropzone dz-clickeable text-center" name="dz_product">
                             @csrf
                             <div class="dz-default dz-message text-sm">
                                 <i class="fa-solid fa-upload text-5xl"></i><br>
@@ -125,7 +118,7 @@
 
                         </div>
                         <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB.</div>
-                        <span id="dz_product_error" class="text-rose-500 text-xs dz_product_error"></span>
+                        <span id="dz_gallery_error" class="text-rose-500 text-xs dz_product_error"></span>
                     </div>
                 </div>
             </div>
@@ -140,81 +133,170 @@
 </section>
 <script type="module">
 
+    let id      = "{{ $product->id ?? 0 }}";
+    let gallery = @json($gallery ?? []);
+
+    var _token = $('meta[name="csrf-token"]').attr('content');
+    
+    const wysiwyg = document.getElementById('wysiwyg');
     const quill = new Quill('#wysiwyg',{
-            theme:'snow',
-            placeholder: 'Descripcion...',
-            modules: {
-                toolbar: [
-                    [{ 'header': [1, 2, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'align': [] }],
-                    ['blockquote', 'code-block'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['clean']
-                ]
+        theme:'snow',
+        placeholder: 'Descripción...',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'align': [] }],
+                ['blockquote', 'code-block'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['clean']
+            ]
+        }
+    });
+
+    //campos form obligatorios
+    const requiredFields = document.querySelectorAll('#product_edit_form [required]');
+    const businessWrapper = document.querySelector('#business_id'); //verificar select como algo aparte
+    const categoryWrapper = document.querySelector('#categories_id'); 
+
+    //vuelve a ocultar los mensajes de error cuando se ingrese informacion en los input
+    requiredFields.forEach(field => {
+        field.addEventListener("click", function(e){
+            const errorSpan = document.getElementById(`${field.name}_error`);
+            errorSpan.classList.add('hidden');
+        });
+    });
+
+    //error de ambios select
+    const businessError = document.getElementById('business_id_error');
+    document.getElementById('business_id').addEventListener('change', function() {
+        businessError.classList.add('hidden');
+    });
+
+    const categoryError = document.getElementById('categories_id_error');
+    document.getElementById('categories_id').addEventListener('change', function() {
+        categoryError.classList.add('hidden');
+    });
+
+    //submit form via ajax a business/store
+    document.querySelector("button[type=submit]").addEventListener("click", function(e) {
+
+        e.preventDefault();
+        e.stopPropagation();
+    
+        //verificar que todos los campos esten llenos, incluso las imagenes
+        let formStatus = true;
+        let imageStatus = true;
+
+        requiredFields.forEach(field => {
+            const errorSpan = document.getElementById(`${field.name}_error`);
+            if(field.value.trim() == '' || field.value == 0){
+                formStatus = false;
+                errorSpan.classList.remove('hidden');
             }
         });
 
+        //si id es 0, nuevo business. Debe subir por obligacion una imagen de perfil y minimo 3 imagenes en la galeria
+        if( id == 0 ){
+            if( dzGallery.getQueuedFiles().length < 3 ){
+                imageStatus = false;
+                alert('Por favor, asegúrate de subir al menos tres en la galeria.');
+            }
+        }
+        
+        //si formulario esta completo e imagenes subidas, enviar formulario via ajax y recuperar id del negocio
+        if( formStatus && imageStatus ){
+            const form = document.getElementById('product_edit_form');
+            const formData = new FormData(form);
+            //adjuntar al form el name "description" con el contenido del editor quill
+            formData.append('description',quill.root.innerHTML);
 
-    var folder = '<?= $product->folder ?? null ?>';
-    var images = '<?= isset($gallery) ? json_encode($gallery):null ?>';
-    var gal = ( images != '') ? Object.values(JSON.parse(images)) : '';
+            //deerminar metodo http
+            const isCreate = "{{ request()->routeIs('product.create') }}";
+            let url;
+            if( isCreate ){
+                url = "{{ route('product.store') }}";
+            }else{
+                url = "{{ route('product.update', $product->id ?? 0 ) }}";
+                formData.append('_method', 'PATCH');
+            }
 
-    let form = document.getElementById('product_edit_form');
+            //enviar formulario via ajax
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                processData: false, 
+                contentType: false, 
+                headers: { 'X-CSRF-TOKEN': _token },
+                success: function(data){
+                    //recueprar id business guardada
+                    id = data.business_id;
+                    //comienza a subir iamgenes
+                    if( dzGallery.getQueuedFiles().length > 0  ){
+                        dzGallery.processQueue();
+                    }
+                    if( isCreate ){
+                        window.location.href = "/product/"+id; //redirecciona al negocio subido
+                    }else{
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                        
+                    }
+                    
+                }
+            });
+        }
+    });
 
-    let _token = $('meta[name="csrf-token"]').attr('content');
-
-    let gallery = new dz("#dz_product", {
+    let dzGallery = new dz("#dz_gallery", {
         url:"{{ route('product.gallery') }}",
         method: "post",
         addRemoveLinks: true,
         acceptedFiles: 'image/*',
-        maxFiles: 4,
+        maxFiles: 9,
         dictRemoveFile: '<i class="fa-solid fa-trash-can"></i>',
         dictCancelUpload: '<i class="fa-solid fa-ban"></i>',
         paramName: 'gallery',
         autoProcessQueue: false,
         uploadMultiple: true,
-        parallelUploads: 4,
+        parallelUploads: 10,
         maxFilesize: 20000000,
-        resizeWidth: 800,
-        resizeHeight: 700,
-        resizeMethod: 'crop',
         headers: {
             'X-CSRF-TOKEN': _token
         },
         init: function(){
-            this.on("sending", function(file, xhr, data) {
-                data.append("folder", folder );
-                data.append("business_id", document.getElementById('business_id').value);
+            this.on("sending", function(file, xhr, data) { //añade nombre carpeta (id) si usuario edita el negocio
+                data.append( "id", id );
             });
 
-            if( gal != '' ){
-                gal.forEach(x => {
-                    let mockFile = { name: x, size: 12345 };
-                    this.displayExistingFile(mockFile, '/uploads/products/'+folder+'/'+x);
+            if( gallery != '' ){ //añade imagenes si es que el usuario edita el negocio
+                gallery = JSON.parse(gallery);
+                gallery.forEach(x => {
+                    let mockFile = { name: x };
+                    this.displayExistingFile(mockFile, '/uploads/products/'+id+'/'+x);
                 });
-
-                var existingFiles = gal.length;
-                this.options.maxFiles = 4 - existingFiles; //actualiza el maximo de imagenes que se pueden subir
-
+                
+                var existingFiles = gallery.length;
+                this.options.maxFiles = 9 - existingFiles; //actualiza el maximo de imagenes que se pueden subir
             }
         },
         addedfiles: function(file){
             for (let j=0; j < file.length; j++) {
                 if (file[j].size > 20000000) { // This is the maximum file size in bytes
-                    $('#dz_product_error').html('El peso máximo de las imágenes debe ser de 2MB');
+                    $('#dz_gallery_error').html('El peso máximo de las imágenes debe ser de 2MB');
                     file[j].previewElement.remove();
                 }
             }
         },
         removedfile: function(file){ //elimina imagenes previamente subidas o al momento de la creacion
             var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
-            if( r == true && folder != '' ){
+            if( r == true && id != '' ){
                 $.ajax({
                     type: 'POST',
                     url: "{{ route('product.delete_file') }}",
-                    data: { file: folder+'/'+file.name },
+                    data: { file: id+'/'+file.name },
                     headers: {
                         'X-CSRF-TOKEN': _token
                     },
@@ -223,76 +305,8 @@
                     }
                 });
 
-            }else if( r == true && folder == ''){ file.previewElement.remove();  }
+            }else if( r == true ){ file.previewElement.remove();  }
         }
     });
-
-    var firstError = '';
-    var requiredFields = document.querySelectorAll('#product_edit_form [required]');
-
-    //vuelve a ocultar los mensajes de error cuando se ingrese informacion en los input
-    requiredFields.forEach(field => {
-        field.addEventListener("keydown", function(e){
-            const errorSpan = document.getElementById(`${field.name}_error`);
-            errorSpan.classList.add('hidden');
-            firstError = '';
-        });
-    });
-
-    document.querySelector("button[type=submit]").addEventListener("click", function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        document.getElementById('textarea_product-description').value = quill.root.innerHTML;
-
-        //validacion de datos y agrega error si no esta lleno, ademas valida si todo esta
-        let allFull = true;
-        requiredFields.forEach(field => {
-            const errorSpan = document.getElementById(`${field.name}_error`);
-            if (field.value.trim() === '' || field.value == 0 ) {
-                firstError = firstError == '' ? field : firstError;
-                allFull = false
-                if( errorSpan != null ){
-                    errorSpan.classList.remove('hidden');
-                }
-
-            }
-        });
-
-        if(allFull == false){
-            alert('Le faltan completar algunos campos obligatorios.');
-        }
-
-        //hace scroll hasta hacer visible el primer error que se guarda en la revicion anterior
-        if (firstError) {
-            const offset = 400;
-            window.scrollTo({
-                top: offset,
-                behavior: 'smooth',
-            });
-        }
-
-        //1era vez subiendo imagenes o editando
-        if( allFull && folder == '' ){
-            if( gallery.getQueuedFiles().length > 0 ){
-                gallery.processQueue();
-            }else{
-                alert('Por favor, asegúrate de subir al menos una imagen a su galería');
-            }
-        }
-        //editando imagenes
-        if( allFull && folder != '' ){
-            if( gallery.getQueuedFiles().length > 0 ){
-                gallery.processQueue();
-            }else{
-                form.submit();
-            }
-        }
-    });
-
-    gallery.on("successmultiple", function(files, response) {
-        form.submit();
-    });
-
 </script>
 @endsection

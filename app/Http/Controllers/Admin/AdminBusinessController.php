@@ -96,9 +96,9 @@ class AdminBusinessController extends Controller
         if( $request->hasFile('avatar')){
             $avatar = $request->file('avatar');
 
-            $old_avatar = show_business_avatar($folder);
+            $old_avatar = get_images_from_folder('business',$folder,'avatar');
             if ($old_avatar != '') {
-                $avatar_path = public_path('uploads/business/'. show_business_avatar($folder));
+                $avatar_path = public_path('uploads/business/'.$folder.'/'. get_images_from_folder('business',$folder,'avatar'));
                 unlink( $avatar_path );
             }
             

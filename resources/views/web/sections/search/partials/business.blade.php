@@ -14,7 +14,7 @@
         <div class="col-span-12 md:col-span-6">
             @foreach ( $results as $r )
             @php
-                $avatar = 'uploads/business/'.show_business_avatar($r->folder);
+                $avatar = 'uploads/business/'.get_images_from_folder('business',$r->id,'avatar');
             @endphp
 
                 <div id="business_container" class="mb-4 border-4 border-neutral flex flex-col rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 md:flex-row cursor-pointer" >

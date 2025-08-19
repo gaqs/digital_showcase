@@ -14,15 +14,11 @@
                     <div class="splide__track">
                         <ul class="splide__list">
                             @php
-                                $base_url = asset('uploads/products/'.$product->folder).'/';
-                                $path = public_path('uploads/products/'.$product->folder);
-                                $images = array_diff(scandir($path), array('.','..'));
-
-                                $i = 0;
+                                $images = get_images_from_folder('products', $product->id, 'gallery' );
 
                                 foreach ($images as $img) {
                                     echo '<li class="splide__slide flex justify-center">
-                                            <img src="'.$base_url.$img.'" class="" alt="">
+                                            <img src="'.asset('uploads/products/'.$product->id.'/'.$img).'" class="" alt="">
                                          </li>';
                                 }
                             @endphp
@@ -32,7 +28,7 @@
                 <ul id="thumbnails" class="thumbnails">
                     @foreach ( $images as $img )
                     <li class="thumbnail">
-                        <img src="{{ $base_url.$img }}" alt="">
+                        <img src="{{ asset('uploads/products/'.$product->id.'/'.$img) }}" alt="">
                     </li>
                     @endforeach
                 </ul>
@@ -174,6 +170,9 @@
                 </div>
             </div>
             <div id="product_responsable" class="col-span-12 md:col-span-4">
+                @php
+                    $avatar = get_images_from_folder('business', $business->id, 'avatar' );
+                @endphp
                 <div>
                     <div class="block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                         <h5 class="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">

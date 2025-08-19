@@ -91,16 +91,17 @@ class ProfileController extends Controller
     }
 
     public function avatar(Request $request)
-    {
-        $aux = manage_profile_files($request, 'avatar');
+    {      
+        $id = Auth::user()->id;
+        $aux = save_entity_image($request, 'users', $id, 'avatar'); //guarda el avatar del usuario en una carpeta con el id del usuario
         return $aux;
     }
 
     public function banner(Request $request)
     {
-        $aux = manage_profile_files($request, 'banner');
+        $id = Auth::user()->id;
+        $aux = save_entity_image($request, 'users', $id, 'banner'); //guarda el avatar del usuario en una carpeta con el id del usuario
         return $aux;
-
     }
 
     public function save(Request $request)

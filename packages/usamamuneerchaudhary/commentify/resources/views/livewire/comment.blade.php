@@ -12,8 +12,13 @@
             <footer class="flex justify-between items-center mb-1">
                 <div class="flex items-center">
                     <div class="flex flex-row content-center">
+
+                        <?php
+                            $avatar = get_images_from_folder('users', $comment->user->id, 'avatar');
+                        ?>
+
                         <div class="mr-3" id="user_avatar">
-                            <img src="{{ asset($comment->user->avatar()) }}" alt="{{$comment->user->name}}" class="w-12 rounded-full" />
+                            <img src="{{ asset('uploads/users/'.$avatar) }}" alt="{{$comment->user->name}}" class="w-12 rounded-full" />
                         </div>
                         <div>
                             <p class="font-bold" id="user_name">{{Str::ucfirst($comment->user->name)}}</p>

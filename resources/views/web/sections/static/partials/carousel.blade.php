@@ -16,26 +16,24 @@
 
                 </div>
             </li>
-            @for ($i=0; $i < count($carousel); $i++)
-                @if(!empty($carousel))
-
+            @foreach($business as $b)
+                @if(!empty($b))
                 @php
-                    $image = show_business_gallery($carousel[$i]['folder']);
-                    $image = reset($image);
+                    $image = get_images_from_folder('business',$b->id,'gallery');
                 @endphp
                 <li class="splide__slide">
                     <div class="h-[550px]">
 
-                        <img src="{{ asset('uploads/business/'.$carousel[$i]['folder'].'/'.$image) }}" class="block w-full h-full object-cover brightness-50" alt="..." />
+                        <img src="{{ asset('uploads/business/'.$b->id.'/'.reset($image)) }}" class="block w-full h-full object-cover brightness-50" alt="..." />
                         <div class="absolute top-1/2 right-0 md:right-80 -translate-y-1/2 text-right pr-5 text-white md:block md:w-[50%] border-r-8 border-danger">
                             <h5 class="slide_title text-5xl font-bold">
-                                {{ $carousel[$i]['name'] }}
+                                {{ $b->name }}
                             </h5>
                             <p class="slide_subtitle my-3">
-                                <i class="text-rose-500 fa-solid fa-location-dot"></i> {{ $carousel[$i]['address'] }}</span>
+                                <i class="text-rose-500 fa-solid fa-location-dot"></i> {{ $b->address }}</span>
                             </p>
                             <p class="slide_subtitle">
-                               {{ strip_tags(substr($carousel[$i]['description'], 0, 200)) }} ...<x-link href="{{ route('business.show', ['id' => $carousel[$i]['id'] ]) }}">
+                               {{ strip_tags(substr($b->description, 0, 200)) }} ...<x-link href="{{ route('business.show', ['id' => $b->id ]) }}">
                                 Saber más &raquo;
                             </x-link>
                             </p>
@@ -44,7 +42,7 @@
                     </div>
                 </li>
                 @endif
-            @endfor
+            @endforeach
 		</ul>
   </div>
 </section>

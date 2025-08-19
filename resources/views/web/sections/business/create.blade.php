@@ -31,15 +31,8 @@
                 </p>
             </header>
 
-            @if (request()->routeIs('business.create'))
-                <form id="business_edit_form" method="post" enctype="multipart/form-data" action="{{ route('business.store') }}" class="mt-6 space-y-6">
-                @csrf
-            @else
-                <form id="business_edit_form" method="post" enctype="multipart/form-data" action="{{ route('business.update', ['id' => $business->id ]) }}" class="mt-6 space-y-6">
-                @csrf
-                @method('patch')
-            @endif
 
+            <form id="business_edit_form" method="post" enctype="multipart/form-data" action="#" class="mt-6 space-y-6">
                 <div id="business_create_information" class="block rounded-lg bg-white p-6 mt-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                     <h5 class="mb-2 pb-1 font-medium leading-tight text-neutral-800 dark:text-neutral-50">
                         <i class="fa-solid fa-circle-info text-rose-500"></i> Información negocio
@@ -63,10 +56,9 @@
                             <div class="text-neutral-400 text-xs leading-normal ml-2">*Ingresa palabras separadas por coma (,) que describan tu negocio. Así ayudarán al motor de búsqueda a encontrar información relevante más fácilmente.</div>
                             <span id="keywords_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
-                        <div class="col-span-2">
+                        <div class="col-span-2 mb-3">
                             <div id="wysiwyg">{!! old('description', $business->description ?? null) !!}</div>
-                            <textarea id="textarea_business-description" class="hidden" name="description" placeholder="Descripcion">
-                            </textarea>
+                            <textarea maxlength="2000" id="textarea_business-description" name="description" class="hidden"></textarea>
                             <span id="description_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                     </div>
@@ -148,7 +140,7 @@
                         <div class="col-span-12 md:col-span-6">
                             <div class="relative flex flex-wrap items-stretch mt-1">
                                 <span class="flex items-center whitespace-nowrap rounded-s border border-e-0 border-solid border-neutral-200 px-3 text-center text-base text-surface dark:border-white/10 dark:text-white bg-secondary-100">+569</span>
-                                <x-input-large id="input_business-phone" name="phone" type="text" maxlength="12" class="" :value="old('phone', $business->phone ?? null)" placeholder="Teléfono" />
+                                <x-input-large id="input_business-phone" name="phone" type="text" maxlength="12" class="" :value="old('phone', $business->phone ?? null)" placeholder="Teléfono" required/>
                             </div>
                             <span id="phone_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
 
@@ -160,8 +152,7 @@
                             </div>
                         </div>
                         <div class="col-span-12 md:col-span-6">
-                            <x-input-large id="input_business-email" name="email" type="text"
-                                class="mt-1 block w-full" :value="old('email', $business->email ?? null)" placeholder="Correo electrónico" required />
+                            <x-input-large id="input_business-email" name="email" type="text" class="mt-1 block w-full" :value="old('email', $business->email ?? null)" placeholder="Correo electrónico" required />
                             <span id="email_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                         <div class="col-span-12 md:col-span-6">
@@ -182,8 +173,8 @@
                     </h5>
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-12 md:col-span-4">
-                            <label for="dz_profile" class="text-neutral-500"> Logo de empresa </label>
-                            <div id="dz_profile" class="dropzone dz-clickeable grid grid-cols-1 justify-items-center">
+                            <label for="dz_avatar" class="text-neutral-500"> Logo de empresa </label>
+                            <div id="dz_avatar" class="dropzone dz-clickeable grid grid-cols-1 justify-items-center">
                                 @csrf
                                 <div class="dz-default dz-message text-sm">
                                     <i class="fa-solid fa-upload text-5xl"></i><br>
@@ -209,22 +200,25 @@
                         </div>
 
                         <div class="flex items-center gap-4 mt-3">
-                            <x-button type="submit" class="!px-7 !pb-3 !pt-3 !text-sm !font-bold" value="danger">{{ __('Save') }}</x-button>
+                            <x-button type="submit" class="!px-7 !pb-3 !pt-3 !text-sm !font-bold" value="danger">Guardar</x-button>
                         </div>
                     </div>
                 </div>
-
             </form>
-
-
         </div>
     </section>
 
     <script type="module">
+        let id      = "{{ $business->id ?? 0 }}";
+        let avatar  = "{{ $avatar ?? null }}";
+        let gallery = @json($gallery ?? []);
 
+        var _token = $('meta[name="csrf-token"]').attr('content');
+        
+        const wysiwyg = document.getElementById('wysiwyg');
         const quill = new Quill('#wysiwyg',{
             theme:'snow',
-            placeholder: 'Descripcion...',
+            placeholder: 'Descripción...',
             modules: {
                 toolbar: [
                     [{ 'header': [1, 2, false] }],
@@ -236,16 +230,97 @@
                 ]
             }
         });
-    
-        var folder = '<?= $business->folder ?? null ?>';
-        var avatar = '<?= $avatar ?? null ?>';
-        var images = '<?= isset($gallery) ? json_encode($gallery):null ?>';
-        var gal = ( images != '') ? Object.values(JSON.parse(images)) : '';
 
-        let form = document.getElementById('business_edit_form');
-        var _token = $('meta[name="csrf-token"]').attr('content');
+        //campos form obligatorios
+        const requiredFields = document.querySelectorAll('#business_edit_form [required]');
+        const categoryWrapper = document.querySelector('[data-te-select-init]'); //verificar select como algo aparte
 
-        let profile = new dz("#dz_profile", {
+        //vuelve a ocultar los mensajes de error cuando se ingrese informacion en los input
+        requiredFields.forEach(field => {
+            field.addEventListener("click", function(e){
+                const errorSpan = document.getElementById(`${field.name}_error`);
+                errorSpan.classList.add('hidden');
+            });
+        });
+
+        const categoryError = document.getElementById('categories_id_error');
+        document.getElementById('categories_id').addEventListener('change', function() {
+            categoryError.classList.add('hidden');
+        });
+
+        //submit form via ajax a business/store
+        document.querySelector("button[type=submit]").addEventListener("click", function(e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+        
+            //verificar que todos los campos esten llenos, incluso las imagenes
+            let formStatus = true;
+            let imageStatus = true;
+
+            requiredFields.forEach(field => {
+                const errorSpan = document.getElementById(`${field.name}_error`);
+                if(field.value.trim() == '' || field.value == 0){
+                    formStatus = false;
+                    errorSpan.classList.remove('hidden');
+                }
+            });
+
+            //si id es 0, nuevo business. Debe subir por obligacion una imagen de perfil y minimo 3 imagenes en la galeria
+            if( id == 0 ){
+                if( dzAvatar.getQueuedFiles().length < 1 || dzGallery.getQueuedFiles().length < 3 ){
+                    imageStatus = false;
+                    alert('Por favor, asegúrate de subir al menos una imagen en perfil y minimo tres en la galeria.');
+                }
+            }
+            
+            //si formulario esta completo e imagenes subidas, enviar formulario via ajax y recuperar id del negocio
+            if( formStatus && imageStatus ){
+                const form = document.getElementById('business_edit_form');
+                const formData = new FormData(form);
+                //adjuntar al form el name "description" con el contenido del editor quill
+                formData.append('description',quill.root.innerHTML);
+
+                //deerminar metodo http
+                const isCreate = "{{ request()->routeIs('business.create') }}";
+                let url;
+                if( isCreate ){
+                    url = "{{ route('business.store') }}";
+                }else{
+                    url = "{{ route('business.update', $business->id ?? 0) }}";
+                    formData.append('_method', 'PATCH');
+                }
+
+                //enviar formulario via ajax
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: formData,
+                    processData: false, 
+                    contentType: false, 
+                    headers: { 'X-CSRF-TOKEN': _token },
+                    success: function(data){
+                        //recueprar id business guardada
+                        id = data.business_id;
+                        //comienza a subir iamgenes
+                        if( dzAvatar.getQueuedFiles().length > 0 ){
+                            dzAvatar.processQueue();
+                        }
+                        if( dzGallery.getQueuedFiles().length > 0  ){
+                            dzGallery.processQueue();
+                        }
+                        if( isCreate ){
+                            window.location.href = "/business/"+id; //redirecciona al negocio subido
+                        }else{
+                            location.reload();
+                        }
+                        
+                    }
+                });
+            }
+        });
+
+        let dzAvatar = new dz("#dz_avatar", {
             url:"{{ route('business.avatar') }}",
             method: "post",
             addRemoveLinks: true,
@@ -253,18 +328,18 @@
             maxFiles: 1,
             dictRemoveFile: '<i class="fa-solid fa-trash-can"></i>',
             dictCancelUpload: '<i class="fa-solid fa-ban"></i>',
-            paramName: 'profile',
+            paramName: 'avatar',
             autoProcessQueue: false,
             resizeWidth: 500,
             resizeHeight: 500,
-            resizeMethod: 'crop',
+            resizeMethod: 'contain',
             maxFilesize: 20000000,
             headers: {
                 'X-CSRF-TOKEN': _token
             },
             init: function(){
                 this.on("sending", function(file, xhr, data) { //añade nombre carpeta si usuario edita el negocio
-                    data.append( "folder", folder );
+                    data.append( "id",  id);
                 });
 
                 if( avatar != ''){   //añade imagen si es que el usuario edita el negocio
@@ -282,13 +357,13 @@
             },
             removedfile: function(file){
                 var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
-                if( r == true && folder != '' ){//elimina imagenes previamente subidas o al momento de la creacion
+                if( r == true ){//elimina imagenes previamente subidas o al momento de la creacion
                     $.ajax({
-                        type: 'POST',
+                        type: "POST",
                         url: "{{ route('business.delete_file') }}",
                         data: { file: file.name },
                         headers: {
-                            'X-CSRF-TOKEN': _token
+                            "X-CSRF-TOKEN": _token
                         },
                         success: function(data){
                             if( data ){ file.previewElement.remove(); }
@@ -299,7 +374,7 @@
             }
         });
 
-        let gallery = new dz("#dz_gallery", {
+        let dzGallery = new dz("#dz_gallery", {
             url:"{{ route('business.gallery') }}",
             method: "post",
             addRemoveLinks: true,
@@ -316,18 +391,18 @@
                 'X-CSRF-TOKEN': _token
             },
             init: function(){
-                this.on("sending", function(file, xhr, data) { //añade nombre carpeta si usuario edita el negocio
-                    data.append( "folder", folder );
+                this.on("sending", function(file, xhr, data) { //añade nombre carpeta (id) si usuario edita el negocio
+                    data.append( "id", id );
                 });
 
-                if( gal != '' ){ //añade imagenes si es que el usuario edita el negocio
-                    console.log(gal);
-                    gal.forEach(x => {
+                if( gallery != '' ){ //añade imagenes si es que el usuario edita el negocio
+                    gallery = JSON.parse(gallery);
+                    gallery.forEach(x => {
                         let mockFile = { name: x };
-                        this.displayExistingFile(mockFile, '/uploads/business/'+folder+'/'+x);
+                        this.displayExistingFile(mockFile, '/uploads/business/'+id+'/'+x);
                     });
                     
-                    var existingFiles = gal.length;
+                    var existingFiles = gallery.length;
                     this.options.maxFiles = 9 - existingFiles; //actualiza el maximo de imagenes que se pueden subir
                 }
             },
@@ -341,11 +416,11 @@
             },
             removedfile: function(file){ //elimina imagenes previamente subidas o al momento de la creacion
                 var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
-                if( r == true && folder != '' ){
+                if( r == true && id != '' ){
                     $.ajax({
                         type: 'POST',
                         url: "{{ route('business.delete_file') }}",
-                        data: { file: folder+'/'+file.name },
+                        data: { file: id+'/'+file.name },
                         headers: {
                             'X-CSRF-TOKEN': _token
                         },
@@ -354,85 +429,11 @@
                         }
                     });
 
-                }else if( r == true && folder == ''){ file.previewElement.remove();  }
+                }else if( r == true ){ file.previewElement.remove();  }
             }
         });
-
-        var firstError = '';
-        const requiredFields = document.querySelectorAll('#business_edit_form [required]');
-
-        //vuelve a ocultar los mensajes de error cuando se ingrese informacion en los input
-        requiredFields.forEach(field => {
-            field.addEventListener("keydown", function(e){
-                const errorSpan = document.getElementById(`${field.name}_error`);
-                errorSpan.classList.add('hidden');
-                firstError = '';
-            });
-        });
-
-        document.querySelector("button[type=submit]").addEventListener("click", function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            document.getElementById('textarea_business-description').value = quill.root.innerHTML;
-
-            //verifica que los campos esten completos
-            let allFull = true;
-            requiredFields.forEach(field => {
-                const errorSpan = document.getElementById(`${field.name}_error`);
-                if(field.value.trim() == '' || field.value == 0){
-                    firstError = firstError == '' ? field : firstError;
-                    allFull = false;
-                    errorSpan.classList.remove('hidden');');
-                }
-            });
-
-            if(allFull == false){
-                alert('Le faltan completar algunos campos obligatorios.');
-            }
-
-            //hace scroll hasta hacer visible el primer error que se guarda en la revicion anterior
-            if (firstError) {
-                const offset = 400;
-                window.scrollTo({
-                    top: offset,
-                    behavior: 'smooth',
-                });
-            }
-
-            //1era vez subiendo imagenes y ambas deben estar con imagenes
-            if( allFull && folder == '' ){
-
-                if( profile.getQueuedFiles().length > 0 && gallery.getQueuedFiles().length >= 3 ){
-                    profile.processQueue();
-                }else{
-                    alert('Por favor, asegúrate de subir al menos una imagen en perfil y minimo tres en la galeria.');
-                }
-            }
-
-            //editando imagenes
-            if( allFull && folder != '' ){
-                if( profile.getQueuedFiles().length > 0 ){
-                    profile.processQueue();
-                }else if( gallery.getQueuedFiles().length > 0  ){
-                    gallery.processQueue();
-                }else{
-                    form.submit();
-                }
-            }
-        });
-
-        profile.on("success", function(files, response) {
-            if( gallery.getQueuedFiles().length > 0 ){
-                gallery.processQueue();
-            }else{
-                form.submit();
-            }
-        });
-
-        gallery.on("successmultiple", function(files, response) { form.submit(); });
-
 
     </script>
+
 @endsection
 

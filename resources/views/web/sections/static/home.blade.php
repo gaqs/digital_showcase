@@ -9,6 +9,9 @@
     </div>
     @include('web.sections.static.partials.business')
     @include('web.sections.static.partials.products')
+    <!-- Oficios -->
+    @include('web.sections.static.partials.trades')
+    <!-- /Oficios -->
     @include('web.sections.static.partials.comments')
     @include('web.sections.static.partials.aboutus')
 </x-app-layout>

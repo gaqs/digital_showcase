@@ -174,7 +174,7 @@
             autoProcessQueue: false,
             resizeWidth: 200,
             resizeHeight: 200,
-            resizeMethod: 'crop',
+            resizeMethod: 'contain',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },

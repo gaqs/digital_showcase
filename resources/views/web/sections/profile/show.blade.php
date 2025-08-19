@@ -1,10 +1,9 @@
 <x-app-layout>
     @php
-        $avatar = isset($profile->avatar) ? 'uploads/users/' . $user->id . '/' . $profile->avatar : 'uploads/users/default/_avatar.jpg';
-        $banner = isset($profile->banner) ? 'uploads/users/' . $user->id . '/' . $profile->banner : 'uploads/users/default/_banner.jpg';
+        $avatar = get_images_from_folder('users', $profile->id, 'avatar');
+        $banner = get_images_from_folder('users', $profile->id, 'banner');
     @endphp
-    <div class="relative overflow-hidden bg-cover bg-no-repeat p-20 mt-20 text-center"
-        style="background-image: url('{{ asset($banner) }}'); height: 300px"></div>
+    <div class="relative overflow-hidden bg-cover bg-no-repeat p-20 mt-20 text-center" style="background-image: url('{{ asset('uploads/users/'.$banner) }}'); height: 300px"></div>
     <div class="container-xl relative md:px-20 -mt-36">
         <div class="grid grid-cols-12 gap-5">
 
@@ -14,7 +13,7 @@
                 <div class="h-full w-full overflow-hidden bg-fixed relative z-10">
                     <div class="flex flex-col h-full items-center mt-2">
                         <div id="avatar" class="border-8 border-danger rounded-full overflow-hidden">
-                            <img src="{{ asset($avatar) }}" class="w-32 rounded-full shadow-lg" alt="Avatar" />
+                            <img src="{{ asset('uploads/users/'.$avatar) }}" class="w-32 rounded-full shadow-lg" alt="Avatar" />
                         </div>
                         <div class="flex flex-col mt-2 text-center">
                             <div class="text-neutral-700 text-2xl font-bold">
@@ -91,10 +90,10 @@
                     @else
                         @foreach ($business as $bus)
                             @php
-                                $avatar = 'uploads/business/' . show_business_avatar($bus->folder);
+                                $avatar = get_images_from_folder('business',$bus->id,'avatar');
                             @endphp
                             <div id="business_container" class="flex flex-col rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 md:flex-row cursor-pointer w-full">
-                                <img class="h-96 w-full rounded-t-lg object-cover md:h-auto md:w-48 md:rounded-none  md:rounded-l-lg" src="{{ asset($avatar) }}" alt="" />
+                                <img class="h-96 w-full rounded-t-lg object-cover md:h-auto md:w-48 md:rounded-none  md:rounded-l-lg" src="{{ asset('uploads/business/'.$avatar) }}" alt="" />
                                 <div class="flex flex-col justify-start p-6 pb-0 w-full">
                                     <h5 class="text-xl font-medium text-neutral-900 dark:text-neutral-50">
                                         {{ $bus->name }}

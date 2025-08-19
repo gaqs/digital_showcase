@@ -15,7 +15,6 @@ if (! function_exists('category_list')) {
         }
 
     }
-
 }
 
 if (! function_exists('business_list_per_id')) {
@@ -26,9 +25,7 @@ if (! function_exists('business_list_per_id')) {
             $thisone = ( $bsns->id == $selected) ? 'selected':'';
             echo '<option class="text-xl" value="'.$bsns->id.'" data-folder="'.$bsns->folder.'" '.$thisone.' >'.$bsns->name.'</option>';
         }
-
     }
-
 }
 
 if( ! function_exists('manage_profile_files')) {
@@ -53,70 +50,93 @@ if( ! function_exists('manage_profile_files')) {
     }
 }
 
+if (!function_exists('get_images_from_folder')) {
+    /**
+     * Recupera avatar, banner o galería de imágenes desde cualquier carpeta padre.
+     * @param string $entity (business, products, trades, user)
+     * @param string|int $folder (nombre de la carpeta o id de usuario) ### FIX TO CHANGE FOLER NAME TO ONLY ID OF BUSINESS, PRODUCT, TRADE OR USER
+     * @param string $type ('avatar', 'banner', 'gallery')
+     * @return mixed (string para avatar/banner, array para galería)
+     */
+    function get_images_from_folder($entity, $folder, $type = 'gallery')
+    {
+        $base = public_path("uploads/$entity/$folder/");
 
-/*
-return the business avatar folder, name and extension 'ugxIKlsdjw/_avatar.jpg'
-*/
-if( ! function_exists('show_business_avatar')) {
-    function show_business_avatar($folder) {
-        if( $folder != 'default' || $folder != null ){
-            $directory = public_path('uploads/business/' . $folder . '/');
-            $files = glob($directory . '_avatar*');
+        // Buscar avatar
+        if ($type === 'avatar') {
+            $avatar = glob($base . '_avatar.*');
+            return isset($avatar[0]) ? $folder.'/'.basename($avatar[0]) : 'default/_avatar.jpg';
+        }
 
-            if (!empty($files)) {
-                $file = $files[0];
-                $extension = pathinfo($file, PATHINFO_EXTENSION);
-                return $folder.'/_avatar.'.$extension;
+        // Buscar banner
+        if ($type === 'banner') {
+            $banner = glob($base . '_banner.*');
+            return isset($banner[0]) ? $folder.'/'.basename($banner[0]) : 'default/_banner.jpg';
+        }
+
+        // Buscar galería (excluye avatar y banner)
+        if ($type === 'gallery') {
+            $allFiles = scandir($base);
+            $avatar = glob($base . '_avatar.*');
+            $banner = glob($base . '_banner.*');
+            $exclude = array('.', '..');
+            if (isset($avatar[0])) $exclude[] = basename($avatar[0]);
+            if (isset($banner[0])) $exclude[] = basename($banner[0]);
+            $images = array_diff($allFiles, $exclude);
+            return array_values($images); // array de nombres de archivo
+        }
+
+        return null;
+    }
+}
+
+
+if (!function_exists('save_entity_image')) {
+    /**
+     * Guarda imágenes (avatar, banner, gallery) para user, product, business, trade.
+     * @param \Illuminate\Http\Request $request
+     * @param string $entity ('user', 'product', 'business', 'trade')
+     * @param string|int $folder (id o nombre de carpeta)
+     * @param string $type ('avatar', 'banner', 'gallery')
+     * @return array|string
+     */
+    function save_entity_image($request, $entity, $folder, $type = 'gallery')
+    {
+        $base = public_path("uploads/$entity/$folder/");
+        if (!is_dir($base)) {
+            mkdir($base, 0775, true);
+        }
+
+        // Avatar o banner (un solo archivo)
+        if (in_array($type, ['avatar', 'banner'])) {
+            if ($request->hasFile($type)) {
+                $file = $request->file($type);
+                $ext = $file->getClientOriginalExtension();
+                $fileName = "_{$type}." . $ext;
+
+                // Borra el anterior si existe
+                foreach (glob($base . "_{$type}.*") as $old) {
+                    @unlink($old);
+                }
+
+                $file->move($base, $fileName);
+                return true;
             }
-        }else{
-            return $folder.'/_avatar.jpg';
-        }
-    }
-}
-
-if( ! function_exists('show_business_gallery')) {
-    function show_business_gallery($folder) {
-        if( $folder != null){
-            $directory = public_path('uploads/business/' . $folder . '/');
-        }else if($folder == null){
-            $directory = public_path('uploads/business/default/');
         }
 
-        $allFiles = scandir($directory);
-        $avatarFile = glob($directory. '/_avatar.*');
-        $avatar = isset($avatarFile[0]) ? basename($avatarFile[0]) : null;
-        // Excluir los archivos ".", ".." y cualquier archivo que empiece con "_avatar"
-        $images = array_diff($allFiles, array('.', '..', $avatar));
+        // Galería (varios archivos)
+        if ($type === 'gallery' && $request->hasFile('gallery')) {
+            $saved = [];
+            foreach ($request->file('gallery') as $file) {
+                $ext = $file->getClientOriginalExtension();
+                $fileName = time() . '_' . \Illuminate\Support\Str::random(10) . '.' . $ext;
+                $file->move($base, $fileName);
+                $saved[] = $fileName;
+            }
+            return $saved;
+        }
 
-        return $images;
-    }
-}
-
-if( ! function_exists('show_product_picture')) {
-    function show_product_picture($folder) {
-        $directory = public_path('uploads/products/' . $folder . '/');
-
-        $allFiles = scandir($directory);
-        $exclude = array('.', '..');
-
-        $images = array_diff($allFiles, $exclude);
-
-        return reset($images);
-
-    }
-}
-
-if( ! function_exists('show_product_gallery')) {
-    function show_product_gallery($folder) {
-        $directory = public_path('uploads/products/' . $folder . '/');
-
-        $allFiles = scandir($directory);
-        $exclude = array('.', '..');
-
-        $images = array_diff($allFiles, $exclude);
-
-        return $images;
-
+        return [];
     }
 }
 

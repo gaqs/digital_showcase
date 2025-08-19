@@ -123,7 +123,7 @@
         <div class="col-span-12 md:col-span-9 mt-5 relative text">
             <p>Fotos del Negocio</p>
             @php
-                $images = show_business_gallery($business->folder);
+                $images = get_images_from_folder('business',$business->folder,'gallery');
             @endphp
 
             <div class="mb-3 mt-3 w-[50%]">

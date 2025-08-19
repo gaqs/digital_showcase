@@ -12,14 +12,13 @@
         <div class="splide__track">
             <ul class="splide__list">
                 @php
-                    $folder = ($business->folder == null)? 'default' : $business->folder;
-                    $base_url = asset('uploads/business/' . $folder) . '/';
+                    $gallery = get_images_from_folder('business', $business->id, 'gallery');
 
                     $i = 0;
                     $j = 0;
                     foreach ($gallery as $img) {
                         echo '<li class="splide__slide overflow-hidden h-[400px] linear_gradient">
-                                <img src="' . $base_url . $img . '" class="w-full h-full object-cover" alt="">
+                                <img src="'.asset('uploads/business/'.$business->id.'/'.$img).'" class="w-full h-full object-cover" alt="">
                              </li>';
                         if (++$i == 6) {
                             break;
@@ -35,10 +34,10 @@
                 <div class="flex justify-center">
                     <section id="gallery" class="w-3/4 splide" aria-label="Galería">
                         <div class="splide__track">
-                            <ul class="splide__list">
+                            <ul class="splide__list flex items-center">
                                 @foreach ($gallery as $img)
                                 <li class="splide__slide">
-                                    <img src="{{ $base_url.$img }}" alt="">
+                                    <img src="{{ asset('uploads/business/'.$business->id.'/'.$img) }}" alt="">
                                 </li>
                                 @endforeach
                             </ul>
@@ -49,11 +48,12 @@
                 <ul id="thumbnails_gallery" class="thumbnails">
                     @foreach ($gallery as $img)
                         <li class="thumbnail">
-                            <img src="{{ $base_url.$img }}" class="w-full h-full object-cover" alt="">
+                            <img src="{{ asset('uploads/business/'.$business->id.'/'.$img) }}" class="w-full h-full object-cover" alt="">
                         </li>
                     @endforeach
                 </ul>
             </x-modal>
+            
         </div>
     </div>
 
@@ -61,6 +61,9 @@
         <div class="flex flex-row items-center">
             <div>
                 <div id="business_icon" class="mr-5">
+                    @php
+                        $avatar = get_images_from_folder('business', $business->id, 'avatar');
+                    @endphp
                     <img src="{{ asset('uploads/business/'.$avatar) }}" class="w-32 rounded-full shadow-lg" alt="Avatar" />
                 </div>
             </div>
@@ -124,7 +127,10 @@
                                         <a href="{{ route('product.show', ['id' => $p->id]) }}" target="_blank">
                                             <div class="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                                                 <div class="overflow-hidden h-[100px]">
-                                                    <img class="rounded-t-lg w-full h-full object-cover" src="{{ asset('uploads/products/'.$p->folder.'/'.show_product_picture($p->folder)) }}" alt="" />
+                                                    @php
+                                                        $image = get_images_from_folder('products', $p->id, 'gallery');
+                                                    @endphp
+                                                    <img class="rounded-t-lg w-full h-full object-cover" src="{{ asset('uploads/products/'.$p->id.'/'.reset($image)) }}" alt="" />
                                                 </div>
 
                                                 <div class="p-2 text-center">
@@ -190,7 +196,8 @@
                                                     ShareButtons::page( url()->current(), 'PM360', [
                                                             'title' => $business->name,
                                                             'rel' => 'nofollow noopener noreferrer',
-                                                            'class' => '!text-4xl'
+                                                            'class' => '!text-4xl',
+                                                            'target' => '_blank'
                                                         ])
                                                         ->facebook()
                                                         ->twitter()
@@ -285,7 +292,6 @@
                                 </div>
                             </div>
                             <div>
-                                <div id="container_stars" class=""></div>
                                 <div>
                                     <div id="qty_reviews" class="text-neutral-600">{{ $business->qty_comments }} comentarios</div>
                                     <div id="product_stars" class="inline">
@@ -346,17 +352,17 @@
                         <div class="text-sm text-neutral-600 dark:text-neutral-200">
 
                             @php
-                                $avatar = isset($profile->avatar) ? 'uploads/users/' . $user->id . '/' . $profile->avatar : 'uploads/users/default/_avatar.jpg';
-                                $banner = isset($profile->banner) ? 'uploads/users/' . $user->id . '/' . $profile->banner : 'uploads/users/default/_banner.jpg';
+                                $avatar = get_images_from_folder('users', $user->id, 'avatar');
+                                $banner = get_images_from_folder('users', $user->id, 'banner');
                             @endphp
 
                             <div class="relative bg-cover bg-no-repeat text-center"
-                                style="background-image: url('{{ asset($banner) }}'); height: 150px">
+                                style="background-image: url('{{ asset('uploads/users/'.$banner) }}'); height: 150px">
                             </div>
                             <div class="h-full w-full overflow-hidden bg-fixed -mt-24 relative z-10">
                                 <div class="flex flex-col h-full items-center mt-2">
                                     <div id="avatar" class="border-8 border-danger rounded-full overflow-hidden">
-                                        <img src="{{ asset($avatar) }}" class="w-32 rounded-full shadow-lg"
+                                        <img src="{{ asset('uploads/users/'.$avatar) }}" class="w-32 rounded-full shadow-lg"
                                             alt="Avatar" />
                                     </div>
                                     <div class="flex flex-col mt-2 text-center">
@@ -392,38 +398,6 @@
         perPage: 3,
         focus: 'center'
     }).mount();
-
-
-    var splide = new Splide( '#gallery', {
-        pagination: false,
-    });
-
-    var thumbnails = document.getElementsByClassName( 'thumbnail' );
-    var current;
-
-    for ( var i = 0; i < thumbnails.length; i++ ) {
-        initThumbnail( thumbnails[ i ], i );
-    }
-
-    function initThumbnail( thumbnail, index ) {
-        thumbnail.addEventListener( 'click', function () {
-            splide.go( index );
-        });
-    }
-
-    splide.on( 'mounted move', function () {
-        var thumbnail = thumbnails[ splide.index ];
-
-        if ( thumbnail ) {
-            if ( current ) {
-                current.classList.remove( 'is-active' );
-            }
-            thumbnail.classList.add( 'is-active' );
-            current = thumbnail;
-    }
-    });
-
-    splide.mount();
 
     var lat_value = '{{ $business->latitude }}';
     var lon_value = '{{ $business->longitude }}';

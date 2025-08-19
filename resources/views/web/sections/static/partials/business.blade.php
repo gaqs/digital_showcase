@@ -17,7 +17,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="business_grid">
             @foreach ($business as $bus)
                 @php
-                    $avatar = 'uploads/business/' . show_business_avatar($bus->folder);
+                    $avatar = 'uploads/business/'. get_images_from_folder('business',$bus->id,'avatar');
                 @endphp
                 
                 <a href="{{ route('business.show', ['id' => $bus->id]) }}">

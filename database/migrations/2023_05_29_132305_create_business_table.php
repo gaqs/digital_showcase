@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('web')->nullable();
             $table->string('facebook')->nullable();
             $table->string('instagram')->nullable();
-            $table->string('twitter')->nullable();
+            $table->string('x')->nullable();
             $table->string('tiktok')->nullable();
             $table->string('mercadolibre')->nullable();
             $table->string('yapo')->nullable();

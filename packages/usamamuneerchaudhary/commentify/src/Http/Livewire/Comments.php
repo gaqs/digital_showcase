@@ -75,7 +75,13 @@ class Comments extends Component
                         ->where('commentable_id', $comment->commentable_id)
                         ->get();
 
-        $table = ($comment->commentable_type == 'App\Models\Product') ? 'product' : 'business';
+        $table = 'business';
+
+        if ($comment->commentable_type == 'App\Models\Product') {
+            $table = 'product';
+        } elseif ($comment->commentable_type == 'App\Models\TradeSkill') {
+            $table = 'trade_skill';
+        }
 
         $update = DB::table($table)
                         ->where('id', $comment->commentable_id)

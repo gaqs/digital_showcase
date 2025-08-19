@@ -6,8 +6,7 @@
                 <h2 class="text-3xl text-neutral-900 font-bold w-full">Nuevos para ti</h2>
             </div>
         </div>
-
-        @if( empty($products))
+        @if( !empty($products) )
         <section id="product_splide" class="splide" aria-label="Listado de productos">
             <div class="splide__track">
                   <ul class="splide__list">
@@ -20,7 +19,10 @@
                                     {{ $pro->c_name }}
                                 </div>
                                 <div id="product_image" class="overflow-hidden h-[200px]">
-                                    <img class="rounded-t-lg w-full h-full object-cover" src="{{ asset('uploads/products/'.$pro->folder.'/'.show_product_picture($pro->folder)) }}" alt="" />
+                                    @php
+                                        $image = get_images_from_folder('products', $pro->id, 'gallery');
+                                    @endphp
+                                    <img class="rounded-t-lg w-full h-full object-cover" src="{{ asset('uploads/products/'.$pro->id.'/'.reset($image)) }}" alt="" />
                                 </div>
                                 <div id="product_info" class="py-3 text-center">
                                     <div id="product_name" class="font-medium dark:text-neutral-200 mb-1">
@@ -72,7 +74,7 @@
             768: {
                 perPage: 2,
             },
-    }
+        }
     });
 
 splide.mount();

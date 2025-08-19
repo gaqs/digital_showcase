@@ -11,7 +11,7 @@
             @endphp
             @foreach($business_comments as $bc)
             @php
-                $avatar = ($bc->u_avatar == null) ? 'uploads/users/default/_avatar.jpg' : 'uploads/users/'.$bc->u_id.'/'.$bc->u_avatar;
+                $avatar = get_images_from_folder('users', $bc->u_id, 'avatar');
             @endphp
 
             <div class="col-span-12 md:col-span-4">
@@ -20,7 +20,7 @@
                     <div class="border-b-2 border-neutral-100 px-6 py-3 dark:border-neutral-600 dark:text-neutral-50">
                         <div class="flex flex-row content-center">
                             <div class="mr-3" id="user_avatar">
-                                <img src="{{ asset($avatar) }}" class="w-12 rounded-full" alt="Avatar" />
+                                <img src="{{ asset('uploads/users/'.$avatar) }}" class="w-12 rounded-full" alt="Avatar" />
                             </div>
                             <div>
                                 <p class="font-bold" id="user_name">{{ $bc->u_name }}</p>
@@ -42,8 +42,7 @@
                         </p>
                         <x-link href="{{ route('business.show', ['id' => $bc->business_id]).'#comment_id_'.$bc->comment_id }}" class="font-bold text-sm">Continuar leyendo > </x-link>
                     </div>
-                    <div
-                        class="border-t-2 text-right text-neutral-400 border-neutral-100 px-3 py-3 dark:border-neutral-600 dark:text-neutral-50">
+                    <div class="border-t-2 text-right text-neutral-400 border-neutral-100 px-3 py-3 dark:border-neutral-600 dark:text-neutral-50">
                         <div class="flex flex-row gap-5 justify-end">
                             <div id="like_count">
                                 <i class="fa-regular hover:fa-solid fa-thumbs-up text-2xl text-green-600"></i>
@@ -69,7 +68,7 @@
             @foreach($products_comments as $pc)
 
             @php
-                $avatar = ($pc->u_avatar == null) ? 'uploads/users/default/_avatar.jpg' : 'uploads/users/'.$pc->u_id.'/'.$pc->u_avatar;
+                $avatar = get_images_from_folder('users', $pc->u_id, 'avatar');
             @endphp
 
             <div class="col-span-12 md:col-span-4">
@@ -78,7 +77,7 @@
                     <div class="border-b-2 border-neutral-100 px-6 py-3 dark:border-neutral-600 dark:text-neutral-50">
                         <div class="flex flex-row content-center">
                             <div class="mr-3" id="user_avatar">
-                                <img src="{{ asset($avatar) }}" class="w-12 rounded-full" alt="Avatar" />
+                                <img src="{{ asset('uploads/users/'.$avatar) }}" class="w-12 rounded-full" alt="Avatar" />
                             </div>
                             <div>
                                 <p class="font-bold" id="user_name">{{ $pc->u_name }}</p>

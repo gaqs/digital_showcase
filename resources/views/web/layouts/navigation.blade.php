@@ -29,15 +29,8 @@
                     Productos
                 </x-nav-link>
                 <x-nav-link  href="#" >
-                    Oficios (pronto)
+                    Oficios
                 </x-nav-link>
-                <!--
-                <x-dropdown value="Negocios" type="link">
-                    <x-dropdown-link href="#">prueba 1</x-dropdown-link>
-                    <x-dropdown-link href="#">prueba 2</x-dropdown-link>
-                    <x-dropdown-link href="#">prueba 3</x-dropdown-link>
-                </x-dropdown>
-                -->
             </ul>
 
             <!-- Right elements -->

@@ -26,17 +26,17 @@ class ProductsTable extends DataTableComponent
             ->leftjoin('business','business.id','=','product.business_id' )
             ->select('product.*','business.id as bsns_id','business.name','business.score')
             ->where('product.user_id','=',Auth::user()->id);
-
     }
 
     public function columns(): array
     {
         return [
-            //'uploads/products/'.$product[$i]->folder.'/'.show_product_picture($product[$i]->folder);
             ImageColumn::make('Avatar')
                 ->location(
-                    fn($row) => asset('uploads/products/'.$row->folder.'/'.show_product_picture($row->folder))
-                )
+                    function($row){
+                        $image = get_images_from_folder('products', $row->id, 'gallery');
+                        return asset('uploads/products/'.$row->id.'/'.reset($image));
+                    })
                 ->attributes(fn($row) => [
                     'style' => 'max-width: 100px'
                 ]),

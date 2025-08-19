@@ -1,18 +1,18 @@
 <x-app-layout>
     @php
-        $avatar = $avatar == null ? 'uploads/users/default/_avatar.jpg' : 'uploads/users/'.Auth::user()->id.'/'.$avatar;
-        $banner = $banner == null ? 'uploads/users/default/_banner.jpg' : 'uploads/users/'.Auth::user()->id.'/'.$banner;
+        $avatar = get_images_from_folder('users', Auth::user()->id, 'avatar');
+        $banner = get_images_from_folder('users', Auth::user()->id, 'banner');
     @endphp
     <a href="{{ route('profile.edit') }}">
         <x-button class="absolute z-10 top-80 right-5" value="danger">Editar perfil</x-button>
     </a>
-    <div class="relative overflow-hidden bg-cover bg-no-repeat p-20 mt-20 text-center" style="background-image: url('{{ asset($banner) }}'); height: 300px">
+    <div class="relative overflow-hidden bg-cover bg-no-repeat p-20 mt-20 text-center" style="background-image: url('{{ asset('uploads/users/'.$banner) }}'); height: 300px">
         <div class="absolute bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-fixed"
             style="background-color: rgba(0, 0, 0, 0.4)">
 
             <div class="flex h-full items-center md:pl-40">
                 <div id="avatar" class="border-8 border-danger rounded-full overflow-hidden">
-                    <img src="{{ asset($avatar) }}" class="w-32 rounded-full shadow-lg" alt="Avatar" />
+                    <img src="{{ asset('uploads/users/'.$avatar) }}" class="w-32 rounded-full shadow-lg" alt="Avatar" />
                 </div>
                 <div class="flex flex-col ml-3 text-center md:text-left">
                     <div class="text-neutral-100 text-2xl font-bold">
@@ -91,6 +91,15 @@
                                 </ul>
                             </div>
                             @endif
+
+                            <a href="{{ route('trade.create') }}#create_trade" class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('trade.create') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
+                                <i class="fa-solid fa-icons"></i> Ingresar Oficio
+                            </a>
+
+                            <a href="{{ route('trade.index') }}#create_trade" class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('trade.index') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
+                                <i class="fa-solid fa-icons"></i> Mis Oficios
+                            </a>
+
                             <a href="{{ route('profile.saved') }}" class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('profile.saved') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
                                 <i class="fa-solid fa-building-flag"></i> Guardados
                             </a>

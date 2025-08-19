@@ -1,7 +1,6 @@
 @if (session()->has('status'))
     @if (session('status') == 'success')
-        <div class="fixed top-24 right-8 z-50 pointer-events-auto mx-auto mb-4 hidden w-96 max-w-full rounded-lg bg-success-100 bg-clip-padding text-success-700 shadow-lg shadow-black/5 data-[te-toast-show]:block data-[te-toast-hide]:hidden animate__animated animate__slideInRight animate__faster" id="static-example" role="alert" aria-live="assertive" aria-atomic="true" data-te-autohide="true"
-            data-te-toast-init data-te-toast-show>
+        <div class="fixed top-24 right-8 z-50 pointer-events-auto mx-auto mb-4 hidden w-96 max-w-full rounded-lg bg-success-100 bg-clip-padding text-success-700 shadow-lg shadow-black/5 data-[te-toast-show]:block data-[te-toast-hide]:hidden animate__animated animate__slideInRight animate__faster" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-te-autohide="true" data-te-toast-init data-te-toast-show>
 
             <div class="flex items-center justify-between rounded-t-lg bg-success-100 bg-clip-padding px-4 pb-2 pt-2.5">
                 <p class="flex items-center font-bold text-success-700">
@@ -9,8 +8,7 @@
                 </p>
                 <div class="flex items-center">
                     <p class="text-xs text-success-700">{{ now()->subSeconds()->diffForHumans() }} atrás</p>
-                    <button type="button"class="ml-2 box-content rounded-none border-none opacity-80 hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
-                        data-te-toast-dismiss aria-label="Close">
+                    <button type="button"class="ml-2 box-content rounded-none border-none opacity-80 hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none" data-te-toast-dismiss aria-label="Close">
                         <span class="text-xs w-[1em] focus:opacity-100 disabled:pointer-events-none disabled:select-none disabled:opacity-25 [&.disabled]:pointer-events-none [&.disabled]:select-none [&.disabled]:opacity-25">
                             <i class="fa-solid fa-x"></i>
                         </span>
@@ -18,14 +16,12 @@
                 </div>
             </div>
 
-            <div class="break-words rounded-b-lg bg-success-100 px-4 py-4 text-success-700">
+            <div class="toast-message break-words rounded-b-lg bg-success-100 px-4 py-4 text-success-700">
                 {{ session('message') }}
             </div>
         </div>
     @else
-        <div class="fixed top-24 right-8 z-50 pointer-events-auto mx-auto mb-4 hidden w-96 max-w-full rounded-lg bg-danger-100 bg-clip-padding text-sm text-danger-700 shadow-lg shadow-black/5 data-[te-toast-show]:block data-[te-toast-hide]:hidden"
-            id="static-example" role="alert" aria-live="assertive" aria-atomic="true" data-te-autohide="false"
-            data-te-toast-init data-te-toast-show>
+        <div class="fixed top-24 right-8 z-50 pointer-events-auto mx-auto mb-4 hidden w-96 max-w-full rounded-lg bg-danger-100 bg-clip-padding text-sm text-danger-700 shadow-lg shadow-black/5 data-[te-toast-show]:block data-[te-toast-hide]:hidden" id="toast-error" role="alert" aria-live="assertive" aria-atomic="true" data-te-autohide="false" data-te-toast-init data-te-toast-show>
             <div class="flex items-center justify-between rounded-t-lg border-b-2 border-danger-200 bg-danger-100 bg-clip-padding px-4 pb-2 pt-2.5 text-danger-700">
                 <p class="flex items-center font-bold text-danger-700">
                     <i class="fa-solid fa-circle-check mr-2"></i>ERROR
@@ -40,7 +36,7 @@
                     </button>
                 </div>
             </div>
-            <div class="break-words rounded-b-lg bg-danger-100 px-4 py-4 text-danger-700">
+            <div class="toast-message break-words rounded-b-lg bg-danger-100 px-4 py-4 text-danger-700">
                 {{ session('message') }}
             </div>
         </div>
@@ -51,8 +47,7 @@
 
 
 <!-- Footer container -->
-<footer
-    class="px-0 md:px-20 bg-neutral-800 text-center text-neutral-300 dark:bg-neutral-600 dark:text-neutral-200 lg:text-left">
+<footer class="px-0 md:px-20 bg-neutral-800 text-center text-neutral-300 dark:bg-neutral-600 dark:text-neutral-200 lg:text-left">
     <div class="flex items-center justify-center p-4 border-b border-b-gray-400 lg:justify-between">
         <div class="mr-12 hidden lg:block">
             <span>Mantente conectado con nuestras redes sociales:</span>

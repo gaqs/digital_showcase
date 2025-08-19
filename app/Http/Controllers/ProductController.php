@@ -49,15 +49,21 @@ class ProductController extends Controller
         unset($data['_token']);
 
         $data['user_id'] = Auth::user()->id;
-        $data['folder'] = $request->session()->get('product_folder');
         $data['created_at'] = now();
         $data['updated_at'] = now();
 
-        $product = Product::insertGetId($data);
+        $id = Product::insertGetId($data);
 
-        $request->session()->forget('product_folder');
+        // Retornar JSON para AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Producto ingresado correctamente',
+                'business_id' => $id
+            ]);
+        }
 
-        return Redirect::route('product.show', ['id' => $product])->with(['status' => 'success', 'message' => 'Negocio ingresado correctamente']);
+        $request->session->put(['status' => 'success', 'message' => 'Producto creado correctamente']);
     }
 
     /**
@@ -68,7 +74,7 @@ class ProductController extends Controller
         $product = Product::find($id);
 
         $business = Business::find($product->business_id);
-        $business_avatar = show_business_avatar($business->folder);
+        $business_avatar = get_images_from_folder('business',$business->folder,'avatar');
 
         $comments = Comment::select( Comment::raw('count(*) as qty_comments, avg(score) as score') )
                         ->where('commentable_type', 'App\Models\Product')
@@ -105,7 +111,7 @@ class ProductController extends Controller
     public function edit(string $id)
     {
         $data['product'] = Product::find($id);
-        $data['gallery'] = show_product_gallery($data['product']->folder);
+        $data['gallery'] = json_encode(get_images_from_folder('products',$id,'gallery'));
 
         return view('web.sections.product.create',$data);
     }
@@ -116,12 +122,20 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $data = $request->all();
-        unset($data['_token']);
+
         $data['updated_at'] = now();
 
         $product::find($request->id)->update($data);
 
-        return Redirect::route('product.edit', ['id' => $request->id])->with(['status' => 'success', 'message' => 'Producto editado correctamente']);
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Producto editado correctamente',
+                'business_id' => $request->id
+            ]);
+        }
+
+        $request->session->put(['status' => 'success', 'message' => 'Producto editado correctamente']);
     }
 
     /**
@@ -149,34 +163,14 @@ class ProductController extends Controller
 
     }
 
-    /**
-     * Store a newly created gallery.
-     * folder name: {business_id}_{str_random(10)}_{unixtime}
-     */
-    public function gallery(Request $request)
-    {
-        $folder = $request->folder;
-        //si no hay nombre de carpeta en $folder, genera una que no exista en la DB
-        if( $folder == '' || empty($folder)){
-            do{
-                $folder = $request->business_id.'_'.str_random(10).'_'.time();
-                $db_folder = Product::where('folder', $folder)->first();
-            }while($db_folder);
-        }
+    public function gallery(Request $request){
 
-        $request->session()->put('product_folder', $folder);
+        $save_gallery = save_entity_image($request,'products',$request->id,'gallery');
 
-        //crea la carpeta si no existe
-        $folder_path = public_path('uploads/products/' . $folder);
-        if (!is_dir($folder_path)) { mkdir($folder_path, 0775, true); }
-
-        //mueve los archivos a la carpeta
-        $files = $request->file('gallery');
-        if( $files ){
-            foreach ($files as $file){
-                $file_name = time().'_'.str_random(10) .'.'.$file->extension();
-                $file->move($folder_path, $file_name);
-            }
+        if( $save_gallery ){
+            return response()->json([ 'success' => 200 ]);
+        }else{
+            return 'error';
         }
     }
 

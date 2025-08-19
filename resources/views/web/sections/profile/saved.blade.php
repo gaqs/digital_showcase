@@ -31,13 +31,14 @@
                 @php
                     if( $r->saveable_type == 'Business'){
 
-                        $image = show_business_gallery($r->folder);
+                        $image = get_images_from_folder('businesss',$r->folder,'gallery');
                         $image = 'uploads/business/'.$r->folder.'/'.reset($image);
 
                         $route = route('business.show', ['id' => $r->save_id ]);
 
                     }elseif( $r->saveable_type == 'Product'){
-                        $image = 'uploads/products/'.$r->folder.'/'.show_product_picture($r->folder);
+                        $image = get_images_from_folder('products',$r->folder,'gallery');
+                        $image = 'uploads/products/'.$r->folder.'/'.reset($image);
 
                         $route = route('product.show', ['id' => $r->save_id ]);
                     }
