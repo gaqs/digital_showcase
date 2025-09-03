@@ -18,7 +18,7 @@
 
                                 foreach ($images as $img) {
                                     echo '<li class="splide__slide flex justify-center">
-                                            <img src="'.asset('uploads/products/'.$product->id.'/'.$img).'" class="" alt="">
+                                            <img src="'.asset('uploads/products/'.$img).'" class="" alt="">
                                          </li>';
                                 }
                             @endphp
@@ -158,7 +158,7 @@
             <div id="product_description" class="col-span-12">
                 <div class="block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                     <h5 class="text-xl mb-5 font-medium">Descripción</h5>
-                    <div class="descriptions">{!! $product->description !!}</div>
+                    <div class="description">{!! $product->description !!}</div>
                 </div>
             </div>
         </div>

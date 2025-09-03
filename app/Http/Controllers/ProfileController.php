@@ -135,14 +135,14 @@ class ProfileController extends Controller
     public function saved(Request $request): View
     {
         $business = DB::table('business')
-                        ->select('user_saves.id as insert_id', 'business.id', 'business.name', 'business.description', 'business.folder', 'user_saves.saveable_type', 'user_saves.user_id', 'user_saves.save_id')
+                        ->select('user_saves.id as insert_id', 'business.id', 'business.name', 'business.description', 'user_saves.saveable_type', 'user_saves.user_id', 'user_saves.save_id')
                         ->join('user_saves', 'business.id', '=', 'user_saves.save_id')
                         ->where('user_saves.saveable_type', 'Business')
                         ->where('user_saves.user_id', Auth::user()->id);
 
 
         $data['results'] = DB::table('product')
-                        ->select('user_saves.id as insert_id', 'product.id', 'product.name', 'product.description', 'product.folder', 'user_saves.saveable_type', 'user_saves.user_id', 'user_saves.save_id' )
+                        ->select('user_saves.id as insert_id', 'product.id', 'product.name', 'product.description', 'user_saves.saveable_type', 'user_saves.user_id', 'user_saves.save_id' )
                         ->join('user_saves', 'product.id', '=', 'user_saves.save_id')
                         ->where('user_saves.saveable_type', 'Product')
                         ->where('user_saves.user_id', Auth::user()->id)

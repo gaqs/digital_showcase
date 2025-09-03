@@ -54,6 +54,8 @@ class ProductController extends Controller
 
         $id = Product::insertGetId($data);
 
+        session()->flash('status', 'success');
+        session()->flash('message', 'Producto ingresado correctamente');
         // Retornar JSON para AJAX
         if ($request->ajax()) {
             return response()->json([
@@ -62,8 +64,6 @@ class ProductController extends Controller
                 'business_id' => $id
             ]);
         }
-
-        $request->session->put(['status' => 'success', 'message' => 'Producto creado correctamente']);
     }
 
     /**
@@ -127,6 +127,9 @@ class ProductController extends Controller
 
         $product::find($request->id)->update($data);
 
+        session()->flash('status', 'success');
+        session()->flash('message', 'Producto editado correctamente');
+
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
@@ -134,8 +137,6 @@ class ProductController extends Controller
                 'business_id' => $request->id
             ]);
         }
-
-        $request->session->put(['status' => 'success', 'message' => 'Producto editado correctamente']);
     }
 
     /**

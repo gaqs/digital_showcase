@@ -28,7 +28,7 @@
                 <x-nav-link  :href="route('search.show', ['option' => 1])" :active="request()->routeIs('search.show') && request()->get('option') == 1">
                     Productos
                 </x-nav-link>
-                <x-nav-link  href="#" >
+                <x-nav-link  :href="route('search.show', ['option' => 2])" :active="request()->routeIs('search.show') && request()->get('option') == 2">
                     Oficios
                 </x-nav-link>
             </ul>
@@ -40,16 +40,31 @@
                         {{ substr(Auth::user()->name, 0,1) }}
                     </div>
                     <x-dropdown value="{{ 'Hola '.Auth::user()->name }}" type="link">
-                        <x-dropdown-link :href="route('profile.home')"><i class="fa-solid fa-user"></i> Mi perfil</x-dropdown-link>
-                        <x-dropdown-link href="{{ route('business.create') }}#create_business"><i class="fa-solid fa-building-circle-check"></i> Crear negocio</x-dropdown-link>
-                        <x-dropdown-link href="{{ route('product.create') }}#create_product"><i class="fa-solid fa-icons"></i> Crear producto</x-dropdown-link>
+                        <x-dropdown-link :href="route('profile.home')">
+                            <i class="fa-solid fa-user w-5"></i> Mi perfil
+                        </x-dropdown-link>
+                        <x-dropdown-link href="{{ route('business.create') }}#create_business">
+                            <span class="relative inline-block w-5 h-6">
+                                <i class="fa-solid fa-building"></i>
+                                <i class="fa-solid fa-plus fa-xs absolute bottom-[5px] right-0 text-danger-600"></i>
+                            </span> Crear negocio
+                        </x-dropdown-link>
+                        <x-dropdown-link href="{{ route('product.create') }}#create_product">
+                            <span class="relative inline-block w-5 h-6">
+                                <i class="fas fa-box"></i>
+                                <i class="fa-solid fa-plus fa-xs absolute bottom-[5px] right-0 text-danger-600"></i>
+                            </span>
+                            Crear producto
+                        </x-dropdown-link>
                         @if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin')
-                            <x-dropdown-link :href="route('admin.index')"><i class="fa-solid fa-gear"></i> Administrador</x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.index')">
+                                <i class="fa-solid fa-gear w-5"></i> Administrador
+                            </x-dropdown-link>
                         @endif
                         <form action="{{ route('logout') }}" method="post">
                             @csrf
                             <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
-                            <i class="fa-solid fa-power-off"></i> Salir
+                            <i class="fa-solid fa-power-off w-5"></i> Salir
                     </x-dropdown-link>
                         </form>
 

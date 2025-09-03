@@ -29,7 +29,9 @@ class BusinessController extends Controller
      */
     public function create()
     {
-        return view('web.sections.business.create');
+        //contar la cantidad de negocios del usuario
+        $data['qty_business'] = Business::where('user_id', Auth::user()->id)->count();
+        return view('web.sections.business.create', $data);
     }
 
     /**
@@ -47,16 +49,18 @@ class BusinessController extends Controller
 
         $id = Business::insertGetId($data);
 
+        session()->flash('status', 'success');
+        session()->flash('message', 'Negocio creado correctamente');
         // Retornar JSON para AJAX
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Negocio ingresado correctamente',
+                'message' => 'Negocio creado correctamente',
                 'business_id' => $id
             ]);
         }
 
-        $request->session->put(['status' => 'success', 'message' => 'Negocio creado correctamente']);
+        
     }
     /**
      * Display the specified resource.
@@ -64,7 +68,19 @@ class BusinessController extends Controller
     public function show(string $id)
     {
         $data['business'] = Business::find($id);
-        $data['user'] = User::find($data['business']->user_id);
+        
+        $user = User::find($data['business']->user_id);
+
+        if( $user == null ){
+            $data['user'] = (object)[
+                'id' => 0,
+                'name' => 'John Doe',
+                'email' => 'johndoe@email.com'
+            ];
+        }else{
+            $data['user'] = $user;
+        }
+
         $data['profile'] = UserProfile::where('user_id',$data['business']->user_id)->first();
         $data['products'] = Product::where('business_id', $id)->get();
 
@@ -110,6 +126,9 @@ class BusinessController extends Controller
 
         $business::find($request->id)->update($data);
 
+        session()->flash('status', 'success');
+        session()->flash('message', 'Negocio editado correctamente');
+        //retiornar JSON para AJAX
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
@@ -118,7 +137,7 @@ class BusinessController extends Controller
             ]);
         }
 
-        $request->session->put(['status' => 'success', 'message' => 'Negocio editado correctamente']);
+        
     }
 
     /**
@@ -127,7 +146,7 @@ class BusinessController extends Controller
     public function destroy(string $id)
     {
         $business = Business::find($id);
-        $folder = $business->folder;
+        $folder = $id;
         $product = Product::where('business_id', $business->id)->first();
 
         if( !is_null($product) ){

@@ -108,7 +108,6 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="col-span-2">
-                        <label for="dz_gallery" class="text-neutral-500"> Imágenes </label>
                         <div id="dz_gallery" class="dropzone dz-clickeable text-center" name="dz_product">
                             @csrf
                             <div class="dz-default dz-message text-sm">
@@ -158,6 +157,7 @@
     const requiredFields = document.querySelectorAll('#product_edit_form [required]');
     const businessWrapper = document.querySelector('#business_id'); //verificar select como algo aparte
     const categoryWrapper = document.querySelector('#categories_id'); 
+    let firstVisibleError = '';
 
     //vuelve a ocultar los mensajes de error cuando se ingrese informacion en los input
     requiredFields.forEach(field => {
@@ -166,6 +166,10 @@
             errorSpan.classList.add('hidden');
         });
     });
+
+    if(firstVisibleError != ''){
+        scrollToFirstVisibleError();
+    }
 
     //error de ambios select
     const businessError = document.getElementById('business_id_error');
@@ -183,6 +187,8 @@
 
         e.preventDefault();
         e.stopPropagation();
+
+        setLoadingButton(this, true);
     
         //verificar que todos los campos esten llenos, incluso las imagenes
         let formStatus = true;
@@ -191,16 +197,25 @@
         requiredFields.forEach(field => {
             const errorSpan = document.getElementById(`${field.name}_error`);
             if(field.value.trim() == '' || field.value == 0){
-                formStatus = false;
+                
+                setLoadingButton(this, false); //visualiza carga en el boton
+                formStatus = false; //formulario incompleto
+                firstVisibleError = field.name; //recupera el primer error visible
+
                 errorSpan.classList.remove('hidden');
             }
         });
+
+        if(firstVisibleError != ''){
+            scrollToFirstVisibleError();
+        }
 
         //si id es 0, nuevo business. Debe subir por obligacion una imagen de perfil y minimo 3 imagenes en la galeria
         if( id == 0 ){
             if( dzGallery.getQueuedFiles().length < 3 ){
                 imageStatus = false;
                 alert('Por favor, asegúrate de subir al menos tres en la galeria.');
+                setLoadingButton(this, false);
             }
         }
         
@@ -237,14 +252,21 @@
                         dzGallery.processQueue();
                     }
                     if( isCreate ){
-                        window.location.href = "/product/"+id; //redirecciona al negocio subido
+                        setTimeout(() => {
+                            window.location.href = "/product/"+id; //redirecciona al negocio subido
+                        }, 2000);
                     }else{
                         setTimeout(() => {
-                            location.reload();
-                        }, 1000);
-                        
+                            //recargar la pagina en la parte superior
+                            window.scroll(0,0);
+                            window.location.reload();
+                        }, 2000);
                     }
                     
+                },
+                error: function(){
+                    setLoadingButton(this, false);
+                    alert('Error al guardar el negocio. Por favor, inténtelo de nuevo.');
                 }
             });
         }
@@ -275,7 +297,7 @@
                 gallery = JSON.parse(gallery);
                 gallery.forEach(x => {
                     let mockFile = { name: x };
-                    this.displayExistingFile(mockFile, '/uploads/products/'+id+'/'+x);
+                    this.displayExistingFile(mockFile, '/uploads/products/'+x);
                 });
                 
                 var existingFiles = gallery.length;

@@ -8,6 +8,9 @@
 
         <title>{{ config('app.name', 'Digital Showcase') }}</title>
 
+        <!-- Icon -->
+        <link rel="icon" href="{{ asset('img/puerto_logo.png') }}">
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,7 +53,6 @@
 <script>
 
     //save and delete business on profile
-
     window.addEventListener('load', function() {
 
     var button = document.getElementById('save');
@@ -58,10 +60,11 @@
 
     if(button){
         button.addEventListener('click', function(){
+
             var id = button.getAttribute('data-id');
             var type = button.getAttribute('data-type');
 
-            if( button.classList.contains("button_secondary") ){
+            if( button.getAttribute('value') == 'secondary' ){
                 $.ajax({
                     type: 'POST',
                     url: "{{ route('profile.save') }}",
@@ -70,11 +73,11 @@
                         'X-CSRF-TOKEN': _token
                     },
                     success: function(data){
-                        button.classList.replace('button_secondary', 'button_primary');
                         button.children[0].classList.replace('fa-regular', 'fa-solid');
                     }
                 });
-            }else if(button.classList.contains("button_primary")){
+            }else if(button.getAttribute('value') == 'primary'){
+                console.log('delete');
                 $.ajax({
                     type: 'POST',
                     url: "{{ route('profile.delete_save') }}",
@@ -83,7 +86,6 @@
                         'X-CSRF-TOKEN': _token
                     },
                     success: function(data){
-                        button.classList.replace('button_primary', 'button_secondary');
                         button.children[0].classList.replace('fa-solid', 'fa-regular');
                     }
                 });
@@ -124,7 +126,7 @@ if(galleryElement){
             }
             thumbnail.classList.add( 'is-active' );
             current = thumbnail;
-    }
+        }
     });
 
     splide.mount();

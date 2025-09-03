@@ -25,19 +25,26 @@
                 </p>
             </header>
 
+            @if( $results->isEmpty() )
+                <div class="col-span-12 flex flex-col items-center justify-center mt-28">
+                    <img src="{{ asset('img/empty_cart.svg') }}" alt="No results" class="w-80 mb-2">
+                    <p><i>- "Esta lista esta vacía..."</i></p>
+                </div>
+            @else
+
             <div class="grid grid-cols-1 gap-4 md:grid-cols-4 mt-5">
                 @foreach ( $results as $r )
 
                 @php
                     if( $r->saveable_type == 'Business'){
 
-                        $image = get_images_from_folder('businesss',$r->folder,'gallery');
-                        $image = 'uploads/business/'.$r->folder.'/'.reset($image);
+                        $image = get_images_from_folder('business',$r->save_id,'gallery');
+                        $image = 'uploads/business/'.$r->save_id.'/'.reset($image);
 
                         $route = route('business.show', ['id' => $r->save_id ]);
 
                     }elseif( $r->saveable_type == 'Product'){
-                        $image = get_images_from_folder('products',$r->folder,'gallery');
+                        $image = get_images_from_folder('products',$r->save_id,'gallery');
                         $image = 'uploads/products/'.$r->folder.'/'.reset($image);
 
                         $route = route('product.show', ['id' => $r->save_id ]);
@@ -73,6 +80,7 @@
                 @endforeach
 
             </div>
+            @endif
             <div class="pagination mt-5">
                 {{ $results->onEachSide(2)->links('vendor.pagination.tailwind') }}
             </div>

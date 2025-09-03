@@ -8,6 +8,7 @@
             @php
                 $b_count = count($business_comments);
                 $p_count = count($products_comments);
+                $t_count = count($trades_comments);
             @endphp
             @foreach($business_comments as $bc)
             @php
@@ -15,7 +16,7 @@
             @endphp
 
             <div class="col-span-12 md:col-span-4">
-                <div class="block text-left rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+                <div class="hvr-grow block text-left rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
 
                     <div class="border-b-2 border-neutral-100 px-6 py-3 dark:border-neutral-600 dark:text-neutral-50">
                         <div class="flex flex-row content-center">
@@ -72,7 +73,7 @@
             @endphp
 
             <div class="col-span-12 md:col-span-4">
-                <div class="block text-left rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+                <div class="hvr-grow block text-left rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
 
                     <div class="border-b-2 border-neutral-100 px-6 py-3 dark:border-neutral-600 dark:text-neutral-50">
                         <div class="flex flex-row content-center">
@@ -122,6 +123,67 @@
                     </div>
                 @endfor
             @endif
+
+
+             @foreach($trades_comments as $tc)
+
+            @php
+                $avatar = get_images_from_folder('users', $tc->u_id, 'avatar');
+            @endphp
+
+            <div class="col-span-12 md:col-span-4">
+                <div class="hvr-grow block text-left rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+
+                    <div class="border-b-2 border-neutral-100 px-6 py-3 dark:border-neutral-600 dark:text-neutral-50">
+                        <div class="flex flex-row content-center">
+                            <div class="mr-3" id="user_avatar">
+                                <img src="{{ asset('uploads/users/'.$avatar) }}" class="w-12 rounded-full" alt="Avatar" />
+                            </div>
+                            <div>
+                                <p class="font-bold" id="user_name">{{ $tc->u_name }}</p>
+                                <p class="text-sm" id="what_comment">Comentó un oficio</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="px-6 py-4">
+                        <x-link href="#" class="font-bold">{{ $tc->p_name }}</x-link>
+                        <div>
+                            <div id="stars" class="inline">
+                                <?= print_stars($tc->trade_score) ?>
+                            </div>
+                        </div>
+                        <p class="mt-3 text-sm text-neutral-600 dark:text-neutral-200">
+                            <span id="date_comment" class="font-bold">{{ beautiful_date($tc->created_at) }}.</span>
+                            {{ substr($tc->body,0, 300).'...' }}
+                        </p>
+                        <x-link href="{{ route('trade.show', ['id' => $tc->trade_id]).'#comment_id_'.$tc->comment_id }}" class="font-bold text-sm">Continuar leyendo > </x-link>
+                    </div>
+                    <div
+                        class="border-t-2 text-right text-neutral-400 border-neutral-100 px-3 py-3 dark:border-neutral-600 dark:text-neutral-50">
+                        <div class="flex flex-row gap-5 justify-end">
+                            <div id="like_count">
+                                <i class="fa-regular hover:fa-solid fa-thumbs-up text-2xl text-green-600"></i>
+                                {{ comment_likes($tc->comment_id) }}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @endforeach
+
+            @if($t_count < 3)
+                @for($i = 0; $i < 3 - $t_count; $i++)
+                    <div class="col-span-12 md:col-span-4 flex flex-col items-center justify-center">
+                        <img src="{{ asset('img/post.svg') }}" alt="Sin comentario" class="w-80 scale-x-[-1]">
+                        <p class="mt-3"><i>- "Falta algo aquí..."</i></p>
+                    </div>
+                @endfor
+            @endif
+
+            
 
         </div>
     </div>

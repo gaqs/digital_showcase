@@ -25,7 +25,8 @@ class TradeController extends Controller
      */
     public function create()
     {
-        $data['trade_skill'] = [];
+        //contar la cantidad de negocios del usuario
+        $data['qty_trade'] = TradeSkill::where('user_id', Auth::user()->id)->count();
         return view('web.sections.trade.create', $data);
     }
 
@@ -44,16 +45,17 @@ class TradeController extends Controller
 
         $id = TradeSkill::insertGetId($data);
 
+        session()->flash('status', 'success');
+        session()->flash('message', 'Oficio creado correctamente');
         // Retornar JSON para AJAX
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Oficio tradicional ingresado correctamente',
-                'business_id' => $id
+                'message' => 'Oficio ingresado correctamente',
+                'trade_id' => $id
             ]);
         }
 
-        $request->session->put(['status' => 'success', 'message' => 'Oficio tradicional creado correctamente']);
     }
 
     /**
@@ -72,7 +74,9 @@ class TradeController extends Controller
     {
         $query = TradeSkill::find($id);
 
-        $data['trade_skill'] = $query;
+        $data['qty_trade'] = TradeSkill::where('user_id', Auth::user()->id)->count();
+        
+        $data['trade_skill'] = $query;  
 
         $data['avatar'] = get_images_from_folder('trades', $id, 'avatar');
         $data['banner'] = get_images_from_folder('trades', $id, 'banner');
@@ -84,9 +88,24 @@ class TradeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, TradeSkill $trade)
     {
-        //
+        $data = $request->all();
+
+        $data['updated_at'] = now();
+
+        $trade::find($request->id)->update($data);
+
+        session()->flash('status', 'success');
+        session()->flash('message', 'Oficio editado correctamente');
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Oficio editado correctamente',
+                'trade_id' => $request->id
+            ]);
+        }
     }
 
     /**
@@ -94,7 +113,22 @@ class TradeController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $trade = TradeSkill::find($id);
+        $folder = $id;
+        if($folder){
+
+            $rmfolder = delete_folder( public_path('uploads/trades/'.$folder) );
+
+            if($rmfolder){
+                $trade->delete();
+                return Redirect::route('trade.index')->with(['status' => 'success', 'message' => 'Oficio tradicional eliminado correctamente.']);
+            }else{
+                return Redirect::route('trade.index')->with(['status' => 'error', 'message' => 'No se logro eliminar el Oficio tradicional.']);
+            }
+
+        }else{
+            return Redirect::route('trade.index')->with(['status' => 'error', 'message' => 'No se encuentra la carpeta del Oficio tradicional.']);
+        }
     }
 
     public function avatar(Request $request)

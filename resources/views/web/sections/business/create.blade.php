@@ -31,6 +31,10 @@
                 </p>
             </header>
 
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-5 {{ (isset($qty_business) && $qty_business >= 3) ? null: 'hidden' }}" role="alert">
+                <p class="font-bold"><i class="fas fa-exclamation"></i> Alerta</p>
+                <p>Usted ya posee 3 negocios, no es posible crear más.</p>
+            </div>
 
             <form id="business_edit_form" method="post" enctype="multipart/form-data" action="#" class="mt-6 space-y-6">
                 <div id="business_create_information" class="block rounded-lg bg-white p-6 mt-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
@@ -51,8 +55,7 @@
                             <span id="categories_id_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                         <div class="md:col-md-2 col-span-1">
-                            <x-input-large id="input_business-keywords" name="keywords" type="text"
-                                class="mt-1 block w-full" :value="old('keywords', $business->keywords ?? null)" placeholder="Palabras clave*" required/>
+                            <x-input-large id="input_business-keywords" name="keywords" type="text" class="mt-1 block w-full" :value="old('keywords', $business->keywords ?? null)" placeholder="Palabras clave*" required/>
                             <div class="text-neutral-400 text-xs leading-normal ml-2">*Ingresa palabras separadas por coma (,) que describan tu negocio. Así ayudarán al motor de búsqueda a encontrar información relevante más fácilmente.</div>
                             <span id="keywords_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
@@ -199,8 +202,10 @@
                             <span id="dz_gallery_error" class="text-rose-500 text-xs"></span>
                         </div>
 
-                        <div class="flex items-center gap-4 mt-3">
-                            <x-button type="submit" class="!px-7 !pb-3 !pt-3 !text-sm !font-bold" value="danger">Guardar</x-button>
+                        <div class="mt-3">
+                            <x-button type="submit" class="!flex !items-center !gap-2 !px-7 !pb-3 !pt-3 !text-sm !font-bold !inline {{ (isset($qty_business) && $qty_business >= 3) ? 'pointer-events-none opacity-60':''}}" value="danger">
+                                Guardar
+                            </x-button>
                         </div>
                     </div>
                 </div>
@@ -213,7 +218,7 @@
         let avatar  = "{{ $avatar ?? null }}";
         let gallery = @json($gallery ?? []);
 
-        var _token = $('meta[name="csrf-token"]').attr('content');
+        var _token  = $('meta[name="csrf-token"]').attr('content');
         
         const wysiwyg = document.getElementById('wysiwyg');
         const quill = new Quill('#wysiwyg',{
@@ -234,6 +239,7 @@
         //campos form obligatorios
         const requiredFields = document.querySelectorAll('#business_edit_form [required]');
         const categoryWrapper = document.querySelector('[data-te-select-init]'); //verificar select como algo aparte
+        let firstVisibleError = '';
 
         //vuelve a ocultar los mensajes de error cuando se ingrese informacion en los input
         requiredFields.forEach(field => {
@@ -253,6 +259,8 @@
 
             e.preventDefault();
             e.stopPropagation();
+
+            setLoadingButton(this, true);
         
             //verificar que todos los campos esten llenos, incluso las imagenes
             let formStatus = true;
@@ -261,10 +269,18 @@
             requiredFields.forEach(field => {
                 const errorSpan = document.getElementById(`${field.name}_error`);
                 if(field.value.trim() == '' || field.value == 0){
-                    formStatus = false;
+
+                    setLoadingButton(this, false); //visualiza carga en el boton
+                    formStatus = false; //formulario incompleto
+                    firstVisibleError = field.name; //recupera el primer error visible
+
                     errorSpan.classList.remove('hidden');
                 }
             });
+
+            if(firstVisibleError != ''){
+                scrollToFirstVisibleError();
+            }
 
             //si id es 0, nuevo business. Debe subir por obligacion una imagen de perfil y minimo 3 imagenes en la galeria
             if( id == 0 ){
@@ -310,11 +326,21 @@
                             dzGallery.processQueue();
                         }
                         if( isCreate ){
-                            window.location.href = "/business/"+id; //redirecciona al negocio subido
+                            setTimeout(() => {
+                                window.location.href = "/business/"+id; //redirecciona al negocio subido
+                            }, 2000);
                         }else{
-                            location.reload();
+                            setTimeout(() => {
+                                //recargar la pagina en la parte superior
+                                window.scroll(0,0);
+                                window.location.reload();
+                            }, 2000);
                         }
                         
+                    },
+                    error: function(){
+                        setLoadingButton(this, false);
+                        alert('Error al guardar el negocio. Por favor, inténtelo de nuevo.');
                     }
                 });
             }
@@ -330,9 +356,9 @@
             dictCancelUpload: '<i class="fa-solid fa-ban"></i>',
             paramName: 'avatar',
             autoProcessQueue: false,
-            resizeWidth: 500,
-            resizeHeight: 500,
-            resizeMethod: 'contain',
+            resizeWidth: 250,
+            resizeHeight: 250,
+            resizeMethod: 'crop',
             maxFilesize: 20000000,
             headers: {
                 'X-CSRF-TOKEN': _token
@@ -342,7 +368,7 @@
                     data.append( "id",  id);
                 });
 
-                if( avatar != ''){   //añade imagen si es que el usuario edita el negocio
+                if( avatar != '' && avatar != 'default/_avatar.jpg'){   //añade imagen si es que el usuario edita el negocio
                     let mockFile = { name: avatar, size: 12345 };
                     this.displayExistingFile(mockFile, '/uploads/business/'+avatar);
                 }
@@ -399,7 +425,7 @@
                     gallery = JSON.parse(gallery);
                     gallery.forEach(x => {
                         let mockFile = { name: x };
-                        this.displayExistingFile(mockFile, '/uploads/business/'+id+'/'+x);
+                        this.displayExistingFile(mockFile, '/uploads/business/'+x);
                     });
                     
                     var existingFiles = gallery.length;

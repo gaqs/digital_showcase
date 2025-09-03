@@ -1,6 +1,6 @@
 <x-app-layout>
 
-    <div class="splide mt-20">
+    <div id="header" class="splide mt-20">
         <div class="splide__arrows splide__arrows--ltr">
             <button class="splide__arrow splide__arrow--prev !bg-white !text-white text-xl">
                 <i class="fa-solid fa-chevron-left text-black"></i>
@@ -13,12 +13,11 @@
             <ul class="splide__list">
                 @php
                     $gallery = get_images_from_folder('business', $business->id, 'gallery');
-
                     $i = 0;
                     $j = 0;
                     foreach ($gallery as $img) {
                         echo '<li class="splide__slide overflow-hidden h-[400px] linear_gradient">
-                                <img src="'.asset('uploads/business/'.$business->id.'/'.$img).'" class="w-full h-full object-cover" alt="">
+                                <img src="'.asset('uploads/business/'.$img).'" class="w-full h-full object-cover" alt="">
                              </li>';
                         if (++$i == 6) {
                             break;
@@ -30,28 +29,32 @@
         <div class="absolute right-20 bottom-12">
             <x-button class="hidden md:block" data-te-toggle="modal" data-te-target="#gallery_modal" value="danger">Ver Galeria</x-button>
 
-            <x-modal id="gallery_modal">
+            <x-modal id="gallery_modal" size="fullscreen" title="Galería de Imágenes">
+                
                 <div class="flex justify-center">
-                    <section id="gallery" class="w-3/4 splide" aria-label="Galería">
+
+                    <section id="gallery" class="w-3/4 splide max-h-[90vh] " aria-label="Galería">
                         <div class="splide__track">
                             <ul class="splide__list flex items-center">
                                 @foreach ($gallery as $img)
-                                <li class="splide__slide">
-                                    <img src="{{ asset('uploads/business/'.$business->id.'/'.$img) }}" alt="">
+                                <li class="splide__slide flex justify-center items-center">
+                                    <img src="{{ asset('uploads/business/'.$img) }}" alt="" class="object-contain max-h-[90vh] max-w-full">
                                 </li>
                                 @endforeach
                             </ul>
                         </div>
                     </section>
+
                 </div>
 
                 <ul id="thumbnails_gallery" class="thumbnails">
                     @foreach ($gallery as $img)
                         <li class="thumbnail">
-                            <img src="{{ asset('uploads/business/'.$business->id.'/'.$img) }}" class="w-full h-full object-cover" alt="">
+                            <img src="{{ asset('uploads/business/'.$img) }}" class="w-full h-full object-cover" alt="">
                         </li>
                     @endforeach
                 </ul>
+
             </x-modal>
             
         </div>
@@ -90,7 +93,7 @@
                         <h5 class="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
                             Descripción
                         </h5>
-                        <div class="mb-4 text-neutral-600 dark:text-neutral-200 descriptions">
+                        <div class="mb-4 text-neutral-600 dark:text-neutral-200 description">
                             {!! $business->description !!}
                         </div>
                     </div>
@@ -130,7 +133,7 @@
                                                     @php
                                                         $image = get_images_from_folder('products', $p->id, 'gallery');
                                                     @endphp
-                                                    <img class="rounded-t-lg w-full h-full object-cover" src="{{ asset('uploads/products/'.$p->id.'/'.reset($image)) }}" alt="" />
+                                                    <img class="rounded-t-lg w-full h-full object-cover" src="{{ asset('uploads/products/'.reset($image)) }}" alt="" />
                                                 </div>
 
                                                 <div class="p-2 text-center">
@@ -362,8 +365,7 @@
                             <div class="h-full w-full overflow-hidden bg-fixed -mt-24 relative z-10">
                                 <div class="flex flex-col h-full items-center mt-2">
                                     <div id="avatar" class="border-8 border-danger rounded-full overflow-hidden">
-                                        <img src="{{ asset('uploads/users/'.$avatar) }}" class="w-32 rounded-full shadow-lg"
-                                            alt="Avatar" />
+                                        <img src="{{ asset('uploads/users/'.$avatar) }}" class="w-32 rounded-full shadow-lg" alt="Avatar" />
                                     </div>
                                     <div class="flex flex-col mt-2 text-center">
                                         <div class="text-neutral-700 text-2xl font-bold">
@@ -373,10 +375,15 @@
                                             {{ $user->email }}
                                         </div>
                                     </div>
-                                    <div class="mt-5">
+                                    <div class="mt-5 flex flex-col items-center">
+                                        @if ( $user->id == 0)
+                                            <p class="mb-2">¿Conoces al dueño de este negocio?</p>
+                                            <x-button value="danger" class="">¡Informanos!</x-button>
+                                        @else
                                         <a href="{{ route('profile.show', ['id' => $user->id]) }}" target="_blank">
                                             <x-button value="danger">Ver Perfil</x-button>
                                         </a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -393,10 +400,17 @@
 </x-app-layout>
 
 <script type="module">
-    new Splide('.splide', {
+    new Splide('#header', {
         type: 'loop',
         perPage: 3,
-        focus: 'center'
+        focus: 'center',
+    }).mount();
+
+    new Splide('#gallery', {
+        type: 'loop',
+        perPage: 1,
+        focus: 'center',
+        autoHeight: true,
     }).mount();
 
     var lat_value = '{{ $business->latitude }}';

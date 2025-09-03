@@ -45,15 +45,20 @@
                         <div class="-mr-1">
                             <a href="{{ route('profile.home') }}#create_business" aria-current="true"
                                 class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('profile.home') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
-                                <i class="fa-solid fa-house"></i> Inicio
+                                <i class="fa-solid fa-house w-6"></i> Inicio
+
                             </a>
                             <a href="{{ route('business.index') }}#create_business" aria-current="true"
                                 class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('business.index') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
-                                <i class="fa-solid fa-building"></i> Mis negocios
+                                <i class="fa-solid fa-building w-6"></i> Mis negocios
                             </a>
 
                             <a href="{{ route('business.create') }}#create_business" class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('business.create') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
-                                <i class="fa-solid fa-building-circle-check"></i> Crear negocio
+                                <span class="relative inline-block w-6 h-6">
+                                    <i class="fa-solid fa-building"></i>
+                                    <i class="fa-solid fa-plus fa-xs absolute bottom-[5px] right-[5px] text-danger-600"></i>
+                                </span>
+                                Crear negocio
                             </a>
                             @if ( request()->routeIs('business.create') )
                             <div>
@@ -74,10 +79,14 @@
                             </div>
                             @endif
                             <a href="{{ route('product.index') }}#create_business" class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('product.index') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
-                                <i class="fa-solid fa-icons"></i> Mis productos
+                                <i class="fas fa-box w-6"></i> Mis productos
                             </a>
                             <a href="{{ route('product.create') }}#create_product" class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('product.create') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
-                                <i class="fa-solid fa-icons"></i> Crear producto
+                                <span class="relative inline-block w-6 h-6">
+                                    <i class="fas fa-box"></i>
+                                    <i class="fa-solid fa-plus fa-xs absolute bottom-[5px] right-[5px] text-danger-600"></i>
+                                </span>
+                                Crear producto
                             </a>
                             @if ( request()->routeIs('product.create') )
                             <div>
@@ -92,31 +101,36 @@
                             </div>
                             @endif
 
-                            <a href="{{ route('trade.create') }}#create_trade" class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('trade.create') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
-                                <i class="fa-solid fa-icons"></i> Ingresar Oficio
+                            <a href="{{ route('trade.index') }}#create_trade" class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('trade.index') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
+                                <i class="fas fa-hammer w-6"></i>
+                                Mis Oficios
                             </a>
 
-                            <a href="{{ route('trade.index') }}#create_trade" class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('trade.index') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
-                                <i class="fa-solid fa-icons"></i> Mis Oficios
+                            <a href="{{ route('trade.create') }}#create_trade" class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('trade.create') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
+                                <span class="relative inline-block w-6 h-6">
+                                    <i class="fas fa-hammer"></i>
+                                    <i class="fa-solid fa-plus fa-xs absolute bottom-[5px] right-[5px] text-danger-600"></i>
+                                </span>
+                                Ingresar Oficio
                             </a>
 
                             <a href="{{ route('profile.saved') }}" class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('profile.saved') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
-                                <i class="fa-solid fa-building-flag"></i> Guardados
+                                <i class="fas fa-bookmark w-6"></i> Guardados
                             </a>
                             <p class="p-4 w-full text-neutral-700 font-bold border-neutral-100 border-opacity-100 py-4 dark:border-opacity-50">
                                 Mi Cuenta
                             </p>
                             <a href="{{ route('profile.edit') }}"
                                 class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('profile.edit') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
-                                <i class="fa-solid fa-user-pen"></i> Ver/Editar perfil
+                                <i class="fa-solid fa-user-pen w-6"></i> Ver/Editar perfil
                             </a>
                             <a href="{{ route('password.home') }}"
                                 class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('profile.password') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
-                                <i class="fa-solid fa-unlock-keyhole"></i> Cambiar contraseña
+                                <i class="fa-solid fa-unlock-keyhole w-6"></i> Cambiar contraseña
                             </a>
                             <a href="#!"
                                 class="block w-full cursor-pointer p-4 hover:-ml-1 hover:border-l-4 hover:border-danger-600 hover:bg-danger-100 hover:text-danger-600 {{ request()->routeIs('profile.logout') ? '-ml-1 border-l-4 border-danger-600 bg-danger-100 text-danger-600' : null }}">
-                                <i class="fa-solid fa-power-off"></i> Desconectar
+                                <i class="fa-solid fa-power-off w-6"></i> Desconectar
                             </a>
                         </div>
                     </div>

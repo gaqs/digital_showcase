@@ -22,7 +22,7 @@
                         @php
                             $image = get_images_from_folder('products', $r->id, 'gallery');
                         @endphp
-                        <img class="rounded-t-lg w-full h-full object-cover" src="{{ asset('uploads/products/'.$r->id.'/'.reset($image)) }}" alt="" />
+                        <img class="rounded-t-lg w-full h-full object-cover" src="{{ asset('uploads/products/'.reset($image)) }}" alt="" />
                     </div>
                     <div id="product_info" class="py-3 text-center">
                         <div id="product_name" class="font-medium dark:text-neutral-200 mb-1">

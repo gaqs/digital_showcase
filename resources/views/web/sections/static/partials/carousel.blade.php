@@ -24,7 +24,7 @@
                 <li class="splide__slide">
                     <div class="h-[550px]">
 
-                        <img src="{{ asset('uploads/business/'.$b->id.'/'.reset($image)) }}" class="block w-full h-full object-cover brightness-50" alt="..." />
+                        <img src="{{ asset('uploads/business/'.reset($image)) }}" class="block w-full h-full object-cover brightness-50" alt="..." />
                         <div class="absolute top-1/2 right-0 md:right-80 -translate-y-1/2 text-right pr-5 text-white md:block md:w-[50%] border-r-8 border-danger">
                             <h5 class="slide_title text-5xl font-bold">
                                 {{ $b->name }}

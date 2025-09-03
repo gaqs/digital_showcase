@@ -37,7 +37,7 @@ window.addEventListener('load', function() {
         links.forEach(link => {
             const href = link.getAttribute('href');
             if( href == '' || href == '#'){
-                link.querySelector('img').classList.add('grayscale');
+                link.querySelector('img').classList.add('opacity-50');
             }
         });
     }
@@ -280,18 +280,6 @@ if( delete_link != null ){
     });
 }
 
-//global submit button load
-const form = document.querySelector('form');
-if( form != null){
-    form.addEventListener('submit', (e) => {
-        const submitButton = document.querySelector('button[type=submit]');
-        submitButton.disabled = true;
-        if(submitButton.children[0]){
-            submitButton.children[0].className = 'fa-solid fa-circle-notch fa-spin';
-        }
-    });
-}
-
 //formatea el precio agregando puntos cada miles
 function formatearPrecio(input) {
     let valor = input.value.replace(/[^0-9]/g, '');
@@ -327,3 +315,62 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+function scrollToFirstVisibleError() {
+    // Busca el primer span con clase text-rose-500 y que NO tenga la clase hidden
+    const firstError = document.querySelector('span.text-rose-500:not(.hidden)');
+    if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+//global submit button via ajax
+function setLoadingButton(btn, loading = true) {
+    if (loading) {
+        btn.disabled = true;
+        btn.classList.add('opacity-60', 'cursor-not-allowed');
+        btn.dataset.originalHtml = btn.innerHTML;
+        btn.innerHTML = `<span class="fa-solid fa-circle-notch fa-spin me-1"></span>Procesando...`;
+    } else {
+        btn.disabled = false;
+        btn.classList.remove('opacity-60', 'cursor-not-allowed');
+        if (btn.dataset.originalHtml) {
+            btn.innerHTML = btn.dataset.originalHtml;
+        }
+    }
+}
+
+//global submit button load
+const form = document.querySelector('form');
+if( form != null){
+    form.addEventListener('submit', (e) => {
+        const submitButton = document.querySelector('button[type=submit]');
+        submitButton.disabled = true;
+        if(submitButton.children[0]){
+            submitButton.children[0].className = 'fa-solid fa-circle-notch fa-spin';
+            submitButton.classList.add('opacity-60', 'cursor-not-allowed');
+        }
+    });
+}
+
+function showStatusToast(type, message) {
+    let toastId = type === 'success' ? 'toast-success' : 'toast-error';
+    let toast = document.getElementById(toastId);
+    if (toast) {
+        // Actualiza el mensaje si es necesario
+        let msgDiv = toast.querySelector('.toast-message');
+        if (msgDiv) msgDiv.textContent = message;
+
+        toast.classList.remove('hidden');
+        toast.setAttribute('data-te-toast-show', '');
+        toast.classList.add('animate__animated', 'animate__slideInRight', 'animate__faster');
+
+        // Oculta automáticamente el toast de éxito después de 3 segundos
+        if (type === 'success') {
+            setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.removeAttribute('data-te-toast-show');
+            }, 3000);
+        }
+    }
+}

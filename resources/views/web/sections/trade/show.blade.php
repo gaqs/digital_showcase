@@ -19,7 +19,7 @@
                             </div>
                             <div class="flex flex-col mt-5 text-center">
                                 <div class="text-neutral-700 text-2xl font-bold">
-                                    {{ $trade_skill->name }}
+                                    {{ $trade_skill->name.' '.$trade_skill->lastname }}
                                 </div>
                                 <div>
                                     {{ $trade_skill->trade }}
@@ -34,7 +34,11 @@
                                             </div>
                                             <div>
                                                 <div class="text-info-700">Whatsapp</div>
-                                                <div class="text-sm">+569 {{ $trade_skill->whatsapp }}</div>
+                                                @if ( $trade_skill->whatsapp == null || $trade_skill->whatsapp == '')
+                                                    <div class="text-sm">No disponible</div>
+                                                @else
+                                                    <div class="text-sm">+569 {{ $trade_skill->whatsapp }}</div>
+                                                @endif
                                             </div>
                                         </div>
                                     </li>
@@ -67,7 +71,11 @@
                                             </div>
                                             <div>
                                                 <div class="text-info-700">Dirección</div>
-                                                <div class="text-sm">{{ $trade_skill->address }}</div>
+                                                @if ( $trade_skill->address == null || $trade_skill->address == '')
+                                                    <div class="text-sm">No disponible</div>
+                                                @else
+                                                    <div class="text-sm">{{ $trade_skill->address }}</div>
+                                                @endif
                                             </div>
                                         </div>
                                     </li>
@@ -87,24 +95,24 @@
                             <div id="trade_score" class="flex flex-row items-center mb-5">
                                 <div>
                                     <div id="score" class="bg-green-700 w-fit font-bold text-2xl mr-3 text-white p-3 rounded-xl">
-                                        5.0
+                                        {{ $trade_skill->score }}
                                     </div>
                                 </div>
                                 <div>
                                     <div>
-                                        <div id="qty_reviews" class="text-neutral-600">12 comentarios</div>
+                                        <div id="qty_reviews" class="text-neutral-600">{{ $trade_skill->qty_comments }} comentarios</div>
                                         <div id="trade_stars" class="inline">
-                                            <?= print_stars(4) ?>
+                                            <?= print_stars( $trade_skill->score ) ?>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <p class="text-neutral-700 dark:text-neutral-300">
-                                {{ $trade_skill->description }}
+                                {!! $trade_skill->description !!}
                             </p>
                         </div>
-                        <div id="trade_rrss" class="block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 col-span-12">
+                        <div id="rrss" class="block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 col-span-12">
                             <h2 class="text-2xl font-bold mb-4">Redes Sociales</h2>
                             <div id="rrss" class="grid md:grid-cols-4 grid-cols-2 gap-4">
                             <a href="{{ $trade_skill->facebook }}" target="_blank" class="flex items-center gap-2">
@@ -144,7 +152,7 @@
                                             $j = 0;
                                             foreach ($gallery as $img) {
                                                 echo '<li class="splide__slide p-2 overflow-hidden h-[300px]">
-                                                        <img src="'.asset('uploads/trades/'.$trade_skill->id.'/'.$img).'" class="w-full h-full object-cover" alt="">
+                                                        <img src="'.asset('uploads/trades/'.$img).'" class="w-full h-full object-cover" alt="">
                                                     </li>';
                                                 if (++$i == 6) {
                                                     break;
@@ -163,7 +171,7 @@
                                                     <ul class="splide__list">
                                                         @foreach ($gallery as $img)
                                                         <li class="splide__slide flex justify-center items-center">
-                                                            <img src="{{ asset('uploads/trades/'.$trade_skill->id.'/'.$img) }}" alt="">
+                                                            <img src="{{ asset('uploads/trades/'.$img) }}" alt="">
                                                         </li>
                                                         @endforeach
                                                     </ul>
@@ -174,7 +182,7 @@
                                         <ul id="thumbnails_gallery" class="thumbnails">
                                             @foreach ($gallery as $img)
                                                 <li class="thumbnail">
-                                                    <img src="{{ asset('uploads/trades/'.$trade_skill->id.'/'.$img) }}" class="w-full h-full object-cover" alt="">
+                                                    <img src="{{ asset('uploads/trades/'.$img) }}" class="w-full h-full object-cover" alt="">
                                                 </li>
                                             @endforeach
                                         </ul>

@@ -2,6 +2,7 @@
 @import "dropzone/dist/dropzone.css";
 @import "@splidejs/splide/dist/css/splide.min.css";
 @import "leaflet/dist/leaflet.css";
+@import "hover.css/css/hover-min.css";
 
 @import "quill/dist/quill.core.css";
 

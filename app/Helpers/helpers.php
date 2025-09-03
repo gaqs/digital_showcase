@@ -2,6 +2,7 @@
 use App\Models\Business;
 use App\Models\UserProfile;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -12,6 +13,17 @@ if (! function_exists('category_list')) {
         foreach (Category::all() as $cat){
             $thisone = ( $cat->id == $selected ) ? 'selected':'';
             echo '<option class="text-xl" value="'.$cat->id.'" '.$thisone.'>'.$cat->name.'</option>';
+        }
+
+    }
+}
+
+if (! function_exists('user_list')) {
+    function user_list($selected){
+        echo '<option value="0">Sin Dueño</option>';
+        foreach (User::all() as $u){
+            $thisone = ( $u->id == $selected ) ? 'selected':'';
+            echo '<option class="text-xl" value="'.$u->id.'" '.$thisone.'>'.$u->id.'.- '.$u->name.' '.$u->lastname.'</option>';
         }
 
     }
@@ -62,29 +74,39 @@ if (!function_exists('get_images_from_folder')) {
     {
         $base = public_path("uploads/$entity/$folder/");
 
-        // Buscar avatar
-        if ($type === 'avatar') {
-            $avatar = glob($base . '_avatar.*');
-            return isset($avatar[0]) ? $folder.'/'.basename($avatar[0]) : 'default/_avatar.jpg';
-        }
+            // Buscar avatar
+            if ($type === 'avatar') {
+                    $avatar = glob($base . '_avatar.*');
+                    return isset($avatar[0]) ? $folder.'/'.basename($avatar[0]) : 'default/_avatar.jpg';
+            }
 
-        // Buscar banner
-        if ($type === 'banner') {
-            $banner = glob($base . '_banner.*');
-            return isset($banner[0]) ? $folder.'/'.basename($banner[0]) : 'default/_banner.jpg';
-        }
+            // Buscar banner
+            if ($type === 'banner') {
+                    $banner = glob($base . '_banner.*');
+                    return isset($banner[0]) ? $folder.'/'.basename($banner[0]) : 'default/_banner.jpg';
+            }
 
-        // Buscar galería (excluye avatar y banner)
-        if ($type === 'gallery') {
-            $allFiles = scandir($base);
-            $avatar = glob($base . '_avatar.*');
-            $banner = glob($base . '_banner.*');
-            $exclude = array('.', '..');
-            if (isset($avatar[0])) $exclude[] = basename($avatar[0]);
-            if (isset($banner[0])) $exclude[] = basename($banner[0]);
-            $images = array_diff($allFiles, $exclude);
-            return array_values($images); // array de nombres de archivo
-        }
+            // Buscar galería (excluye avatar y banner)
+            if ($type === 'gallery') {
+                if( $folder == 0 ){
+                    return ['default/image_1.jpg', 'default/image_2.jpg', 'default/image_3.jpg'];
+
+                }else{
+
+                    $allFiles = scandir($base);
+                    $avatar = glob($base . '_avatar.*');
+                    $banner = glob($base . '_banner.*');
+                    $exclude = array('.', '..');
+                    if (isset($avatar[0])) $exclude[] = basename($avatar[0]);
+                    if (isset($banner[0])) $exclude[] = basename($banner[0]);
+                    $images = array_diff($allFiles, $exclude);
+
+                    return array_map(function($img) use ($folder){
+                        return $folder.'/'.$img;
+                    }, array_values($images));
+                    
+                } 
+            }
 
         return null;
     }

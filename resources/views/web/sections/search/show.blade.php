@@ -4,6 +4,8 @@
             @include('web.sections.search.partials.business')
         @elseif ( $search_type == 'product')
             @include('web.sections.search.partials.products')
+        @elseif ( $search_type == 'trade')
+            @include('web.sections.search.partials.trades')
         @endif
     </div>
 </x-app-layout>

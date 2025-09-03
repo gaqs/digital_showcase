@@ -9,6 +9,7 @@
                 <div class="flex mb-3">
                     <x-radio name="option" :checked="(request()->option) == 0 ? 'checked' : null" id="input-radio-products" value="0">Negocios</x-radio>
                     <x-radio name="option" :checked="(request()->option) == 1 ? 'checked' : null" id="input-radio-business" value="1">Productos</x-radio>
+                    <x-radio name="option" :checked="(request()->option) == 2 ? 'checked' : null" id="input-radio-trades" value="2">Oficios Tradicionales</x-radio>
                 </div>
             </div>
             <div class="col-span-12 md:col-span-6 mb-3">

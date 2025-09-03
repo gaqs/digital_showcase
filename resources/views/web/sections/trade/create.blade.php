@@ -26,6 +26,11 @@
                 </p>
             </header>
 
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-5 {{ ($qty_trade >= 3) ? null: 'hidden' }}" role="alert">
+                <p class="font-bold"><i class="fas fa-exclamation"></i> Alerta</p>
+                <p>Usted ya posee 3 negocios, no es posible crear más.</p>
+            </div>
+
            <form id="trade_edit_form" method="post" enctype="multipart/form-data" action="#" class="mt-6 space-y-6">
 
                 <div class="block rounded-lg bg-white p-6 mt-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
@@ -34,37 +39,39 @@
                     </h5>
 
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                        <div class="col-span-12 md:col-span-4">
-                            <x-input-large id="input_name" name="name" type="text" class="mt-1 block w-full"
-                                :value="old('name', $trade_skill->name ?? null)" placeholder="Nombre" maxlength="255" required />
-                            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                        <div class="col-span-12 md:col-span-3">
+                            <x-input-large id="input_name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $trade_skill->name ?? null)" placeholder="Nombre" maxlength="255" required />
+                            <span id="name_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
-                        <div class="col-span-12 md:col-span-4">
-                            <x-input-large id="input_lastname" name="lastname" type="text" class="mt-1 block w-full"
-                                :value="old('lastname', $trade_skill->lastname?? null)" placeholder="Apellido" maxlength="255" required />
-                            <x-input-error class="mt-2" :messages="$errors->get('lastname')" />
+                        <div class="col-span-12 md:col-span-3">
+                            <x-input-large id="input_lastname" name="lastname" type="text" class="mt-1 block w-full" :value="old('lastname', $trade_skill->lastname?? null)" placeholder="Apellido" maxlength="255" required />
+                            <span id="lastname_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
-                        <div class="col-span-12 md:col-span-4">
-                            <x-input-large id="input_email" name="email" type="email" class="mt-1 block w-full"
-                                :value="old('email', $trade_skill->email?? null)" required placeholder="Correo electrónico" maxlength="255" required/>
-                            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+                        <div class="col-span-12 md:col-span-6">
+                            <x-input-large id="input_trade" name="trade" type="text" class="mt-1 block w-full" :value="old('trade', $trade_skill->trade?? null)" placeholder="Oficio tradicional" maxlength="255" required />
+                            <span id="trade_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
+                        </div>
+                        <div class="col-span-12 md:col-span-6">
+                            <x-input-large id="input_email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $trade_skill->email?? null)" required placeholder="Correo electrónico" maxlength="255" required/>
+                            <span id="email_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                         <div class="col-span-12 md:col-span-3">
                             <div class="relative flex flex-nowrap items-stretch mt-1">
                                 <span class="flex items-center whitespace-nowrap rounded-s border border-e-0 border-solid border-neutral-200 px-3 text-center text-base text-surface dark:border-white/10 dark:text-white bg-secondary-100">+569</span>
                                 <x-input-large id="input_business-phone" name="phone" type="text" maxlength="12" class="" :value="old('phone', $trade_skill->phone ?? null)" placeholder="Teléfono" />
                             </div>
+                            <span id="phone_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                         <div class="col-span-12 md:col-span-3">
                             <div class="relative flex flex-nowrap items-stretch mt-1">
                                 <span class="flex items-center whitespace-nowrap rounded-s border border-e-0 border-solid border-neutral-200 px-3 text-center text-base text-surface dark:border-white/10 dark:text-white bg-secondary-100">+569</span>
                                 <x-input-large id="input_business-whatsapp" name="whatsapp" type="text" maxlength="12" class="" :value="old('whatsapp', $trade_skills->whatsapp ?? null)" placeholder="Whatsapp" />
                             </div>
+                            <span id="whatsapp_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
-                        <div class="col-span-12 md:col-span-6">
-                            <x-input-large id="input_address" name="address" type="text" class="mt-1 block w-full"
-                                :value="old('address', $trade_skill->address ?? null)" placeholder="Dirección" maxlength="255"/>
-                            <x-input-error class="mt-2" :messages="$errors->get('address')" />
+                        <div class="col-span-12 md:col-span-12">
+                            <x-input-large id="input_address" name="address" type="text" class="mt-1 block w-full" :value="old('address', $trade_skill->address ?? null)" placeholder="Dirección" maxlength="255"/>
+                            <span id="address_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 gap-4 mt-5">
@@ -136,25 +143,34 @@
                         </div>
                     </div>
                     <div class="col-span-12">
+
                         <div class="block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                             <h5 class="mb-2 pb-5 font-medium leading-tight text-neutral-800 dark:text-neutral-50">
                                 <i class="fa-solid fa-address-card text-rose-500"></i> Galería
                             </h5>
-                            <div id="dz_gallery" class="dropzone dz-clickeable grid grid-cols-1 justify-items-center">
-                                @csrf
-                                <div class="dz-default dz-message text-sm">
-                                    <i class="fa-solid fa-upload text-5xl"></i><br>
-                                    Arrastra los archivos aquí
+
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="col-span-2">
+                                    <div id="dz_gallery" class="dropzone dz-clickeable text-center" name="dz_product">
+                                        @csrf
+                                        <div class="dz-default dz-message text-sm">
+                                            <i class="fa-solid fa-upload text-5xl"></i><br>
+                                            Arrastra los archivos aquí
+                                        </div>
+
+                                    </div>
+                                    <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB.</div>
+                                    <span id="dz_gallery_error" class="text-rose-500 text-xs dz_product_error"></span>
                                 </div>
                             </div>
-                            <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB.</div>
-                            <span id="dz_gallery_error" class="text-rose-500 text-xs"></span>
                         </div>
+
                     </div>
                 </div>
 
                 <div class="flex items-center gap-4 mt-3">
-                    <x-button type="submit" lass="!px-7 !pb-3 !pt-3 !text-sm !font-bold" value="danger">
+                    <x-button type="submit" lass="!px-7 !pb-3 !pt-3 !text-sm !font-bold {{ ($qty_trade >= 3) ? 'pointer-events-none opacity-60':''}}" value="danger">
                         Guardar
                     </x-button>
 
@@ -171,7 +187,7 @@
 
     <script type="module">
 
-        let id      = "{{ $trade->id ?? 0 }}";
+        let id      = "{{ $trade_skill->id ?? 0 }}";
         let avatar  = "{{ $avatar ?? null }}";
         let banner  = "{{ $banner ?? null }}";
         let gallery = @json($gallery ?? []);
@@ -195,12 +211,23 @@
         });
 
         const requiredFields = document.querySelectorAll('#trade_edit_form [required]');
+        let firstVisibleError = '';
+
+        //vuelve a ocultar los mensajes de error cuando se ingrese informacion en los input
+        requiredFields.forEach(field => {
+            field.addEventListener("click", function(e){
+                const errorSpan = document.getElementById(`${field.name}_error`);
+                errorSpan.classList.add('hidden');
+            });
+        });
 
         //submit form via ajax a business/store
         document.querySelector("button[type=submit]").addEventListener("click", function(e) {
 
             e.preventDefault();
             e.stopPropagation();
+
+            setLoadingButton(this, true);
         
             //verificar que todos los campos esten llenos, incluso las imagenes
             let formStatus = true;
@@ -209,16 +236,25 @@
             requiredFields.forEach(field => {
                 const errorSpan = document.getElementById(`${field.name}_error`);
                 if(field.value.trim() == '' || field.value == 0){
-                    formStatus = false;
+
+                    setLoadingButton(this, false); //visualiza carga en el boton
+                    formStatus = false; //formulario incompleto
+                    firstVisibleError = field.name; //recupera el primer error visible
+
                     errorSpan.classList.remove('hidden');
                 }
             });
 
+            if(firstVisibleError != ''){
+                scrollToFirstVisibleError();
+            }
+            
             //si id es 0, nuevo business. Debe subir por obligacion una imagen de perfil y minimo 3 imagenes en la galeria
             if( id == 0 ){
-                if( dzAvatar.getQueuedFiles().length < 1 || dzBanner.getQueuedFiles().length < 3 || dzGallery.getQueuedFiles().length < 3 ){
+                if( dzAvatar.getQueuedFiles().length < 1 || dzBanner.getQueuedFiles().length < 1 || dzGallery.getQueuedFiles().length < 3 ){
                     imageStatus = false;
                     alert('Por favor, asegúrate de subir al menos una imagen en perfil, un banner y minimo tres en la galeria.');
+                    setLoadingButton(this, false);
                 }
             }
             
@@ -235,7 +271,7 @@
                 if( isCreate ){
                     url = "{{ route('trade.store') }}";
                 }else{
-                    url = "{{ route('trade.update', $trade->id ?? 0 ) }}";
+                    url = "{{ route('trade.update', $trade_skill->id ?? 0 ) }}";
                     formData.append('_method', 'PATCH');
                 }
 
@@ -248,26 +284,36 @@
                     contentType: false, 
                     headers: { 'X-CSRF-TOKEN': _token },
                     success: function(data){
-                        //recueprar id business guardada
-                        id = data.business_id;
-                        //comienza a subir iamgenes
-                        if( dzAvatar.getQueuedFiles().length > 0 ){
-                            dzAvatar.processQueue();
-                        }
-                        if( dzGallery.getQueuedFiles().length > 0  ){
-                            dzGallery.processQueue();
-                        }
-                        if( dzBanner.getQueuedFiles().length > 0  ){
-                            dzBanner.processQueue();
-                        }
-                        if( isCreate ){
+                        if(data.success){
+                             //recueprar id business guardada
+                            id = data.trade_id;
+                            //comienza a subir iamgenes
+                            if( dzAvatar.getQueuedFiles().length > 0 ){
+                                dzAvatar.processQueue();
+                            }
+                            if( dzGallery.getQueuedFiles().length > 0  ){
+                                dzGallery.processQueue();
+                            }
+                            if( dzBanner.getQueuedFiles().length > 0  ){
+                                dzBanner.processQueue();
+                            }
+                            
+                            if( isCreate ){
+                        setTimeout(() => {
                             window.location.href = "/trade/"+id; //redirecciona al negocio subido
-                        }else{
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1000);
-                        }
-                        
+                        }, 2000);
+                    }else{
+                        setTimeout(() => {
+                            //recargar la pagina en la parte superior
+                            window.scroll(0,0);
+                            window.location.reload();
+                        }, 2000);
+                    }
+                        }   
+                    },
+                    error: function(){
+                        setLoadingButton(this, false);
+                        alert('Error al guardar el negocio. Por favor, inténtelo de nuevo.');
                     }
                 });
             }
@@ -283,9 +329,9 @@
             dictCancelUpload: '<i class="fa-solid fa-ban"></i>',
             paramName: 'avatar',
             autoProcessQueue: false,
-            resizeWidth: 500,
-            resizeHeight: 500,
-            resizeMethod: 'contain',
+            resizeWidth: 250,
+            resizeHeight: 250,
+            resizeMethod: 'crop',
             maxFilesize: 20000000,
             headers: {
                 'X-CSRF-TOKEN': _token
@@ -295,7 +341,7 @@
                     data.append( "id",  id);
                 });
 
-                if( avatar != ''){   //añade imagen si es que el usuario edita el negocio
+                if( avatar != '' && avatar != 'default/_avatar.jpg'){   //añade imagen si es que el usuario edita el negocio
                     let mockFile = { name: avatar, size: 12345 };
                     this.displayExistingFile(mockFile, '/uploads/trades/'+avatar);
                 }
@@ -339,7 +385,7 @@
             autoProcessQueue: false,
             resizeWidth: 1280,
             resizeHeight: 300,
-            resizeMethod: 'contain',
+            resizeMethod: 'crop',
             maxFilesize: 20000000,
             headers: {
                 'X-CSRF-TOKEN': _token
@@ -349,7 +395,7 @@
                     data.append( "id",  id);
                 });
 
-                if( banner != ''){   //añade imagen si es que el usuario edita el negocio
+                if( banner != '' && banner != 'default/_banner.jpg'){   //añade imagen si es que el usuario edita el negocio
                     let mockFile = { name: banner, size: 12345 };
                     this.displayExistingFile(mockFile, '/uploads/trades/'+banner);
                 }
@@ -406,7 +452,7 @@
                     gallery = JSON.parse(gallery);
                     gallery.forEach(x => {
                         let mockFile = { name: x };
-                        this.displayExistingFile(mockFile, '/uploads/trades/'+id+'/'+x);
+                        this.displayExistingFile(mockFile, '/uploads/trades/'+x);
                     });
                 }
             },

@@ -1,6 +1,6 @@
 @if (session()->has('status'))
     @if (session('status') == 'success')
-        <div class="fixed top-24 right-8 z-50 pointer-events-auto mx-auto mb-4 hidden w-96 max-w-full rounded-lg bg-success-100 bg-clip-padding text-success-700 shadow-lg shadow-black/5 data-[te-toast-show]:block data-[te-toast-hide]:hidden animate__animated animate__slideInRight animate__faster" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-te-autohide="true" data-te-toast-init data-te-toast-show>
+        <div class="fixed top-24 right-8 z-[9999] pointer-events-auto mx-auto mb-4 hidden w-96 max-w-full rounded-lg bg-success-100 bg-clip-padding text-success-700 shadow-lg shadow-black/5 data-[te-toast-show]:block data-[te-toast-hide]:hidden animate__animated animate__slideInRight animate__faster" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-te-autohide="true" data-te-toast-init data-te-toast-show>
 
             <div class="flex items-center justify-between rounded-t-lg bg-success-100 bg-clip-padding px-4 pb-2 pt-2.5">
                 <p class="flex items-center font-bold text-success-700">
@@ -20,8 +20,8 @@
                 {{ session('message') }}
             </div>
         </div>
-    @else
-        <div class="fixed top-24 right-8 z-50 pointer-events-auto mx-auto mb-4 hidden w-96 max-w-full rounded-lg bg-danger-100 bg-clip-padding text-sm text-danger-700 shadow-lg shadow-black/5 data-[te-toast-show]:block data-[te-toast-hide]:hidden" id="toast-error" role="alert" aria-live="assertive" aria-atomic="true" data-te-autohide="false" data-te-toast-init data-te-toast-show>
+    @elseif( session('status') == 'error')
+        <div class="fixed top-24 right-8 z-[9999] pointer-events-auto mx-auto mb-4 hidden w-96 max-w-full rounded-lg bg-danger-100 bg-clip-padding text-sm text-danger-700 shadow-lg shadow-black/5 data-[te-toast-show]:block data-[te-toast-hide]:hidden" id="toast-error" role="alert" aria-live="assertive" aria-atomic="true" data-te-autohide="false" data-te-toast-init data-te-toast-show>
             <div class="flex items-center justify-between rounded-t-lg border-b-2 border-danger-200 bg-danger-100 bg-clip-padding px-4 pb-2 pt-2.5 text-danger-700">
                 <p class="flex items-center font-bold text-danger-700">
                     <i class="fa-solid fa-circle-check mr-2"></i>ERROR
@@ -128,8 +128,10 @@
 </footer>
 <!--Copyright section-->
 <div class="bg-neutral-700 p-6 text-center text-neutral-300 dark:bg-neutral-700">
-    <span>© 2023 Copyright:</span>
-    <a class="font-semibold text-neutral-300 dark:text-neutral-400" href="#!>
-        Gustavo Quilodrán | gaqs.02@gmail.com
+    <span>© {{ date("Y") }} Copyright </span>
+    <a class="font-semibold text-neutral-300 dark:text-neutral-400" href="#!">
+       Municipalidad de Puerto Montt
     </a>
+    <span>| Desarrollado por Gustavo Quilodrán - </span>
+    <a href="mailto:gaqs.02@gmail.com">gaqs.02@gmail.com</a>
 </div>

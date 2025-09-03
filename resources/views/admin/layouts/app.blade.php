@@ -71,28 +71,20 @@
                                 <a href="{{ route('admin_business.index') }}"><i class="fas fa-briefcase mr-1"></i> Negocios</a>
                             </li>
                             <li class="w-full border-b-2 border-neutral-100 py-4 dark:border-white/10">
-                                <a href="{{ route('admin_product.index') }}"><i class="fas fa-icons mr-1"></i> Productos</a>
+                                <a href="{{ route('admin_product.index') }}"><i class="fas fa-box mr-1"></i> Productos</a>
+                            </li>
+                            <li class="w-full border-b-2 border-neutral-100 py-4 dark:border-white/10">
+                                <a href="{{ route('admin_trade.index') }}"><i class="fas fa-hammer mr-1"></i> Oficios</a>
                             </li>
                             <li class="w-full border-b-2 border-neutral-100 py-4 dark:border-white/10">
                                 <a href="{{ route('admin_comment.index') }}"><i class="fas fa-comments mr-1"></i> Comentarios</a>
-                            </li>
-                        </ul>
-                        <ul class="mt-10">
-                            <li class="text-sm">ADMINISTRADOR</li>
-                        </ul>
-                        <ul class=" ml-5 w-100 text-surface dark:text-white">
-                            <li class="w-full border-b-2 border-neutral-100 py-4 dark:border-white/10">
-                               <a href="#"><i class="fas fa-users mr-1"></i> Administradores</a>
-                            </li>
-                            <li class="w-full border-b-2 border-neutral-100 py-4 dark:border-white/10">
-                                <a href="#"><i class="fas fa-briefcase mr-1"></i> Contraseñas</a>
                             </li>
                         </ul>
 
                         <ul class="ml-5 mt-10">
                             <li>
                                 <a href="{{ route('home.index') }}">
-                                    <i class="fas fa-long-arrow-alt-left"></i> Volver a la pagina oficinal
+                                    <i class="fas fa-long-arrow-alt-left"></i> Volver a la web
                                 </a>
                             </li>
                         </ul>
@@ -135,7 +127,7 @@
     });
 
 
-    /* Global admin delete files from business or products */
+    /* Global admin delete files from business, products and trades gallery */
     let deleteButton = document.querySelectorAll('#delete_file');
 
     if (deleteButton.length > 0) {

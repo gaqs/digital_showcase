@@ -108,6 +108,9 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])->group(function () {
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/aboutus', [HomeController::class, 'us'])->name('home.us');
 
+//Terms and conditions
+Route::get('/terms-conditions', [HomeController::class, 'ttcc'])->name('home.ttcc');
+
 Route::get('/profile/show/{id}', [ProfileController::class, 'show'])->name('profile.show');
 
 //Business

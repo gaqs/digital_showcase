@@ -88,7 +88,7 @@
                                         <form id="delete_something" class="ml-1" action="{{ route('trade.destroy',['id' => $trades[$i]->id ]) }}" method="post">
                                             {{ csrf_field() }}
                                             {{ method_field('DELETE') }}
-                                            <x-button value="danger" type="submit" id="delete_business">
+                                            <x-button value="danger" type="submit" id="delete_business" onclick="return confirm('¿Está seguro de que desea borrar este oficio?')">
                                                 <i class="fa-solid fa-trash-can"></i> Borrar
                                             </x-button>
                                         </form>

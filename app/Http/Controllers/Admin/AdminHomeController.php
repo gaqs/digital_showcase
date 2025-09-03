@@ -47,7 +47,13 @@ class AdminHomeController extends Controller
 
     public function delete_file(Request $request)
     {
-        $file = ($request->type == 'business') ? public_path('uploads/business/'.$request->file) : public_path('uploads/products/'.$request->file);
+        if( $request->type == 'business'){
+            $file = public_path('uploads/business/'.$request->file);
+        }else if( $request->type == 'product' ){
+            $file = public_path('uploads/products/'.$request->file);
+        }else if($request->type == 'trade'){
+            $file = public_path('uploads/trades/'.$request->file);
+        }
 
         if (file_exists($file)) {
             if (unlink($file)) {

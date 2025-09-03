@@ -238,8 +238,16 @@
   font-family: 'Jost', sans-serif !important;
 }
 
-.descriptions h1 { font-size: 2em; font-weight: bold; }
-.descriptions h2 { font-size: 1.5em; font-weight: bold; margin-bottom: 0.75rem; }
-.descriptions ol { list-style-type: disc; margin-left: 3.5em; }
-.descriptions ul { list-style-type: decimal; margin-left: 3.5em; }
-.descriptions li { margin-bottom: 0.5rem; position: relative;}
+.description h1 { font-size: 2em; font-weight: bold; }
+.description h2 { font-size: 1.5em; font-weight: bold; margin-bottom: 0.75rem; }
+.description ol { list-style-type: disc; margin-left: 3.5em; }
+.description ul { list-style-type: decimal; margin-left: 3.5em; }
+.description li { margin-bottom: 0.5rem; position: relative;}
+
+
+.hvr-grow:hover, .hvr-grow:focus, .hvr-grow:active {
+    transform: scale(1.03); /* antes: scale(1.1) */
+}
+.hvr-shrink:hover, .hvr-shrink:focus, .hvr-shrink:active {
+    transform: scale(0.97); 
+}

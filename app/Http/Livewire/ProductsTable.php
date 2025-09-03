@@ -35,7 +35,7 @@ class ProductsTable extends DataTableComponent
                 ->location(
                     function($row){
                         $image = get_images_from_folder('products', $row->id, 'gallery');
-                        return asset('uploads/products/'.$row->id.'/'.reset($image));
+                        return asset('uploads/products/'.reset($image));
                     })
                 ->attributes(fn($row) => [
                     'style' => 'max-width: 100px'

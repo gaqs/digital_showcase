@@ -22,18 +22,18 @@
                 
                 <a href="{{ route('business.show', ['id' => $bus->id]) }}">
 
-                    <div id="business_container" class="border-4 border-neutral flex flex-col rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 md:flex-row cursor-pointer">
+                    <div id="business_container" class="hvr-grow border-4 border-neutral flex flex-col rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 md:flex-row cursor-pointer">
                         <img class="h-96 w-full rounded-t-lg object-cover md:h-auto md:w-48 md:rounded-none md:rounded-l-lg" src="{{ asset($avatar) }}" alt="" />
                         <div class="flex flex-col justify-start p-6 pb-0">
                             <h5 class="text-xl font-medium text-neutral-900 dark:text-neutral-50">
                                 {{ $bus->name }}
                             </h5>
-                            <div id="business_address">
+                            <div id="business_address" class="my-2">
                                 <i class="text-rose-500 fa-solid fa-road"></i> {{ $bus->address }}
                                 <i class="text-rose-500 fa-solid fa-hashtag"></i>{{ $bus->number }}
                             </div>
                             <p class="text-base text-sm text-neutral-600 dark:text-neutral-200 mb-2">
-                                {{ strip_tags(substr($bus->description, 0, 150)) }}...
+                                {{ substr(strip_tags($bus->description),0,150) }}...
                                 <span class="text-red-500 font-bold">
                                     Saber más &raquo;
                                 </span>

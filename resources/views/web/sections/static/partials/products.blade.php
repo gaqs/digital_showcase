@@ -13,7 +13,7 @@
 
                     @foreach($products as $pro)
                       <li class="splide__slide">
-                        <div id="product_container" class="relative flex flex-col justify-between block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 h-full">
+                        <div id="product_container" class="hvr-shrink relative flex flex-col justify-between block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 h-full">
                             <a href="{{ route('product.show', ['id' => $pro->id ]) }}">
                                 <div id="product_category" class="w-fit absolute text-xs text-white top-5 right-4 px-3 py-1 rounded-full" style="background-color: {{ $pro->tw_bg }}">
                                     {{ $pro->c_name }}
@@ -22,7 +22,7 @@
                                     @php
                                         $image = get_images_from_folder('products', $pro->id, 'gallery');
                                     @endphp
-                                    <img class="rounded-t-lg w-full h-full object-cover" src="{{ asset('uploads/products/'.$pro->id.'/'.reset($image)) }}" alt="" />
+                                    <img class="rounded-t-lg w-full h-full object-cover" src="{{ asset('uploads/products/'.reset($image)) }}" alt="" />
                                 </div>
                                 <div id="product_info" class="py-3 text-center">
                                     <div id="product_name" class="font-medium dark:text-neutral-200 mb-1">

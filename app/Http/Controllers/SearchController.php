@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Business;
 use App\Models\Product;
+use App\Models\TradeSkill;
 
 use Illuminate\Http\Request;
 
@@ -75,6 +76,21 @@ class SearchController extends Controller
             ->paginate(8);
 
             $data['search_type'] = 'product';
+
+            return view('web.sections.search.show', $data);
+        
+        }else if($request->option == 2){
+
+            $data['results'] = TradeSkill::where(function ($query) use ($request) {
+                if ($request->search != '') {
+                    $query->where('name', 'like', "%{$request->search}%")
+                        ->orWhere('lastname', 'like', "%{$request->search}%")
+                        ->orWhere('trade', 'like', "%{$request->search}%");
+                }
+            })
+            ->paginate(8);
+
+            $data['search_type'] = 'trade';
 
             return view('web.sections.search.show', $data);
         }

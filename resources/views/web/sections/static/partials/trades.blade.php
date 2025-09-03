@@ -11,39 +11,40 @@
                 <h2 class="text-3xl text-white font-bold w-full">Muebles a medida? Problemas eléctricos?</h2>
             </div>
         </div>
-        @if( true )
+        @if( !empty($trades) )
         <section id="trade_splide" class="splide" aria-label="Listado de productos">
             <div class="splide__track">
                 <ul class="splide__list">
 
-                @for($i=0; $i < 3; $i++)
+                @foreach ( $trades as $tra)
+                    
                     <li class="splide__slide">
-                        <a href="{{ route('trade.show', ['id' => 0]) }}">
-                            <div id="trade_container" class="relative flex flex-col justify-between block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 h-full">
-                                <div id="trade_category" class="w-fit absolute text-xs text-white top-5 right-4 px-3 py-1 rounded-full" style="background-color: red">
-                                    categoria #1
-                                </div>
+                        <a href="{{ route('trade.show', ['id' => $tra->id]) }}">
+                            <div id="trade_container" class="hvr-shrink relative flex flex-col block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 h-full">
                                 <div id="trade_image" class="overflow-hidden h-[300px]">
-                                    <img class="rounded-t-lg w-full h-full object-cover" src="https://picsum.photos/500/500" alt="" />
+                                    @php
+                                        $avatar = 'uploads/trades/'. get_images_from_folder('trades',$tra->id,'avatar');
+                                    @endphp
+                                    <img class="rounded-t-lg w-full h-full object-cover object-top" src="{{ asset($avatar) }}" alt="" />
                                 </div>
-                                <div id="trade_info" class="py-3 text-center">
-                                    <div id="trade_name" class="price text-lg text-danger-600 rounded">
-                                        Gustavo Quilodran
+                                <div id="trade_info" class="p-6 text-center flex flex-col">
+                                    <div id="trade_name" class="text-lg text-danger-600 rounded">
+                                        {{ $tra->name.' '.$tra->lastname }}
                                     </div>
-                                    <div id="trade_price" class="font-medium dark:text-neutral-200 text-xl">
-                                        Desarrollador Web
+                                    <div id="trade_price" class="font-medium dark:text-neutral-200 text-xl mb-3">
+                                        {{ $tra->trade }}
                                     </div>
                                     <div id="trade_description" class="text-sm text-neutral-500 dark:text-neutral-400 mb-3">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.
+                                        {!! substr(strip_tags($tra->description),0,150) !!}
                                     </div>
-                                    <span class="text-red-500 font-bold">
+                                    <span class="text-red-500 font-bold mb-3">
                                         Saber más &raquo;
                                     </span>
                                 </div>
                             </div>
                         </a>
                     </li>
-                    @endfor
+                    @endforeach
                 </ul>
             </div>
         </section>

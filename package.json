@@ -21,6 +21,7 @@
         "@splidejs/splide-extension-auto-scroll": "^0.5.3",
         "animate.css": "^4.1.1",
         "dropzone": "^6.0.0-beta.2",
+        "hover.css": "^2.3.2",
         "jquery": "^3.7.0",
         "leaflet": "^1.9.4",
         "quill": "^2.0.3",

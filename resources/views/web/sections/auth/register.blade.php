@@ -38,7 +38,8 @@
                             <x-input-error :messages="$errors->get('password')" class="mt-1" />
                         </div>
                         <div class="mt-4">
-                            <x-checkbox id="conditions">He leido y acepto los <x-link href="">Terminos y Condiciones de Uso</x-link></x-checkbox>
+                            <x-checkbox id="check_ttcc" name="ttcc" required>He leido y acepto los <x-link href="{{ route('home.ttcc') }}">Terminos y Condiciones de Uso</x-link></x-checkbox>
+                            <span id="ttcc_warning" class="text-rose-500 text-xs hidden">Debe aceptar los términos y condiciones para registrarse.</span>
                         </div>
 
                         <x-button type="submit" class="mt-5 w-full !font-bold capitalize !py-3 !text-base" value="danger">
@@ -76,3 +77,19 @@
         </div>
     </div>
 </x-app-layout>
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const checkbox = document.getElementById('conditions');
+        const button = document.querySelector('button[type="submit"]');
+        const warning = document.getElementById('ttcc_warning');
+
+        //inicialmente el boton se encuentra desabilitado
+        button.disabled = !checkbox.checked;
+        warning.classList.toggle('hidden', checkbox.checked);
+
+        checkbox.addEventListener('change', function(){
+            button.disabled = !this.checked;
+            warning.classList.toggle('hidden', this.checked)
+        });
+    })
+</script>

@@ -41,8 +41,11 @@ class Business extends Model
      */
     protected $fillable = [
         'name',
+        'user_id',
         'score',
         'categories_id',
+        'score',
+        'qty_comments',
         'keywords',
         'email',
         'email_2',
