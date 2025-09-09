@@ -11,7 +11,7 @@
                 <h2 class="text-3xl text-white font-bold w-full">Muebles a medida? Problemas eléctricos?</h2>
             </div>
         </div>
-        @if( !empty($trades) )
+        @if( $trades->count() > 0 )
         <section id="trade_splide" class="splide" aria-label="Listado de productos">
             <div class="splide__track">
                 <ul class="splide__list">
@@ -32,7 +32,7 @@
                                         {{ $tra->name.' '.$tra->lastname }}
                                     </div>
                                     <div id="trade_price" class="font-medium dark:text-neutral-200 text-xl mb-3">
-                                        {{ $tra->trade }}
+                                        {{ $tra->tradeskill_name }}
                                     </div>
                                     <div id="trade_description" class="text-sm text-neutral-500 dark:text-neutral-400 mb-3">
                                         {!! substr(strip_tags($tra->description),0,150) !!}
@@ -51,9 +51,9 @@
         <x-button value="danger" class="mt-5 float-right">Ver todos</x-button>
 
         @else
-        <section id="product_splide" aria-label="No hay productos" class="text-center">
-            <img src="{{ asset('img/camping.svg') }}" alt="" class="w-[400px] mx-auto mb-5">
-            <p><i>- "Limpio y vacío, perfecto para un camping".</i></p>
+        <section id="product_splide" aria-label="No hay productos" class="text-center text-white">
+            <img src="{{ asset('img/no_data.svg') }}" alt="" class="w-[300px] mx-auto mb-5 mt-5">
+            <p><i>- "Estos datos son im.... no hay nada".</i></p>
         </section>
         @endif
     </div>

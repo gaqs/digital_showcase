@@ -26,9 +26,9 @@
                 </p>
             </header>
 
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-5 {{ ($qty_trade >= 3) ? null: 'hidden' }}" role="alert">
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-5 {{ ($qty_trade >= 3) && request()->routeIs('trade.create') ? null: 'hidden' }}" role="alert">
                 <p class="font-bold"><i class="fas fa-exclamation"></i> Alerta</p>
-                <p>Usted ya posee 3 negocios, no es posible crear más.</p>
+                <p>Usted ya posee 3 oficios, no es posible crear más.</p>
             </div>
 
            <form id="trade_edit_form" method="post" enctype="multipart/form-data" action="#" class="mt-6 space-y-6">
@@ -47,9 +47,12 @@
                             <x-input-large id="input_lastname" name="lastname" type="text" class="mt-1 block w-full" :value="old('lastname', $trade_skill->lastname?? null)" placeholder="Apellido" maxlength="255" required />
                             <span id="lastname_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
-                        <div class="col-span-12 md:col-span-6">
-                            <x-input-large id="input_trade" name="trade" type="text" class="mt-1 block w-full" :value="old('trade', $trade_skill->trade?? null)" placeholder="Oficio tradicional" maxlength="255" required />
-                            <span id="trade_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
+                        <div class="md:col-span-6 col-span-12 mt-1">
+                            <select data-te-select-init data-te-select-size="lg" data-te-select-init data-te-select-filter="true" id="trade_id" name="trade_id" required>
+                                {{ trade_skills_list( old('trade_id', $trade_skill->trade_id ?? null) ) }}
+                            </select>
+                            <label data-te-select-label-ref>Oficio Tradicional</label>
+                            <span id="categories_id_error" class="text-rose-500 text-xs ml-3 hidden">Campo obligatorio</span>
                         </div>
                         <div class="col-span-12 md:col-span-6">
                             <x-input-large id="input_email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $trade_skill->email?? null)" required placeholder="Correo electrónico" maxlength="255" required/>
@@ -125,6 +128,7 @@
                                 </div>
                             </div>
                             <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB.</div>
+                            <span id="dz_avatar_error" class="text-rose-500 text-xs dz_product_error"></span>
                         </div>
                     </div>
                     <div class="col-span-12 md:col-span-8">
@@ -140,6 +144,7 @@
                                 </div>
                             </div>
                             <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB.</div>
+                            <span id="dz_banner_error" class="text-rose-500 text-xs dz_product_error"></span>
                         </div>
                     </div>
                     <div class="col-span-12">
@@ -170,13 +175,9 @@
                 </div>
 
                 <div class="flex items-center gap-4 mt-3">
-                    <x-button type="submit" lass="!px-7 !pb-3 !pt-3 !text-sm !font-bold {{ ($qty_trade >= 3) ? 'pointer-events-none opacity-60':''}}" value="danger">
+                    <x-button type="submit" class="!px-7 !pb-3 !pt-3 !text-sm !font-bold {{ ($qty_trade >= 3 && request()->routeIs('trade.create')) ? 'pointer-events-none opacity-60' : '' }}" value="danger">
                         Guardar
                     </x-button>
-
-                    @if (session('status') === 'trade-updated')
-                        <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)" class="text-sm text-gray-600 dark:text-gray-400">{{ __('Saved.') }}</p>
-                    @endif
                 </div>
             </form>
         </div>
@@ -299,16 +300,16 @@
                             }
                             
                             if( isCreate ){
-                        setTimeout(() => {
-                            window.location.href = "/trade/"+id; //redirecciona al negocio subido
-                        }, 2000);
-                    }else{
-                        setTimeout(() => {
-                            //recargar la pagina en la parte superior
-                            window.scroll(0,0);
-                            window.location.reload();
-                        }, 2000);
-                    }
+                                setTimeout(() => {
+                                    window.location.href = "/trade/"+id; //redirecciona al negocio subido
+                                }, 2000);
+                            }else{
+                                setTimeout(() => {
+                                    //recargar la pagina en la parte superior
+                                    window.scroll(0,0);
+                                    window.location.reload();
+                                }, 2000);
+                            }
                         }   
                     },
                     error: function(){
@@ -332,7 +333,7 @@
             resizeWidth: 250,
             resizeHeight: 250,
             resizeMethod: 'crop',
-            maxFilesize: 20000000,
+            maxFilesize: 2500000 ,
             headers: {
                 'X-CSRF-TOKEN': _token
             },
@@ -347,29 +348,33 @@
                 }
             },
             addedfiles: function(file){
-                for (let i=0; i < file.length; i++) {
-                    if (file[i].size > 20000000) { // This is the maximum file size in bytes
-                        $('#dz_profile_error').html('El peso maximo de la imagen debe ser de 2MB');
-                        file[i].previewElement.remove();
-                    }
+                $('#dz_avatar_error').html('');
+                if (file[0].size >= 2500000) { // This is the maximum file size in bytes
+                    $('#dz_avatar_error').html('El peso máximo de las imágenes debe ser de 2MB');
+                    file[j].removedBy = 'size';
+                    this.removeFile(file[0]);
                 }
             },
             removedfile: function(file){
-                var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
-                if( r == true ){//elimina imagenes previamente subidas o al momento de la creacion
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('trade.delete_file') }}",
-                        data: { file: file.name },
-                        headers: {
-                            "X-CSRF-TOKEN": _token
-                        },
-                        success: function(data){
-                            if( data ){ file.previewElement.remove(); }
-                        }
-                    });
+                if( file.removedBy == 'size' ){
+                file.previewElement.remove(); 
+                }else{
+                    var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
+                    if( r == true ){//elimina imagenes previamente subidas o al momento de la creacion
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('trade.delete_file') }}",
+                            data: { file: file.name },
+                            headers: {
+                                "X-CSRF-TOKEN": _token
+                            },
+                            success: function(data){
+                                if( data ){ file.previewElement.remove(); }
+                            }
+                        });
 
-                }else if( r == true ){ file.previewElement.remove(); }
+                    }else if( r == true ){ file.previewElement.remove(); }
+                }
             }
         });
 
@@ -386,7 +391,7 @@
             resizeWidth: 1280,
             resizeHeight: 300,
             resizeMethod: 'crop',
-            maxFilesize: 20000000,
+            maxFilesize: 2500000 ,
             headers: {
                 'X-CSRF-TOKEN': _token
             },
@@ -401,29 +406,33 @@
                 }
             },
             addedfiles: function(file){
-                for (let i=0; i < file.length; i++) {
-                    if (file[i].size > 20000000) { // This is the maximum file size in bytes
-                        $('#dz_profile_error').html('El peso maximo de la imagen debe ser de 2MB');
-                        file[i].previewElement.remove();
-                    }
+                $('#dz_banner_error').html('');
+                if (file[0].size >= 2500000) { // This is the maximum file size in bytes
+                    $('#dz_banner_error').html('El peso máximo de las imágenes debe ser de 2MB');
+                    file[j].removedBy = 'size';
+                    this.removeFile(file[0]);
                 }
             },
             removedfile: function(file){
-                var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
-                if( r == true ){//elimina imagenes previamente subidas o al momento de la creacion
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('trade.delete_file') }}",
-                        data: { file: file.name },
-                        headers: {
-                            "X-CSRF-TOKEN": _token
-                        },
-                        success: function(data){
-                            if( data ){ file.previewElement.remove(); }
-                        }
-                    });
+                if( file.removedBy == 'size' ){
+                file.previewElement.remove(); 
+                }else{
+                    var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
+                    if( r == true ){//elimina imagenes previamente subidas o al momento de la creacion
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('trade.delete_file') }}",
+                            data: { file: file.name },
+                            headers: {
+                                "X-CSRF-TOKEN": _token
+                            },
+                            success: function(data){
+                                if( data ){ this.removeFile(file); }
+                            }
+                        });
 
-                }else if( r == true ){ file.previewElement.remove(); }
+                    }else if( r == true ){ this.removeFile(file); }
+                }   
             }
         });
 
@@ -433,13 +442,13 @@
             addRemoveLinks: true,
             acceptedFiles: 'image/*',
             maxFiles: 9,
-            dictRemoveFile: '<i class="fa-solid fa-trash-can"></i>',
+            dictRemoveFile: '<i id="delete_file" class="fa-solid fa-trash-can"></i>',
             dictCancelUpload: '<i class="fa-solid fa-ban"></i>',
             paramName: 'gallery',
             autoProcessQueue: false,
             uploadMultiple: true,
-            parallelUploads: 10,
-            maxFilesize: 20000000,
+            parallelUploads: 9,
+            maxFilesize: 2500000,
             headers: {
                 'X-CSRF-TOKEN': _token
             },
@@ -458,28 +467,34 @@
             },
             addedfiles: function(file){
                 for (let j=0; j < file.length; j++) {
-                    if (file[j].size > 20000000) { // This is the maximum file size in bytes
+                    if (file[j].size >= 2500000) { // This is the maximum file size in bytes
                         $('#dz_gallery_error').html('El peso máximo de las imágenes debe ser de 2MB');
-                        file[j].previewElement.remove();
+                        file[j].removedBy = 'size';
+                        this.removeFile(file[j]);
                     }
                 }
             },
             removedfile: function(file){ //elimina imagenes previamente subidas o al momento de la creacion
-                var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
-                if( r == true && id != '' ){
-                    $.ajax({
-                        type: 'POST',
-                        url: "{{ route('trade.delete_file') }}",
-                        data: { file: id+'/'+file.name },
-                        headers: {
-                            'X-CSRF-TOKEN': _token
-                        },
-                        success: function(data){
-                            if(data){ file.previewElement.remove(); }
-                        }
-                    });
+                if( file.removedBy == 'size' ){
+                file.previewElement.remove(); 
+                }else{
+                    var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
+                    if( r == true && id != '' ){
+                        $.ajax({
+                            type: 'POST',
+                            url: "{{ route('trade.delete_file') }}",
+                            data: { file: file.name },
+                            headers: {
+                                'X-CSRF-TOKEN': _token
+                            },
+                            success: function(data){
+                                if(data){ this.removeFile(file); }
+                            }
+                        });
 
-                }else if( r == true ){ file.previewElement.remove();  }
+                    }else if( r == true ){ this.removeFile(file);  }
+                }
+                
             }
         });
     </script>

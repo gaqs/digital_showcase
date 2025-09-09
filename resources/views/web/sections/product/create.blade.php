@@ -278,13 +278,13 @@
         addRemoveLinks: true,
         acceptedFiles: 'image/*',
         maxFiles: 9,
-        dictRemoveFile: '<i class="fa-solid fa-trash-can"></i>',
+        dictRemoveFile: '<i id="delete_file" class="fa-solid fa-trash-can"></i>',
         dictCancelUpload: '<i class="fa-solid fa-ban"></i>',
         paramName: 'gallery',
         autoProcessQueue: false,
         uploadMultiple: true,
         parallelUploads: 10,
-        maxFilesize: 20000000,
+        maxFilesize: 2500000,
         headers: {
             'X-CSRF-TOKEN': _token
         },
@@ -306,28 +306,35 @@
         },
         addedfiles: function(file){
             for (let j=0; j < file.length; j++) {
-                if (file[j].size > 20000000) { // This is the maximum file size in bytes
+                if (file[j].size >= 2500000) { // This is the maximum file size in bytes
                     $('#dz_gallery_error').html('El peso máximo de las imágenes debe ser de 2MB');
-                    file[j].previewElement.remove();
+                    file[j].removedBy = 'size';
+                    this.removeFile(file[j]);
                 }
             }
         },
         removedfile: function(file){ //elimina imagenes previamente subidas o al momento de la creacion
-            var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
-            if( r == true && id != '' ){
-                $.ajax({
-                    type: 'POST',
-                    url: "{{ route('product.delete_file') }}",
-                    data: { file: id+'/'+file.name },
-                    headers: {
-                        'X-CSRF-TOKEN': _token
-                    },
-                    success: function(data){
-                        if(data){ file.previewElement.remove(); }
-                    }
-                });
 
-            }else if( r == true ){ file.previewElement.remove();  }
+            //determinar si apreto el boton de eliminar o fue automarico por el exceso de tamaños
+            if( file.removedBy == 'size' ){
+                file.previewElement.remove(); 
+            }else{
+                var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
+                if( r == true && id != '' ){
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('product.delete_file') }}",
+                        data: { file: file.name },
+                        headers: {
+                            'X-CSRF-TOKEN': _token
+                        },
+                        success: function(data){
+                            if(data){ file.previewElement.remove(); }
+                        }
+                    });
+
+                }else if( r == true ){ file.previewElement.remove(); }
+            }  
         }
     });
 </script>

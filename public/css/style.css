@@ -251,3 +251,8 @@
 .hvr-shrink:hover, .hvr-shrink:focus, .hvr-shrink:active {
     transform: scale(0.97); 
 }
+
+.button_disabled{
+  pointer-events: none;
+  opacity: 0.6;
+}

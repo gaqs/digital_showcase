@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('user_id');
             $table->string('name');
             $table->string('lastname');
-            $table->string('trade');
+            $table->integer('trade_id');
             $table->double('score');
             $table->integer('qty_comments');
             $table->string('phone')->nullable();

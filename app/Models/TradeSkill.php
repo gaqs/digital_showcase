@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Usamamuneerchaudhary\Commentify\Traits\Commentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -68,5 +69,13 @@ class TradeSkill extends Model
     public function user(): HasOne
     {
         return $this->hasOne(User::class);
+    }
+
+    /**
+     * Get the user that owns the profile.
+     */
+    public function trade_categories(): BelongsTo
+    {
+        return $this->belongsTo(TradeSkillCategory::class, 'trade_id');
     }
 }

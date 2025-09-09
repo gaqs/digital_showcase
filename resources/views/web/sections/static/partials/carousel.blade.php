@@ -60,7 +60,7 @@
             pauseOnFocus: false,
             rewind: true,
         }
-    }).mount({ AutoScroll }); //NEED FIX
+    }).mount();
 
     header.on('active', function(e) {
         const title = e.slide.querySelector('.slide_title');

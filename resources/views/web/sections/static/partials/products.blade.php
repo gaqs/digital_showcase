@@ -6,7 +6,7 @@
                 <h2 class="text-3xl text-neutral-900 font-bold w-full">Nuevos para ti</h2>
             </div>
         </div>
-        @if( !empty($products) )
+        @if( count($products) > 0 )
         <section id="product_splide" class="splide" aria-label="Listado de productos">
             <div class="splide__track">
                   <ul class="splide__list">

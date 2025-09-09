@@ -38,7 +38,7 @@
                             <x-input-error :messages="$errors->get('password')" class="mt-1" />
                         </div>
                         <div class="mt-4">
-                            <x-checkbox id="check_ttcc" name="ttcc" required>He leido y acepto los <x-link href="{{ route('home.ttcc') }}">Terminos y Condiciones de Uso</x-link></x-checkbox>
+                            <x-checkbox id="check_ttcc" name="ttcc" required>He leido y acepto los <x-link target="_blank" href="{{ route('home.ttcc') }}">Terminos y Condiciones de Uso</x-link></x-checkbox>
                             <span id="ttcc_warning" class="text-rose-500 text-xs hidden">Debe aceptar los términos y condiciones para registrarse.</span>
                         </div>
 

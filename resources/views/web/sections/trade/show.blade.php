@@ -22,7 +22,7 @@
                                     {{ $trade_skill->name.' '.$trade_skill->lastname }}
                                 </div>
                                 <div>
-                                    {{ $trade_skill->trade }}
+                                    {{ $trade_skill->trade_categories->name }}
                                 </div>
                             </div>
                             <div class="mt-5">
@@ -164,14 +164,14 @@
                                 <div>
                                     <x-button class="hidden md:block me-2 float-right" data-te-toggle="modal" data-te-target="#gallery_modal" value="danger">Ver Galeria</x-button>
 
-                                    <x-modal id="gallery_modal">
+                                    <x-modal id="gallery_modal" size="fullscreen">
                                         <div class="flex justify-center">
-                                            <section id="gallery" class="w-3/4 splide" aria-label="Galería">
+                                            <section id="gallery" class="w-3/4 splide max-h-[90vh]" aria-label="Galería">
                                                 <div class="splide__track">
-                                                    <ul class="splide__list">
+                                                    <ul class="splide__list flex items-center">
                                                         @foreach ($gallery as $img)
                                                         <li class="splide__slide flex justify-center items-center">
-                                                            <img src="{{ asset('uploads/trades/'.$img) }}" alt="">
+                                                            <img src="{{ asset('uploads/trades/'.$img) }}" alt="" class="object-contain max-h-[90vh] max-w-full">
                                                         </li>
                                                         @endforeach
                                                     </ul>

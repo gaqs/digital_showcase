@@ -60,11 +60,11 @@
                             @endif
                             -->
                         </div>
-
                         <div>
-                            <x-input-large id="input_phone" name="phone" type="text" class="mt-1 block w-full"
-                                :value="old('phone', $profile->phone ?? '')" placeholder="Teléfono" maxlength="10"/>
-                            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+                            <div class="relative flex flex-wrap items-stretch mt-1">
+                                <span class="flex items-center whitespace-nowrap rounded-s border border-e-0 border-solid border-neutral-200 px-3 text-center text-base text-surface dark:border-white/10 dark:text-white bg-secondary-100">+569</span>
+                                <x-input-large id="input_phone" name="phone" type="text" maxlength="12" class="" :value="old('phone', $user->phone ?? null)" placeholder="Teléfono" />
+                            </div>
                         </div>
                         <div>
                             <x-input-large id="input_address" name="address" type="text" class="mt-1 block w-full"
@@ -124,6 +124,7 @@
                                 </div>
                             </div>
                             <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB.</div>
+                            <span id="dz_avatar_error" class="text-rose-500 text-xs dz_product_error"></span>
                         </div>
                     </div>
                     <div class="col-span-12 md:col-span-8">
@@ -139,6 +140,7 @@
                                 </div>
                             </div>
                             <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB.</div>
+                            <span id="dz_banner_error" class="text-rose-500 text-xs dz_product_error"></span>
                         </div>
                     </div>
                 </div>
@@ -175,8 +177,17 @@
             resizeWidth: 500,
             resizeHeight: 500,
             resizeMethod: 'crop',
+            maxFilesize: 2500000,
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            addedfiles: function(file){
+                $('#dz_avatar_error').html('');
+                if (file[0].size >= 2500000) { // This is the maximum file size in bytes
+                    $('#dz_avatar_error').html('El peso máximo de las imágenes debe ser de 2MB');
+                    this.removeFile(file[0]);
+                }
+               
             },
         });
 
@@ -195,9 +206,18 @@
             resizeWidth: 1280,
             resizeHeight: 300,
             resizeMethod: 'crop',
+            maxFilesize: 2500000,
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
+            addedfiles: function(file){
+                $('#dz_banner_error').html('');
+                if (file[0].size >= 2500000) { // This is the maximum file size in bytes
+                    $('#dz_banner_error').html('El peso máximo de las imágenes debe ser de 2MB');
+                    this.removeFile(file[0]);
+                }
+               
+            }
         });
 
         document.querySelector("button[type=submit]").addEventListener("click", function(e) {

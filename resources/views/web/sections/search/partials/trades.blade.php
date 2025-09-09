@@ -26,7 +26,7 @@
                             {{ $r->name.' '.$r->lastname }}
                         </div>
                         <div id="trade_trade" class="font-medium dark:text-neutral-200 text-xl">
-                            {{ $r->trade }}
+                            {{ $r->trade_categories->name }}
                         </div>
                         <div id="trade_price" class="price text-lg text-danger-600 rounded">
                             {{ $r->price }}

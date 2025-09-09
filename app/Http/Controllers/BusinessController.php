@@ -107,6 +107,7 @@ class BusinessController extends Controller
         $query = Business::find($id);
 
         $data['business'] = $query;
+        $data['qty_business'] = Business::where('user_id', Auth::user()->id)->count();
 
         $data['avatar'] = get_images_from_folder('business', $id, 'avatar');
         $data['gallery'] = json_encode(get_images_from_folder('business', $id, 'gallery'));

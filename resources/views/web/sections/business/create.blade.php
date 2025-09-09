@@ -31,7 +31,7 @@
                 </p>
             </header>
 
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-5 {{ (isset($qty_business) && $qty_business >= 3) ? null: 'hidden' }}" role="alert">
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-5 {{ $qty_business >= 3) && request()->routeIs('business.create') ? null: 'hidden' }}" role="alert">
                 <p class="font-bold"><i class="fas fa-exclamation"></i> Alerta</p>
                 <p>Usted ya posee 3 negocios, no es posible crear más.</p>
             </div>
@@ -186,7 +186,7 @@
 
                             </div>
                             <div class="text-sm text-neutral-500">Tamaño máximo del archivo 2 MB.</div>
-                            <span id="dz_profile_error" class="text-rose-500 text-xs"></span>
+                            <span id="dz_avatar_error" class="text-rose-500 text-xs"></span>
                         </div>
                         <div class="col-span-12 md:col-span-8">
                             <label for="dz_gallery" class="text-neutral-500"> Galería </label>
@@ -203,7 +203,7 @@
                         </div>
 
                         <div class="mt-3">
-                            <x-button type="submit" class="!flex !items-center !gap-2 !px-7 !pb-3 !pt-3 !text-sm !font-bold !inline {{ (isset($qty_business) && $qty_business >= 3) ? 'pointer-events-none opacity-60':''}}" value="danger">
+                            <x-button type="submit" class="!flex !items-center !gap-2 !px-7 !pb-3 !pt-3 !text-sm !font-bold !inline {{ $qty_business >= 3 request()->routeIs('business.create') ? 'pointer-events-none opacity-60' : '' }}" value="danger">
                                 Guardar
                             </x-button>
                         </div>
@@ -359,7 +359,7 @@
             resizeWidth: 250,
             resizeHeight: 250,
             resizeMethod: 'crop',
-            maxFilesize: 20000000,
+            maxFilesize: 2500000,
             headers: {
                 'X-CSRF-TOKEN': _token
             },
@@ -375,28 +375,34 @@
             },
             addedfiles: function(file){
                 for (let i=0; i < file.length; i++) {
-                    if (file[i].size > 20000000) { // This is the maximum file size in bytes
-                        $('#dz_profile_error').html('El peso maximo de la imagen debe ser de 2MB');
-                        file[i].previewElement.remove();
+                    $('#dz_avatar_error').html('');
+                    if (file[0].size >= 2500000) { // This is the maximum file size in bytes
+                        $('#dz_avatar_error').html('El peso máximo de las imágenes debe ser de 2MB');
+                        file[0].removedBy = 'size';
+                        this.removeFile(file[0]);
                     }
                 }
             },
             removedfile: function(file){
-                var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
-                if( r == true ){//elimina imagenes previamente subidas o al momento de la creacion
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('business.delete_file') }}",
-                        data: { file: file.name },
-                        headers: {
-                            "X-CSRF-TOKEN": _token
-                        },
-                        success: function(data){
-                            if( data ){ file.previewElement.remove(); }
-                        }
-                    });
-
-                }else if( r == true ){ file.previewElement.remove(); }
+                //determinar si apreto el boton de eliminar o fue automarico por el exceso de tamaños
+                if( file.removedBy == 'size' ){
+                    file.previewElement.remove(); 
+                }else{
+                    var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
+                    if( r == true){
+                        $.ajax({
+                            type: 'POST',
+                            url: "{{ route('business.delete_file') }}",
+                            data: { file: file.name },
+                            headers: {
+                                'X-CSRF-TOKEN': _token
+                            },
+                            success: function(data){
+                                if(data){ file.previewElement.remove(); }
+                            }
+                        });
+                    }
+                } //endif
             }
         });
 
@@ -406,13 +412,13 @@
             addRemoveLinks: true,
             acceptedFiles: 'image/*',
             maxFiles: 9,
-            dictRemoveFile: '<i class="fa-solid fa-trash-can"></i>',
+            dictRemoveFile: '<i id="delete_file" class="fa-solid fa-trash-can"></i>',
             dictCancelUpload: '<i class="fa-solid fa-ban"></i>',
             paramName: 'gallery',
             autoProcessQueue: false,
             uploadMultiple: true,
             parallelUploads: 10,
-            maxFilesize: 20000000,
+            maxFilesize: 2500000,
             headers: {
                 'X-CSRF-TOKEN': _token
             },
@@ -434,28 +440,34 @@
             },
             addedfiles: function(file){
                 for (let j=0; j < file.length; j++) {
-                    if (file[j].size > 20000000) { // This is the maximum file size in bytes
+                    if (file[j].size >= 2500000 ) { // This is the maximum file size in bytes
                         $('#dz_gallery_error').html('El peso máximo de las imágenes debe ser de 2MB');
-                        file[j].previewElement.remove();
+                        file[j].removedBy = 'size';
+                        this.removeFile(file[j]);
                     }
                 }
             },
             removedfile: function(file){ //elimina imagenes previamente subidas o al momento de la creacion
-                var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
-                if( r == true && id != '' ){
-                    $.ajax({
-                        type: 'POST',
-                        url: "{{ route('business.delete_file') }}",
-                        data: { file: id+'/'+file.name },
-                        headers: {
-                            'X-CSRF-TOKEN': _token
-                        },
-                        success: function(data){
-                            if(data){ file.previewElement.remove(); }
-                        }
-                    });
-
-                }else if( r == true ){ file.previewElement.remove();  }
+                //determinar si apreto el boton de eliminar o fue automarico por el exceso de tamaños
+                if( file.removedBy == 'size' ){
+                    file.previewElement.remove(); 
+                }else{
+                    var r = confirm("¿Está seguro de que quiere eliminar este archivo?");
+                    if( r == true){
+                        $.ajax({
+                            type: 'POST',
+                            url: "{{ route('business.delete_file') }}",
+                            data: { file: file.name },
+                            headers: {
+                                'X-CSRF-TOKEN': _token
+                            },
+                            success: function(data){
+                                if(data){ file.previewElement.remove(); }
+                            }
+                        });
+                    }
+                } //endif
+                
             }
         });
 

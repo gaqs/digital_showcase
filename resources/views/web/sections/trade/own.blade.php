@@ -51,7 +51,7 @@
                                     {{ $trades[$i]->name }}
                                 </h5>
                                 <span class="mb-4">
-                                    <i class="text-rose-500 fas fa-hammer"></i> {{ $trades[$i]->trade }}
+                                    <i class="text-rose-500 fas fa-hammer"></i> {{ $trades[$i]->trade_categories->name }}
                                 </span>
                                 <div class="dark:border-neutral-600 dark:text-neutral-50 mb-4">
                                     <div class="flex flex-row content-center">

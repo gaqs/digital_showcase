@@ -3,6 +3,7 @@ use App\Models\Business;
 use App\Models\UserProfile;
 use App\Models\Category;
 use App\Models\User;
+use App\Models\TradeSkillCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -11,6 +12,17 @@ if (! function_exists('category_list')) {
     function category_list($selected){
         echo '<option value="0">Todas las categorías</option>';
         foreach (Category::all() as $cat){
+            $thisone = ( $cat->id == $selected ) ? 'selected':'';
+            echo '<option class="text-xl" value="'.$cat->id.'" '.$thisone.'>'.$cat->name.'</option>';
+        }
+
+    }
+}
+
+if (! function_exists('trade_skills_list')) {
+    function trade_skills_list($selected){
+        echo '<option value="0">Todos los Oficios</option>';
+        foreach (TradeSkillCategory::all() as $cat){
             $thisone = ( $cat->id == $selected ) ? 'selected':'';
             echo '<option class="text-xl" value="'.$cat->id.'" '.$thisone.'>'.$cat->name.'</option>';
         }
@@ -66,7 +78,7 @@ if (!function_exists('get_images_from_folder')) {
     /**
      * Recupera avatar, banner o galería de imágenes desde cualquier carpeta padre.
      * @param string $entity (business, products, trades, user)
-     * @param string|int $folder (nombre de la carpeta o id de usuario) ### FIX TO CHANGE FOLER NAME TO ONLY ID OF BUSINESS, PRODUCT, TRADE OR USER
+     * @param string|int $folder (id) ### FIX TO CHANGE FOLER NAME TO ONLY ID OF BUSINESS, PRODUCT, TRADE OR USER
      * @param string $type ('avatar', 'banner', 'gallery')
      * @return mixed (string para avatar/banner, array para galería)
      */

@@ -16,7 +16,9 @@ class TradeController extends Controller
      */
     public function index()
     {
-        $data['trades'] = TradeSkill::where('user_id', Auth::user()->id)->get();
+        $data['trades'] = TradeSkill::with('trade_categories')
+                                    ->where('user_id', Auth::user()->id)->get();
+                                    
         return view('web.sections.trade.own', $data);
     }
 
@@ -63,7 +65,8 @@ class TradeController extends Controller
      */
     public function show(string $id)
     {
-        $data['trade_skill'] = TradeSkill::find($id);
+        $data['trade_skill'] = TradeSkill::with('trade_categories')->find($id);
+        //dd($data['trade_skill']->trade_categories);
         return view('web.sections.trade.show', $data);
     }
 

@@ -14,7 +14,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="business_grid">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 item-stretch" id="business_grid">
             @foreach ($business as $bus)
                 @php
                     $avatar = 'uploads/business/'. get_images_from_folder('business',$bus->id,'avatar');
@@ -22,9 +22,9 @@
                 
                 <a href="{{ route('business.show', ['id' => $bus->id]) }}">
 
-                    <div id="business_container" class="hvr-grow border-4 border-neutral flex flex-col rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 md:flex-row cursor-pointer">
+                    <div id="business_container" class="hvr-grow border-4 border-neutral flex flex-col rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 md:flex-row cursor-pointer h-full">
                         <img class="h-96 w-full rounded-t-lg object-cover md:h-auto md:w-48 md:rounded-none md:rounded-l-lg" src="{{ asset($avatar) }}" alt="" />
-                        <div class="flex flex-col justify-start p-6 pb-0">
+                        <div class="flex flex-col justify-between p-6 pb-0">
                             <h5 class="text-xl font-medium text-neutral-900 dark:text-neutral-50">
                                 {{ $bus->name }}
                             </h5>

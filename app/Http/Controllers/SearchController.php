@@ -87,6 +87,9 @@ class SearchController extends Controller
                         ->orWhere('lastname', 'like', "%{$request->search}%")
                         ->orWhere('trade', 'like', "%{$request->search}%");
                 }
+                if ($request->trade_id != 0) {
+                    $query->where('trade_skill.trade_id', $request->trade_id);
+                }
             })
             ->paginate(8);
 

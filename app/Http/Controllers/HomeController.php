@@ -26,7 +26,8 @@ class HomeController extends Controller
                                     ->inRandomOrder()
                                     ->get();
         
-        $data['trades'] = TradeSkill::select('*')
+        $data['trades'] = TradeSkill::select('trade_skill.*', 'trade_categories.name as tradeskill_name', 'trade_categories.tw_color as tw_bg')
+                                    ->leftJoin('trade_categories', 'trade_categories.id', '=', 'trade_skill.trade_id')
                                     ->limit(8)
                                     ->inRandomOrder()
                                     ->get();
@@ -53,10 +54,25 @@ class HomeController extends Controller
                                     ->limit(3)
                                     ->get();
         
-        $data['trades_comments'] = Comment::select('users.name as u_name', 'users.id as u_id', 'comments.id as comment_id', 'comments.body', 'comments.score', 'comments.created_at', 'trade_skill.id as trade_id', 'trade_skill.name as trade_name', 'trade_skill.lastname as trade_lastname', 'trade_skill.trade as trade_trade', 'trade_skill.score as trade_score')
-                                    ->leftJoin('users', 'users.id', '=', 'comments.user_id')
-                                    ->leftJoin('user_profile', 'user_profile.user_id', '=', 'users.id')
-                                    ->leftJoin('trade_skill', 'trade_skill.id', '=', 'comments.commentable_id')
+        $data['trades_comments'] = Comment::select(
+                                                'users.name as u_name', 
+                                                'users.id as u_id', 
+                                                'comments.id as comment_id', 
+                                                'comments.body', 
+                                                'comments.score', 
+                                                'comments.created_at', 
+                                                'trade_skill.id as trade_id', 
+                                                'trade_skill.name as trade_name', 
+                                                'trade_skill.lastname as trade_lastname',  
+                                                'trade_skill.score as trade_score',
+                                                'trade_categories.name as tradeskill_name'
+                                                )
+
+                                    ->leftJoin('users',             'users.id',             '=', 'comments.user_id')
+                                    ->leftJoin('user_profile',      'user_profile.user_id', '=', 'users.id')
+                                    ->leftJoin('trade_skill',       'trade_skill.id',       '=', 'comments.commentable_id')
+                                    ->leftjoin('trade_categories',  'trade_categories.id',  '=', 'trade_skill.trade_id')
+
                                     ->where('parent_id', null)
                                     ->where('commentable_type', 'App\Models\TradeSkill')
                                     ->whereNull('trade_skill.deleted_at')
