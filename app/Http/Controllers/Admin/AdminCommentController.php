@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Usamamuneerchaudhary\Commentify\Models\Comment;
+
 class AdminCommentController extends Controller
 {
     /**
@@ -60,6 +62,11 @@ class AdminCommentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        dd($id);
+        //softdelete comment
+        $comment = Comment::findOrFail($id);
+        $comment->delete();
+
+        return redirect()->back()->with('success', 'Comentario eliminado correctamente.');
     }
 }

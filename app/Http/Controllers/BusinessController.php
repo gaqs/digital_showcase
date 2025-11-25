@@ -47,6 +47,16 @@ class BusinessController extends Controller
         $data['created_at'] = now();
         $data['updated_at'] = now();
 
+        //verify if user has more than 3 businesses
+        $qty_business = Business::where('user_id', Auth::user()->id)->count();
+        if( $qty_business >= 3 ){
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Has alcanzado el límite de negocios permitidos (3). Elimina un negocio existente para crear uno nuevo.'
+                ]);
+            }
+        }
         $id = Business::insertGetId($data);
 
         session()->flash('status', 'success');

@@ -24,7 +24,7 @@
                         <h5 class="text-xl font-medium text-neutral-900 dark:text-neutral-50">
                             {{ $r->name }}
                         </h5>
-                        <span class="mb-4"><i class="text-rose-500 fa-solid fa-location-dot"></i> {{ $r->address }}</span>
+                        <span class="mb-4"><i class="text-rose-500 fa-solid fa-location-dot"></i> {{ $r->address.' #'.$r->number }}</span>
                         <p class="text-base text-sm text-neutral-600 dark:text-neutral-200 mb-2">
                             {{ strip_tags(substr($r->description, 0, 200)) }}...
                             <br>
@@ -107,14 +107,17 @@ window.addEventListener('load', function() {
         
         business.addEventListener('click', function() {
 
-            var lat = marker_info.getAttribute('data-lat');
-            var lng = marker_info.getAttribute('data-lng');
+            var lat = Number(marker_info.getAttribute('data-lat'));
+            var lng = Number(marker_info.getAttribute('data-lng'));
+            console.log('lat:', lat, 'lng:', lng);
             var name = marker_info.getAttribute('data-name');
             var address = marker_info.getAttribute('data-address');
 
             // Actualizar la posición del marcador
             marker.setLatLng([lat, lng]);
             map.setView([lat, lng], 16);
+
+            map.panTo( new L.latLng(lat, lng) ); 
 
             // Quitar border-danger de todos los negocios
             businesses.forEach(function(b) {

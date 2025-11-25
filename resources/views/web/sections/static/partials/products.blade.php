@@ -12,7 +12,7 @@
                   <ul class="splide__list">
 
                     @foreach($products as $pro)
-                      <li class="splide__slide">
+                      <li class="splide__slide" data-splide-interval="3000">
                         <div id="product_container" class="hvr-shrink relative flex flex-col justify-between block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 h-full">
                             <a href="{{ route('product.show', ['id' => $pro->id ]) }}">
                                 <div id="product_category" class="w-fit absolute text-xs text-white top-5 right-4 px-3 py-1 rounded-full" style="background-color: {{ $pro->tw_bg }}">
@@ -64,6 +64,7 @@
 <script type="module">
     var splide = new Splide( '#product_splide', {
         type   : 'loop',
+        autoplay: 'playing',
         perPage: 4,
         focus  : 'center',
         gap    : 20,

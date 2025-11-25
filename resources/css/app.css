@@ -6,6 +6,9 @@
 
 @import "quill/dist/quill.core.css";
 
+@import "animate.css/animate.min.css";
+@import "animate.css/animate.compat.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

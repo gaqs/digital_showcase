@@ -63,15 +63,48 @@
             <x-input-error class="mt-2" :messages="$errors->get('tiktok')" />
         </div>
 
+        <!-- avatar -->
         <div class="col-span-12 md:col-span-4 mt-5 relative">
-            <p>Foto de Perfil</p>
-            <img src="{{ isset($profile->avatar) ? asset('uploads/users/' . $user->id . '/' . $profile->avatar) : asset('uploads/users/default/_avatar.jpg') }}" alt="" class="mt-3">
-            <x-link href="#" class="text-decoration">Eliminar</x-link>
+
+            <input type="hidden" value="{{ $user->id }}" name="folder" id="folder">
+
+            <p>Perfil</p>
+
+            <div class="mb-3 mt-3 w-full">
+                <input class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3 file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white file:dark:text-white" type="file" name="avatar"/>
+            </div>
+            @php
+                $avatar = get_images_from_folder('users',$user->id,'avatar') ?? null;
+                $avatar = ($avatar == 'default/_avatar.jpg') ? null : $avatar; 
+            @endphp
+            <img src="<?= asset('uploads/users/'.$avatar) ?>" alt="" class="mt-3 max-w-sm" />
+
+            <x-button id="delete_file" type="button" value="danger" class="mt-2 hidden" data-folder="{{ $user->id }}"><i class="fas fa-trash-alt"></i></x-button>
+
+            <p class="mt-3"><i>*Seleccionar una nueva imagen reemplazará la foto de perfil actual.</i></p>
+
         </div>
-        <div class="col-span-12 md:col-span-8 mt-5 relative text">
-            <p>Foto de Banner</p>
-            <img src="{{ isset($profile->banner) ? asset('uploads/users/' . $user->id . '/' . $profile->banner) : asset('uploads/users/default/_banner.jpg') }}" alt="" class="mt-3">
-            <x-link href="#" class="text-red decoration-inherit">Eliminar</x-link>
+
+        <!-- banner -->
+        <div class="col-span-12 md:col-span-8 mt-5 relative">
+
+            <input type="hidden" value="{{ $user->id }}" name="folder" id="folder">
+
+            <p>Banner</p>
+
+            <div class="mb-3 mt-3 w-full">
+                <input class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3 file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white file:dark:text-white" type="file" name="banner"/>
+            </div>
+            @php
+                $banner = get_images_from_folder('users',$user->id,'banner') ?? null;
+                $banner = ($banner == 'default/_banner.jpg') ? null : $banner; 
+            @endphp
+            <img src="<?= asset('uploads/users/'.$banner) ?>" alt="" class="mt-3" />
+
+            <x-button id="delete_file" type="button" value="danger" class="mt-2 hidden" data-folder="{{ $user->id }}"><i class="fas fa-trash-alt"></i></x-button>
+
+            <p class="mt-3"><i>*Seleccionar una nueva imagen reemplazará la foto de banner actual.</i></p>
+
         </div>
 
     </div>

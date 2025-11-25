@@ -97,7 +97,7 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])->group(function () {
             'show'    => 'admin_comment.show',
             'edit'    => 'admin_comment.edit',
             'update'  => 'admin_comment.update',
-            'destroy' => 'admin_comment.destroy'
+            'destroy' => 'admin_comment.destroy' //delete comment
         ]
     ]);
 

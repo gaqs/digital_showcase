@@ -78,8 +78,7 @@
                 <div id="qty_reviews" class="text-sm inline">{{ $business->qty_comments }} comentarios</div>
 
                 <div id="business_address">
-                    <i class="text-rose-500 fa-solid fa-road"></i> {{ $business->address }}
-                    <i class="text-rose-500 fa-solid fa-hashtag ms-3"></i>{{ $business->number }}
+                    <i class="text-rose-500 fa-solid fa-road"></i> {{ $business->address.' #'.$business->number  }}
                 </div>
             </div>
         </div>
@@ -378,7 +377,9 @@
                                     <div class="mt-5 flex flex-col items-center">
                                         @if ( $user->id == 0)
                                             <p class="mb-2">¿Conoces al dueño de este negocio?</p>
-                                            <x-button value="danger" class="">¡Informanos!</x-button>
+                                            <a target="_blank" href="mailto:contacto@subdelpuertomontt.cl">
+                                                <x-button value="danger" class="">¡Informanos!</x-button>
+                                            </a>
                                         @else
                                         <a href="{{ route('profile.show', ['id' => $user->id]) }}" target="_blank">
                                             <x-button value="danger">Ver Perfil</x-button>

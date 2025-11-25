@@ -80,12 +80,6 @@
                 <p>
                     La Municipalidad de Puerto Montt, a través de Dideco y su Subdirección de Desarrollo Económico Local, impulsa diversas iniciativas orientadas al fortalecimiento del ecosistema emprendedor local.
                 </p>
-                <p class="mb-4 mt-5 flex items-center justify-center md:justify-start font-semibold">
-                    <a href="{{ route('admin.index') }}" target="_blank">
-                        <i class="fas fa-user-cog"></i>
-                        ACCESO ADMINISTRADOR
-                    </a>
-                </p>
             </div>
             <!-- Useful links section -->
             <div class="">
@@ -93,7 +87,7 @@
                     Enlaces útiles
                 </h6>
                 <p class="mb-4">
-                    <a href="#!" class="text-neutral-300 dark:text-neutral-200">Puerto Montt</a>
+                    <a href="{{ route('home.ttcc') }}" class="text-neutral-300 dark:text-neutral-200">Terminos y Condiciones</a>
                 </p>
                 <p class="mb-4">
                     <a href="#!" class="text-neutral-300 dark:text-neutral-200">DIDECO</a>

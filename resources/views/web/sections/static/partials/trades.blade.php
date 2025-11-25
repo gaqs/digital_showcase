@@ -7,8 +7,8 @@
     <div class="container relative">
         <div class="grid grid-cols-12 text-center" id="products_categories">
             <div class="col-span-12 mb-5">
-                <h4 class="text-rose-500">Oficios destacados</h4>
-                <h2 class="text-3xl text-white font-bold w-full">Muebles a medida? Problemas eléctricos?</h2>
+                <h4 class="text-rose-500">Oficios tradicionales</h4>
+                <h2 class="text-3xl text-white font-bold w-full">¿Reparaciones?</h2>
             </div>
         </div>
         @if( $trades->count() > 0 )

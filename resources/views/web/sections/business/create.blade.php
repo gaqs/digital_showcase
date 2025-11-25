@@ -31,7 +31,7 @@
                 </p>
             </header>
 
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-5 {{ $qty_business >= 3) && request()->routeIs('business.create') ? null: 'hidden' }}" role="alert">
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-5 {{ $qty_business >= 3 && request()->routeIs('business.create') ? null: 'hidden' }}" role="alert">
                 <p class="font-bold"><i class="fas fa-exclamation"></i> Alerta</p>
                 <p>Usted ya posee 3 negocios, no es posible crear más.</p>
             </div>
@@ -203,7 +203,7 @@
                         </div>
 
                         <div class="mt-3">
-                            <x-button type="submit" class="!flex !items-center !gap-2 !px-7 !pb-3 !pt-3 !text-sm !font-bold !inline {{ $qty_business >= 3 request()->routeIs('business.create') ? 'pointer-events-none opacity-60' : '' }}" value="danger">
+                            <x-button type="submit" class="!flex !items-center !gap-2 !px-7 !pb-3 !pt-3 !text-sm !font-bold !inline {{ $qty_business >= 3 && request()->routeIs('business.create') ? 'pointer-events-none opacity-60' : '' }}" value="danger">
                                 Guardar
                             </x-button>
                         </div>

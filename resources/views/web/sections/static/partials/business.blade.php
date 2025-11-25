@@ -29,8 +29,7 @@
                                 {{ $bus->name }}
                             </h5>
                             <div id="business_address" class="my-2">
-                                <i class="text-rose-500 fa-solid fa-road"></i> {{ $bus->address }}
-                                <i class="text-rose-500 fa-solid fa-hashtag"></i>{{ $bus->number }}
+                                <i class="text-rose-500 fa-solid fa-road"></i> {{ $bus->address.' #'.$bus->number }}
                             </div>
                             <p class="text-base text-sm text-neutral-600 dark:text-neutral-200 mb-2">
                                 {{ substr(strip_tags($bus->description),0,150) }}...

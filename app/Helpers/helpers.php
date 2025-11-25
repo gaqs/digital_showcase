@@ -100,19 +100,19 @@ if (!function_exists('get_images_from_folder')) {
 
             // Buscar galería (excluye avatar y banner)
             if ($type === 'gallery') {
-                if( $folder == 0 ){
+
+                $allFiles = scandir($base);
+                $avatar = glob($base . '_avatar.*');
+                $banner = glob($base . '_banner.*');
+                $exclude = array('.', '..');
+                if (isset($avatar[0])) $exclude[] = basename($avatar[0]);
+                if (isset($banner[0])) $exclude[] = basename($banner[0]);
+                $images = array_diff($allFiles, $exclude);
+                
+                if( empty($images) ){
                     return ['default/image_1.jpg', 'default/image_2.jpg', 'default/image_3.jpg'];
 
                 }else{
-
-                    $allFiles = scandir($base);
-                    $avatar = glob($base . '_avatar.*');
-                    $banner = glob($base . '_banner.*');
-                    $exclude = array('.', '..');
-                    if (isset($avatar[0])) $exclude[] = basename($avatar[0]);
-                    if (isset($banner[0])) $exclude[] = basename($banner[0]);
-                    $images = array_diff($allFiles, $exclude);
-
                     return array_map(function($img) use ($folder){
                         return $folder.'/'.$img;
                     }, array_values($images));

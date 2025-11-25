@@ -28,7 +28,7 @@
                 <ul id="thumbnails" class="thumbnails">
                     @foreach ( $images as $img )
                     <li class="thumbnail">
-                        <img src="{{ asset('uploads/products/'.$product->id.'/'.$img) }}" alt="">
+                        <img src="{{ asset('uploads/products/'.$img) }}" alt="">
                     </li>
                     @endforeach
                 </ul>

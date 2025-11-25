@@ -256,3 +256,8 @@
   pointer-events: none;
   opacity: 0.6;
 }
+
+.splide__progress__bar {
+  height: 5px;
+  background: #dc4c64;
+}
